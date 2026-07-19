@@ -2,7 +2,7 @@
 
 > **"보내는 이의 예산 안에서, 받는 이에게 가장 높은 감도의 선택권을 선물하는 플랫폼"**
 > 
-> 본 프로젝트는 '카카오톡 선물하기'의 획일화되고 성의 없는 모바일 선물 경험(Transactional UX)을 혁신하기 위해 1달간의 제품 및 기술 회의(C-Level & Lead level)를 통해 구체화된 스펙을 담고 있습니다.
+> 기존 '카카오톡 선물하기'의 획일적이고 일방적인 선물 방식(Transactional UX)을 탈피하고, 선물을 주는 사람의 품격과 받는 사람의 소중한 취향을 모두 존중할 수 있도록 기획한 프로젝트입니다.
 
 ---
 
@@ -178,7 +178,7 @@ CREATE TABLE orders (
 
 ## 5. System Sequence Diagrams
 
-1개월간의 아키텍처 회의 끝에 결제 대행사(PG) API 연동 시 레이턴시를 최소화하고 동시성 이슈를 예방할 수 있는 3가지 트랜잭션 플로우를 합의하였습니다.
+결제 대행사(PG) API 연동 시 레이턴시를 최소화하고 동시성 이슈를 예방할 수 있는 3가지 트랜잭션 플로우 설계입니다.
 
 ### Flow 1: Curation & Pre-Payment (가결제)
 ```mermaid
@@ -241,7 +241,7 @@ sequenceDiagram
 sharepresent/
 ├── index.html            # [Phase 0] 서버 비용 $0로 구동되는 정적 단일 웹 프로토타입 (배포용)
 ├── README.md             # 프로젝트 상세 설계 명세서
-├── MEETING_MINUTES.md    # 1달간의 회의 기록
+├── MEETING_MINUTES.md    # 프로젝트 기획 및 의사결정 회의록
 ├── frontend/             # [Phase 2] 프로덕션용 프론트엔드 (React / Next.js) 소스 코드 폴더
 └── backend/              # [Phase 2] 프로덕션용 백엔드 (Spring Boot / Node.js) 소스 코드 폴더
 ```
