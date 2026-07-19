@@ -1,0 +1,1250 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SharePresent - 마음을 전하는 가장 세련된 방법</title>
+  
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="보내는 이의 예산 안에서, 받는 이의 취향대로 고르는 프리미엄 모바일 선물 플랫폼">
+  <meta property="og:title" content="SharePresent - 프리미엄 큐레이션 선물">
+  <meta property="og:description" content="소중한 분에게 감도 높은 선물 리스트를 제안해보세요.">
+  <meta property="og:type" content="website">
+
+  <!-- Premium Typography & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Noto+Sans+KR:wght@300;400;500;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* Reset & CSS Variables */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    :root {
+      --bg-color: #f7f6f2; /* Warm Ivory Sand */
+      --primary-color: #798a75; /* Sage Green */
+      --primary-hover: #5d6d5a;
+      --accent-color: #b58d75; /* Warm Terracotta */
+      --text-dark: #2a2c2b;
+      --text-muted: #7c7e7c;
+      --card-bg: #ffffff;
+      --card-shadow: 0 10px 40px rgba(0, 0, 0, 0.04);
+      --card-border: 1px solid rgba(121, 138, 117, 0.12);
+      --serif-font: "Playfair Display", serif;
+      --sans-font: "Outfit", "Noto Sans KR", sans-serif;
+      --transition-smooth: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    body {
+      font-family: var(--sans-font);
+      background-color: #e5e3dc;
+      color: var(--text-dark);
+      overflow-x: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px 0;
+    }
+
+    /* Sandbox Mobile Device Wrapper */
+    .app-container {
+      width: 100%;
+      max-width: 450px;
+      height: 850px;
+      background: var(--bg-color);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      border-radius: 36px;
+      overflow: hidden;
+      box-shadow: 0 25px 80px rgba(0, 0, 0, 0.12);
+      border: 8px solid #2a2c2b; /* Simulated device bezel */
+    }
+
+    /* Screen Base Class */
+    .screen {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      padding: 24px 20px;
+      overflow-y: auto;
+      display: none;
+      flex-direction: column;
+      transition: var(--transition-smooth);
+    }
+
+    .screen.active {
+      display: flex;
+      animation: fade-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    /* Scrollbar Style */
+    .screen::-webkit-scrollbar {
+      width: 4px;
+    }
+    .screen::-webkit-scrollbar-thumb {
+      background-color: rgba(121, 138, 117, 0.2);
+      border-radius: 4px;
+    }
+
+    /* Header styling */
+    .app-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0 20px 0;
+      flex-shrink: 0;
+    }
+
+    .brand-logo {
+      font-family: var(--serif-font);
+      font-size: 1.6rem;
+      font-weight: 600;
+      color: var(--primary-color);
+      letter-spacing: -0.5px;
+      cursor: pointer;
+    }
+
+    .reset-btn {
+      background: none;
+      border: none;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* Card styling */
+    .premium-card {
+      background-color: var(--card-bg);
+      border-radius: 24px;
+      border: var(--card-border);
+      box-shadow: var(--card-shadow);
+      padding: 24px;
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    /* Buttons */
+    .primary-btn {
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 16px 28px;
+      border-radius: 50px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 8px 25px rgba(121, 138, 117, 0.25);
+      transition: var(--transition-smooth);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+    }
+
+    .primary-btn:hover {
+      background-color: var(--primary-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 30px rgba(121, 138, 117, 0.35);
+    }
+
+    .secondary-btn {
+      background-color: transparent;
+      color: var(--primary-color);
+      border: 1.5px solid var(--primary-color);
+      padding: 14px 28px;
+      border-radius: 50px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+      width: 100%;
+      text-align: center;
+    }
+
+    .secondary-btn:hover {
+      background-color: rgba(121, 138, 117, 0.05);
+    }
+
+    /* ---------------------------------------------------- */
+    /* SCREEN 1: SENDER CREATION INTERFACE (Default) */
+    /* ---------------------------------------------------- */
+    .input-group {
+      margin-bottom: 20px;
+    }
+
+    .input-label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin-bottom: 8px;
+      letter-spacing: -0.2px;
+    }
+
+    .text-input {
+      width: 100%;
+      padding: 14px 16px;
+      border-radius: 12px;
+      border: 1px solid rgba(0,0,0,0.1);
+      background-color: #fafaf9;
+      font-size: 0.95rem;
+      transition: var(--transition-smooth);
+      outline: none;
+    }
+
+    .text-input:focus {
+      border-color: var(--primary-color);
+      background-color: white;
+    }
+
+    .textarea-input {
+      resize: none;
+      height: 100px;
+    }
+
+    /* Grid selector for products in creation */
+    .creation-product-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-height: 250px;
+      overflow-y: auto;
+      padding: 4px;
+      border: 1px solid rgba(0,0,0,0.05);
+      border-radius: 12px;
+      margin-bottom: 20px;
+    }
+
+    .creation-card {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px;
+      border-radius: 14px;
+      border: 1.5px solid transparent;
+      background-color: white;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+    }
+
+    .creation-card.selected {
+      border-color: var(--primary-color);
+      background-color: rgba(121, 138, 117, 0.04);
+    }
+
+    .creation-card-img {
+      width: 48px;
+      height: 48px;
+      border-radius: 8px;
+      background-color: #f0ede6;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .creation-card-detail {
+      flex-grow: 1;
+    }
+
+    .creation-card-brand {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--primary-color);
+    }
+
+    .creation-card-name {
+      font-size: 0.85rem;
+      font-weight: 700;
+    }
+
+    .creation-card-price {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .creation-checkbox {
+      width: 18px;
+      height: 18px;
+      border-radius: 4px;
+      border: 2px solid #ddd;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition-smooth);
+    }
+
+    .creation-card.selected .creation-checkbox {
+      background-color: var(--primary-color);
+      border-color: var(--primary-color);
+    }
+
+    .creation-card.selected .creation-checkbox::after {
+      content: '✓';
+      color: white;
+      font-size: 0.7rem;
+      font-weight: 900;
+    }
+
+    /* ---------------------------------------------------- */
+    /* SCREEN 2: RECIPIENT RIBBON / UNWRAPPING SCREEN */
+    /* ---------------------------------------------------- */
+    .ribbon-screen {
+      background: radial-gradient(circle at center, #ffffff 0%, #f1efe9 100%);
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      z-index: 10;
+    }
+
+    .gift-box-wrapper {
+      position: relative;
+      width: 160px;
+      height: 160px;
+      margin-bottom: 30px;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .gift-box-circle {
+      position: absolute;
+      width: 200px;
+      height: 200px;
+      border: 1px dashed var(--primary-color);
+      border-radius: 50%;
+      animation: rotate-circle 24s linear infinite, pulse-circle 2.5s infinite ease-in-out;
+    }
+
+    .gift-box-icon {
+      width: 110px;
+      height: 110px;
+      fill: none;
+      stroke: var(--primary-color);
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .gift-box-wrapper:hover .gift-box-icon {
+      transform: scale(1.1) rotate(4deg);
+    }
+
+    .ribbon-title {
+      font-family: var(--serif-font);
+      font-size: 2.2rem;
+      font-weight: 500;
+      margin-bottom: 10px;
+    }
+
+    .ribbon-subtitle {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 40px;
+    }
+
+    /* ---------------------------------------------------- */
+    /* SCREEN 3: RECIPIENT MAIN SELECTION SCREEN */
+    /* ---------------------------------------------------- */
+    .recipient-msg-card {
+      background: rgba(255, 255, 255, 0.8);
+      border-left: 4px solid var(--primary-color);
+      backdrop-filter: blur(10px);
+    }
+
+    .recipient-msg-title {
+      font-family: var(--serif-font);
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .recipient-msg-body {
+      font-size: 0.9rem;
+      line-height: 1.6;
+      color: #3d403e;
+      word-break: keep-all;
+    }
+
+    .selection-intro {
+      margin-bottom: 14px;
+    }
+
+    .selection-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+    }
+
+    .selection-desc {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .product-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-bottom: 100px; /* Leave space for bottom bar */
+    }
+
+    .product-card {
+      background-color: white;
+      border-radius: 20px;
+      padding: 14px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      cursor: pointer;
+      box-shadow: var(--card-shadow);
+      border: 1.5px solid transparent;
+      transition: var(--transition-smooth);
+    }
+
+    .product-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.06);
+    }
+
+    .product-card.selected {
+      border-color: var(--primary-color);
+      background-color: rgba(121, 138, 117, 0.03);
+    }
+
+    .product-card-img-wrapper {
+      width: 80px;
+      height: 80px;
+      border-radius: 12px;
+      background-color: #f6f5f1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .product-card-info {
+      flex-grow: 1;
+    }
+
+    .product-card-brand {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--primary-color);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 2px;
+    }
+
+    .product-card-name {
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .product-card-desc {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .product-radio {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 2px solid #ddd;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition-smooth);
+      flex-shrink: 0;
+    }
+
+    .product-card.selected .product-radio {
+      border-color: var(--primary-color);
+      background-color: var(--primary-color);
+    }
+
+    .product-radio::after {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background-color: white;
+      transform: scale(0);
+      transition: var(--transition-smooth);
+    }
+
+    .product-card.selected .product-radio::after {
+      transform: scale(1);
+    }
+
+    /* Floating bottom action bar */
+    .recipient-action-bar {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: white;
+      padding: 16px 20px 28px 20px;
+      box-shadow: 0 -10px 30px rgba(0,0,0,0.05);
+      border-radius: 24px 24px 0 0;
+      transform: translateY(100%);
+      transition: var(--transition-smooth);
+      z-index: 100;
+    }
+
+    .recipient-action-bar.visible {
+      transform: translateY(0);
+    }
+
+    /* Shipping Form Modal/Drawer */
+    .drawer-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.35);
+      backdrop-filter: blur(2px);
+      z-index: 200;
+      opacity: 0;
+      pointer-events: none;
+      transition: var(--transition-smooth);
+    }
+
+    .drawer-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .drawer-form {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background-color: white;
+      border-radius: 28px 28px 0 0;
+      padding: 28px 20px 30px 20px;
+      z-index: 210;
+      box-shadow: 0 -15px 40px rgba(0,0,0,0.1);
+      transform: translateY(100%);
+      transition: var(--transition-smooth);
+    }
+
+    .drawer-form.active {
+      transform: translateY(0);
+    }
+
+    .drawer-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .drawer-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+    }
+
+    .close-drawer {
+      background: none;
+      border: none;
+      font-size: 1.6rem;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+
+    /* ---------------------------------------------------- */
+    /* SCREEN 4: SENDER RESULT VIEW PAGE (Link back) */
+    /* ---------------------------------------------------- */
+    .result-success-badge {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background-color: rgba(121, 138, 117, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 20px auto;
+    }
+
+    .result-success-badge svg {
+      width: 32px;
+      height: 32px;
+      stroke: var(--primary-color);
+    }
+
+    .result-desc {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .result-info-box {
+      background-color: #fcfbfa;
+      border: var(--card-border);
+      border-radius: 18px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    .result-info-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px dashed rgba(0,0,0,0.05);
+      font-size: 0.9rem;
+    }
+
+    .result-info-row:last-child {
+      border-bottom: none;
+    }
+
+    .result-info-label {
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .result-info-val {
+      font-weight: 700;
+      color: var(--text-dark);
+      text-align: right;
+    }
+
+    /* Copy Address Notification Toast */
+    .toast {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background-color: rgba(42, 44, 43, 0.85);
+      color: white;
+      padding: 10px 20px;
+      border-radius: 50px;
+      font-size: 0.85rem;
+      z-index: 500;
+      transition: var(--transition-smooth);
+      opacity: 0;
+    }
+
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    /* General Animations */
+    @keyframes fade-in {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes rotate-circle {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    @keyframes pulse-circle {
+      0%, 100% { transform: scale(1); opacity: 0.6; }
+      50% { transform: scale(1.04); opacity: 0.2; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sandbox UI Shell simulating a high-end mobile phone bezel -->
+  <div class="app-container">
+
+    <!-- ------------------------------------------------------------------ -->
+    <!-- SCREEN A: SENDER CREATION PAGE (Default when URL has no params) -->
+    <!-- ------------------------------------------------------------------ -->
+    <div class="screen" id="creationScreen">
+      <header class="app-header">
+        <span class="brand-logo" onclick="goToHome()">SharePresent</span>
+        <span style="font-size: 0.75rem; font-weight: 700; background: var(--primary-color); color: white; padding: 3px 8px; border-radius: 50px;">선물 만들기 모드</span>
+      </header>
+
+      <div class="premium-card">
+        <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 15px;">나만의 Curation Box 생성</h3>
+        
+        <div class="input-group">
+          <label class="input-label" for="senderName">보내는 분 성함</label>
+          <input class="text-input" type="text" id="senderInputName" placeholder="예: 주희" value="주희">
+        </div>
+
+        <div class="input-group">
+          <label class="input-label" for="senderMsg">축하 메시지 카드</label>
+          <textarea class="text-input textarea-input" id="senderInputMsg" placeholder="받는 사람에게 전달할 따뜻한 한마디를 입력하세요.">생일 진심으로 축하해! 늘 고마운 마음에 보답하고 싶어서, 너의 감성에 어울리는 제품들을 골라봤어. 이 중에서 마음에 드는 상품으로 하나 편하게 골라줘! 집으로 바로 배송될 거야.</textarea>
+        </div>
+      </div>
+
+      <div class="selection-intro">
+        <h3 class="selection-title">제안할 선물 아이템 3개 선택</h3>
+        <p class="selection-desc">수령인이 고를 수 있도록 3가지 상품을 선택해주세요.</p>
+      </div>
+
+      <!-- Scrollable select grid -->
+      <div class="creation-product-grid" id="creationGrid">
+        <!-- Will be populated dynamically via JavaScript -->
+      </div>
+
+      <button class="primary-btn" id="generateLinkBtn">
+        선물 링크 생성하기
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+          <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+        </svg>
+      </button>
+
+      <div id="generatedLinkArea" style="margin-top: 15px; display: none;">
+        <div class="premium-card" style="padding: 16px; background-color: rgba(121, 138, 117, 0.05); text-align: center;">
+          <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 10px; word-break: break-all;">아래의 선물 전용 공유 링크가 복사되었습니다.<br>받는 사람에게 카톡이나 문자로 전송하세요!</p>
+          <input class="text-input" type="text" id="shareUrlInput" readonly style="font-size: 0.75rem; text-align: center; margin-bottom: 12px;">
+          <button class="secondary-btn" id="copyShareUrlBtn">링크 복사하기</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ------------------------------------------------------------------ -->
+    <!-- SCREEN B: RECIPIENT RIBBON / UNWRAPPING SCREEN -->
+    <!-- ------------------------------------------------------------------ -->
+    <div class="screen ribbon-screen" id="recipientRibbonScreen">
+      <div class="gift-box-wrapper" id="giftBoxTrigger">
+        <div class="gift-box-circle"></div>
+        <svg class="gift-box-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <path d="M20 12v10H4V12"></path>
+          <path d="M2 7h20v5H2z"></path>
+          <path d="M12 22V7"></path>
+          <path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"></path>
+          <path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"></path>
+        </svg>
+      </div>
+      <h1 class="ribbon-title" id="recipientBoxTitle">For You,</h1>
+      <p class="ribbon-subtitle" id="recipientBoxSubtitle">주희님이 당신의 소중한 취향을 담은<br>특별한 기프트 박스를 보냈습니다.</p>
+      <button class="primary-btn" style="width: auto; padding: 16px 36px;" id="unwrapBtn">
+        선물함 열어보기
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+      </button>
+    </div>
+
+    <!-- ------------------------------------------------------------------ -->
+    <!-- SCREEN C: RECIPIENT MAIN SELECTION SCREEN -->
+    <!-- ------------------------------------------------------------------ -->
+    <div class="screen" id="recipientMainScreen">
+      <header class="app-header">
+        <span class="brand-logo">SharePresent</span>
+        <button class="reset-btn" onclick="goToHome()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+          처음으로
+        </button>
+      </header>
+
+      <div class="premium-card recipient-msg-card">
+        <h2 class="recipient-msg-title" id="messageCardHeader">Dear Guest,</h2>
+        <p class="recipient-msg-body" id="messageCardBody">메시지를 불러오는 중...</p>
+      </div>
+
+      <div class="selection-intro">
+        <h3 class="selection-title">나를 위해 제안된 취향 저격 컬렉션</h3>
+        <p class="selection-desc">마음에 드는 상품 한 가지를 선택해 주세요 (가격은 비공개됩니다).</p>
+      </div>
+
+      <!-- Recipient product choices grid -->
+      <div class="product-list" id="recipientProductList">
+        <!-- Will be populated dynamically based on sender selection -->
+      </div>
+
+      <!-- Floating bottom panel -->
+      <div class="recipient-action-bar" id="recipientActionBar">
+        <button class="primary-btn" id="confirmSelectionBtn">선물 선택 완료 및 주소 입력</button>
+      </div>
+
+      <!-- Address Input Drawer inside the container -->
+      <div class="drawer-overlay" id="drawerOverlay"></div>
+      <div class="drawer-form" id="drawerForm">
+        <div class="drawer-header">
+          <h3 class="drawer-title" id="drawerFormTitle">배송 정보 입력</h3>
+          <button class="close-drawer" id="closeDrawerBtn">&times;</button>
+        </div>
+        <form id="deliveryForm">
+          <div class="input-group">
+            <label class="input-label" for="recipientRealName">받는 사람 성함</label>
+            <input class="text-input" type="text" id="recipientRealName" required placeholder="홍길동">
+          </div>
+          <div class="input-group">
+            <label class="input-label" for="recipientPhone">연락처</label>
+            <input class="text-input" type="tel" id="recipientPhone" required placeholder="010-1234-5678">
+          </div>
+          <div class="input-group">
+            <label class="input-label" for="recipientAddress">배송지 주소</label>
+            <input class="text-input" type="text" id="recipientAddress" required placeholder="도로명 또는 지번 상세 주소">
+          </div>
+          <button type="submit" class="primary-btn">최종 선택 전송하기</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- ------------------------------------------------------------------ -->
+    <!-- SCREEN D: RECIPIENT FINISH -> SEND LINK BACK TO SENDER -->
+    <!-- ------------------------------------------------------------------ -->
+    <div class="screen" id="recipientFinishScreen" style="justify-content: center; align-items: center; text-align: center;">
+      <div class="result-success-badge">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+          <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+      </div>
+      <h2 class="ribbon-title">선물 수락 완료 🎁</h2>
+      <p class="result-desc" id="recipientFinishDesc">
+        선물 수락 과정이 정상적으로 끝났습니다!<br>
+        이제 <strong>보낸 분이 결제/정산을 최종 진행</strong>할 수 있도록 아래 버튼을 눌러 결과 링크를 전달해주세요.
+      </p>
+
+      <div class="premium-card" style="padding: 18px; background-color: rgba(121, 138, 117, 0.05); width: 100%;">
+        <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px; line-height: 1.4;">
+          카카오톡 또는 문자로 아래 링크를 보낸 사람에게 공유해 주세요.
+        </p>
+        <button class="primary-btn" id="sendBackToSenderBtn">
+          보낸 사람에게 결과 링크 전송
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
+            <polyline points="16 6 12 2 8 6"></polyline>
+            <line x1="12" y1="2" x2="12" y2="15"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- ------------------------------------------------------------------ -->
+    <!-- SCREEN E: SENDER CONFIRMS FINAL CHOICE (Result URL opened by sender) -->
+    <!-- ------------------------------------------------------------------ -->
+    <div class="screen" id="senderResultScreen">
+      <header class="app-header">
+        <span class="brand-logo" onclick="goToHome()">SharePresent</span>
+        <span style="font-size: 0.75rem; font-weight: 700; background: var(--accent-color); color: white; padding: 3px 8px; border-radius: 50px;">수령 결과 조회</span>
+      </header>
+
+      <div class="result-success-badge">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+          <polyline points="22 4 12 14.01 9 11.01"></polyline>
+        </svg>
+      </div>
+
+      <h2 class="ribbon-title" style="font-size: 1.6rem; text-align: center; margin-bottom: 8px;">선물 매칭 성공! 🎉</h2>
+      <p class="result-desc" id="senderResultDesc">받는 분이 제안해주신 리스트 중 최종 1개를 수락하셨습니다. 입력해주신 배송지로 선물을 발송하시면 됩니다.</p>
+
+      <div class="result-info-box">
+        <div class="result-info-row">
+          <span class="result-info-label">받는 분</span>
+          <span class="result-info-val" id="resReceiverName">-</span>
+        </div>
+        <div class="result-info-row">
+          <span class="result-info-label">연락처</span>
+          <span class="result-info-val" id="resReceiverPhone">-</span>
+        </div>
+        <div class="result-info-row">
+          <span class="result-info-label">선택한 제품</span>
+          <span class="result-info-val" id="resSelectedProduct" style="color: var(--primary-color);">-</span>
+        </div>
+        <div class="result-info-row" style="flex-direction: column; align-items: flex-start; gap: 6px;">
+          <span class="result-info-label">배송 주소</span>
+          <span class="result-info-val" id="resReceiverAddress" style="text-align: left; font-weight: 500; font-size: 0.85rem; width: 100%; word-break: break-all;">-</span>
+        </div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 12px;">
+        <button class="primary-btn" id="copyAddressBtn">배송 주소 복사하기</button>
+        <button class="secondary-btn" onclick="goToHome()">나도 새로운 선물 상자 만들기</button>
+      </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div class="toast" id="toastMessage">주소가 클립보드에 복사되었습니다.</div>
+
+  </div>
+
+  <script>
+    // -------------------------------------------------------------
+    // Premium Product Database (Hardcoded for Static Curation)
+    // -------------------------------------------------------------
+    const PRODUCTS = [
+      { id: 1, brand: "OIMU", name: "소락사 샌디 도자기 머그", price: "38,000원", desc: "설악산의 모래 질감을 담아낸 아늑하고 미니멀한 핸드메이드 도자기 컵 세트입니다.", icon: "mug" },
+      { id: 2, brand: "GRANHAND", "name": "마린 오크모스 사쉐 퍼퓸", price: "45,000원", desc: "차분하고 내추럴한 나무와 풀 향으로 방 안을 가득 채우는 섬세한 패브릭 사쉐 퍼퓸입니다.", icon: "perfume" },
+      { id: 3, brand: "NONFICTION", name: "젠틀나잇 핸드워시 (300ml)", price: "32,000원", desc: "달콤한 스웨이드와 시더우드 향이 어우러져 매일의 일상을 특별하게 해주는 핸드케어.", icon: "wash" },
+      { id: 4, brand: "CROWCANYON", name: "머그 & 플레이트 세트", price: "48,000원", desc: "마블 패턴으로 주방의 감도를 한 단계 올려주는 빈티지 테이블웨어 세트입니다.", icon: "plate" },
+      { id: 5, brand: "HUXLEY", name: "바디 케어 워시 & 로션 듀오", price: "52,000원", desc: "선인장 시드 오일이 선사하는 깊은 보습과 시그니처 모로칸 정원 향의 바디 세트.", icon: "wash" },
+      { id: 6, brand: "SOHPE", name: "아로마 오일 센티드 홈 캔들", price: "41,000원", desc: "천연 에센셜 오일 블렌딩으로 심신을 안정시키고 평온한 무드를 제안하는 홈 캔들.", icon: "candle" }
+    ];
+
+    // State Variables
+    let selectedCreationIds = [1, 2, 3]; // Default selected IDs in creation mode
+    let loadedGiftBox = null;
+    let selectedGiftId = null;
+    let finalShareUrlForSender = "";
+
+    // DOM selectors helper
+    const getEl = id => document.getElementById(id);
+
+    // Initial routing logic based on URL params
+    window.addEventListener('DOMContentLoaded', () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      
+      if (urlParams.has('g')) {
+        // Recipient Gifting View
+        loadRecipientGiftBox(urlParams.get('g'));
+      } else if (urlParams.has('r')) {
+        // Sender Result View
+        loadSenderResultView(urlParams.get('r'));
+      } else {
+        // Default: Sender Creation View
+        loadSenderCreationView();
+      }
+    });
+
+    function showScreen(screenId) {
+      document.querySelectorAll('.screen').forEach(scr => scr.classList.remove('active'));
+      getEl(screenId).classList.add('active');
+    }
+
+    function goToHome() {
+      // Clear URL params and reload to go back to create mode
+      window.location.href = window.location.pathname;
+    }
+
+    // -------------------------------------------------------------
+    // 1. SENDER CREATION MODE LOGIC
+    // -------------------------------------------------------------
+    function loadSenderCreationView() {
+      showScreen('creationScreen');
+      const creationGrid = getEl('creationGrid');
+      creationGrid.innerHTML = "";
+
+      PRODUCTS.forEach(prod => {
+        const isSelected = selectedCreationIds.includes(prod.id);
+        const card = document.createElement('div');
+        card.className = `creation-card ${isSelected ? 'selected' : ''}`;
+        card.dataset.id = prod.id;
+        
+        // Dynamic SVG illustration based on icon type
+        let svgMarkup = '';
+        if (prod.icon === 'mug') {
+          svgMarkup = `<path d="M14 16 C14 12, 34 12, 34 16 L34 36 C34 40, 14 40, 14 36 Z" fill="#798a75" opacity="0.8"/><path d="M34 20 C38 20, 38 28, 34 28" stroke="#798a75" stroke-width="2"/>`;
+        } else if (prod.icon === 'perfume') {
+          svgMarkup = `<path d="M16 16 L32 16 L36 38 L12 38 Z" fill="#b58d75" opacity="0.8"/><rect x="20" y="22" width="8" height="10" fill="white"/>`;
+        } else if (prod.icon === 'wash') {
+          svgMarkup = `<rect x="16" y="20" width="16" height="20" rx="3" fill="#2a2c2b"/><path d="M24 20 L24 14 L18 14" stroke="#2a2c2b" stroke-width="2"/>`;
+        } else {
+          svgMarkup = `<circle cx="24" cy="24" r="14" fill="#d3cfc9"/><path d="M24 10 L24 24" stroke="#798a75" stroke-width="2"/>`;
+        }
+
+        card.innerHTML = `
+          <div class="creation-card-img">
+            <svg width="40" height="40" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+              ${svgMarkup}
+            </svg>
+          </div>
+          <div class="creation-card-detail">
+            <span class="creation-card-brand">${prod.brand}</span>
+            <h4 class="creation-card-name">${prod.name}</h4>
+            <span class="creation-card-price">${prod.price}</span>
+          </div>
+          <div class="creation-checkbox"></div>
+        `;
+
+        card.addEventListener('click', () => {
+          const prodId = parseInt(prod.id);
+          if (selectedCreationIds.includes(prodId)) {
+            // Unselect (only if we have more than 1 selected)
+            if (selectedCreationIds.length > 1) {
+              selectedCreationIds = selectedCreationIds.filter(id => id !== prodId);
+              card.classList.remove('selected');
+            }
+          } else {
+            // Select (up to 3 items max)
+            if (selectedCreationIds.length >= 3) {
+              // Remove the oldest selected
+              const oldestId = selectedCreationIds.shift();
+              const oldestCard = creationGrid.querySelector(`.creation-card[data-id="${oldestId}"]`);
+              if (oldestCard) oldestCard.classList.remove('selected');
+            }
+            selectedCreationIds.push(prodId);
+            card.classList.add('selected');
+          }
+        });
+
+        creationGrid.appendChild(card);
+      });
+    }
+
+    // Generate Encoded Gifting Link
+    getEl('generateLinkBtn').addEventListener('click', () => {
+      const senderName = getEl('senderInputName').value.trim() || "누군가";
+      const message = getEl('senderInputMsg').value.trim() || "축하해요!";
+      
+      if (selectedCreationIds.length === 0) {
+        alert("최소 1개 이상의 선물 후보를 선택하셔야 합니다.");
+        return;
+      }
+
+      // Compact state object
+      const giftBoxData = {
+        s: senderName,
+        m: message,
+        i: selectedCreationIds
+      };
+
+      // Base64 encode the stringified data
+      const jsonStr = JSON.stringify(giftBoxData);
+      const encoded = btoa(encodeURIComponent(jsonStr));
+
+      // Append code parameter
+      const shareUrl = `${window.location.origin}${window.location.pathname}?g=${encoded}`;
+
+      getEl('shareUrlInput').value = shareUrl;
+      getEl('generatedLinkArea').style.display = 'block';
+
+      // Copy to clipboard
+      navigator.clipboard.writeText(shareUrl).then(() => {
+        showToast("선물 전용 공유 링크가 복사되었습니다!");
+      }).catch(err => {
+        console.error("클립보드 복사 실패", err);
+      });
+    });
+
+    getEl('copyShareUrlBtn').addEventListener('click', () => {
+      const copyText = getEl('shareUrlInput');
+      copyText.select();
+      copyText.setSelectionRange(0, 99999);
+      navigator.clipboard.writeText(copyText.value).then(() => {
+        showToast("링크가 클립보드에 복사되었습니다!");
+      });
+    });
+
+
+    // -------------------------------------------------------------
+    // 2. RECIPIENT EXPERIENCE MODE (URL has ?g=...)
+    // -------------------------------------------------------------
+    function loadRecipientGiftBox(encodedData) {
+      try {
+        const decodedStr = decodeURIComponent(atob(encodedData));
+        loadedGiftBox = JSON.parse(decodedStr);
+      } catch (err) {
+        console.error("선물 데이터 복원 실패:", err);
+        alert("올바르지 않거나 손상된 선물 링크입니다.");
+        goToHome();
+        return;
+      }
+
+      // Populate Ribbon screen elements
+      getEl('recipientBoxTitle').textContent = `Dear, ${loadedGiftBox.s || 'Friend'}`;
+      getEl('recipientBoxSubtitle').innerHTML = `<strong>${loadedGiftBox.s}</strong>님이 당신의 취향에 딱 맞춘<br>특별한 프리미엄 선물 리스트를 보냈습니다.`;
+      
+      showScreen('recipientRibbonScreen');
+
+      // Unwrap Button Action
+      getEl('unwrapBtn').addEventListener('click', () => {
+        // Transition to main selection screen
+        getEl('recipientRibbonScreen').style.opacity = '0';
+        setTimeout(() => {
+          getEl('recipientRibbonScreen').style.display = 'none';
+          showScreen('recipientMainScreen');
+          populateRecipientProductList();
+        }, 400);
+      });
+    }
+
+    function populateRecipientProductList() {
+      // Set letter header & text
+      getEl('messageCardHeader').textContent = `From. ${loadedGiftBox.s}`;
+      getEl('messageCardBody').textContent = loadedGiftBox.m;
+
+      const recipientProductList = getEl('recipientProductList');
+      recipientProductList.innerHTML = "";
+
+      // Look up and render items matching the encoded IDs
+      const curatedItems = PRODUCTS.filter(prod => loadedGiftBox.i.includes(prod.id));
+
+      curatedItems.forEach(prod => {
+        const card = document.createElement('div');
+        card.className = "product-card";
+        card.dataset.id = prod.id;
+
+        let svgMarkup = '';
+        if (prod.icon === 'mug') {
+          svgMarkup = `<path d="M18 20 C18 16, 42 16, 42 20 L42 42 C42 46, 18 46, 18 42 Z" fill="#798a75" opacity="0.8"/><path d="M42 25 C47 25, 47 33, 42 33" stroke="#798a75" stroke-width="2.5"/>`;
+        } else if (prod.icon === 'perfume') {
+          svgMarkup = `<path d="M22 18 L38 18 L42 46 L18 46 Z" fill="#b58d75" opacity="0.8"/><rect x="25" y="24" width="10" height="14" rx="2" fill="white" />`;
+        } else if (prod.icon === 'wash') {
+          svgMarkup = `<rect x="22" y="24" width="16" height="22" rx="4" fill="#2a2c2b" /><path d="M30 24 L30 16 L24 16" stroke="#2a2c2b" stroke-width="2" />`;
+        } else {
+          svgMarkup = `<circle cx="30" cy="30" r="18" fill="#d3cfc9"/><path d="M30 12 L30 30" stroke="#798a75" stroke-width="2"/>`;
+        }
+
+        card.innerHTML = `
+          <div class="product-card-img-wrapper">
+            <svg width="50" height="50" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+              ${svgMarkup}
+            </svg>
+          </div>
+          <div class="product-card-info">
+            <span class="product-card-brand">${prod.brand}</span>
+            <h4 class="product-card-name">${prod.name}</h4>
+            <p class="product-card-desc">${prod.desc}</p>
+          </div>
+          <div class="product-radio"></div>
+        `;
+
+        card.addEventListener('click', () => {
+          recipientProductList.querySelectorAll('.product-card').forEach(c => c.classList.remove('selected'));
+          card.classList.add('selected');
+          selectedGiftId = prod.id;
+          getEl('recipientActionBar').classList.add('visible');
+        });
+
+        recipientProductList.appendChild(card);
+      });
+    }
+
+    // Recipient address drawer toggle
+    getEl('confirmSelectionBtn').addEventListener('click', () => {
+      if (!selectedGiftId) return;
+      const selectedProd = PRODUCTS.find(p => p.id === selectedGiftId);
+      
+      getEl('drawerFormTitle').textContent = `[${selectedProd.brand}] ${selectedProd.name} 받기`;
+      getEl('drawerOverlay').classList.add('active');
+      getEl('drawerForm').classList.add('active');
+    });
+
+    const closeDrawer = () => {
+      getEl('drawerOverlay').classList.remove('active');
+      getEl('drawerForm').classList.remove('active');
+    };
+
+    getEl('closeDrawerBtn').addEventListener('click', closeDrawer);
+    getEl('drawerOverlay').addEventListener('click', closeDrawer);
+
+    // Form Submission: Compile recipient choice + address into a second encoded url
+    getEl('deliveryForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      const realName = getEl('recipientRealName').value.trim();
+      const phone = getEl('recipientPhone').value.trim();
+      const address = getEl('recipientAddress').value.trim();
+
+      const selectedProd = PRODUCTS.find(p => p.id === selectedGiftId);
+
+      // Result payload package
+      const resultData = {
+        s: loadedGiftBox.s, // Original Sender
+        r: realName,        // Recipient Name
+        p: phone,           // Recipient Phone
+        a: address,         // Recipient Address
+        i: selectedGiftId   // Selected Product ID
+      };
+
+      const resultEncoded = btoa(encodeURIComponent(JSON.stringify(resultData)));
+      finalShareUrlForSender = `${window.location.origin}${window.location.pathname}?r=${resultEncoded}`;
+
+      closeDrawer();
+      showScreen('recipientFinishScreen');
+    });
+
+    // Send selection back to sender
+    getEl('sendBackToSenderBtn').addEventListener('click', () => {
+      const selectedProd = PRODUCTS.find(p => p.id === selectedGiftId);
+      const textMessage = `[SharePresent] ${loadedGiftBox.s}님! 보내주신 특별 큐레이션 선물함에서 상품 수락을 완료했습니다. 🎁\n\n• 선택한 상품: [${selectedProd.brand}] ${selectedProd.name}\n• 선물 정산 및 배송 주소 확인하기:\n${finalShareUrlForSender}`;
+
+      navigator.clipboard.writeText(textMessage).then(() => {
+        showToast("결과 공유 메시지가 복사되었습니다!");
+        
+        // KakaoTalk / Message redirect fallback simulation
+        const kakaoFallbackUrl = `https://sharer.kakao.com/talk/friends/picker/link?link=${encodeURIComponent(finalShareUrlForSender)}`;
+        setTimeout(() => {
+          // Open system share sheets or fallback
+          if (navigator.share) {
+            navigator.share({
+              title: 'SharePresent 선물 수락 완료',
+              text: textMessage,
+              url: finalShareUrlForSender
+            }).catch(console.error);
+          } else {
+            alert("결과 텍스트와 링크가 클립보드에 자동 복사되었습니다. 카카오톡이나 메시지 창을 열어 보낸 사람에게 붙여넣기(Ctrl+V) 하여 전송해 주세요!");
+          }
+        }, 600);
+      });
+    });
+
+
+    // -------------------------------------------------------------
+    // 3. SENDER RESULT MODE LOGIC (URL has ?r=...)
+    // -------------------------------------------------------------
+    function loadSenderResultView(encodedResult) {
+      try {
+        const decodedStr = decodeURIComponent(atob(encodedResult));
+        const resultObj = JSON.parse(decodedStr);
+
+        const chosenProd = PRODUCTS.find(p => p.id === resultObj.i);
+
+        showScreen('senderResultScreen');
+
+        getEl('resReceiverName').textContent = resultObj.r;
+        getEl('resReceiverPhone').textContent = resultObj.p;
+        getEl('resSelectedProduct').textContent = `[${chosenProd.brand}] ${chosenProd.name}`;
+        getEl('resReceiverAddress').textContent = resultObj.a;
+
+        getEl('senderResultDesc').innerHTML = `<strong>${resultObj.r}</strong>님이 제안해주신 선물 세트 중 <strong>[${chosenProd.brand}] ${chosenProd.name}</strong>을 최종 선택하셨습니다.`;
+        
+        // Copy address action
+        getEl('copyAddressBtn').addEventListener('click', () => {
+          const addressTxt = `수령인: ${resultObj.r}\n연락처: ${resultObj.p}\n주소: ${resultObj.a}\n선택한 상품: [${chosenProd.brand}] ${chosenProd.name}`;
+          navigator.clipboard.writeText(addressTxt).then(() => {
+            showToast("배송 정보 전체가 클립보드에 복사되었습니다!");
+          });
+        });
+
+      } catch (err) {
+        console.error("결과 복원 실패:", err);
+        alert("올바르지 않거나 손상된 결과 보고 링크입니다.");
+        goToHome();
+      }
+    }
+
+
+    // -------------------------------------------------------------
+    // UTILS
+    // -------------------------------------------------------------
+    function showToast(msg) {
+      const toast = getEl('toastMessage');
+      toast.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
+    }
+  </script>
+
+</body>
+</html>

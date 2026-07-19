@@ -1,0 +1,41 @@
+name: Deploy SharePresent Static Demo to GitHub Pages
+
+on:
+  push:
+    branches: ["main", "master"] # main 또는 master 브랜치에 푸시될 때 배포 실행
+  workflow_dispatch: # 수동으로 배포를 트리거할 수 있도록 설정
+
+# GitHub Pages 배포를 위해 필요한 GITHUB_TOKEN 권한 설정
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# 연속 푸시 시 이전 배포를 취소하고 최신 배포만 진행하도록 대기열 설정
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Pages Configuration
+        uses: actions/configure-pages@v5
+
+      - name: Upload Static Files Artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # 루트 디렉토리의 index.html을 배포 파일로 사용합니다.
+          # frontend, backend 폴더는 정적 빌드 대상이 아니므로 빌드 대상에서 제외됩니다.
+          path: '.'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
