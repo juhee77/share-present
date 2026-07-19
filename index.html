@@ -1488,7 +1488,7 @@
         }
 
         // Determine if selected
-        const isSelected = selectedGiftId === prod.id;
+        const isSelected = selectedGiftId == prod.id;
         if (isSelected) {
           card.classList.add('selected');
         }
@@ -1579,7 +1579,7 @@
     // Recipient address drawer toggle
     getEl('confirmSelectionBtn').addEventListener('click', () => {
       if (!selectedGiftId) return;
-      const selectedProd = boxProducts.find(p => p.id === selectedGiftId);
+      const selectedProd = boxProducts.find(p => p.id == selectedGiftId);
       
       getEl('drawerFormTitle').textContent = `[${selectedProd.brand}] ${selectedProd.name} 받기`;
       
@@ -1624,7 +1624,7 @@
       const address = getEl('recipientAddress').value.trim();
       const selectedOption = getEl('recipientOption').value || '';
 
-      const selectedProd = boxProducts.find(p => p.id === selectedGiftId);
+      const selectedProd = boxProducts.find(p => p.id == selectedGiftId);
 
       // Result payload package
       const resultData = {
@@ -1649,7 +1649,7 @@
 
     // Send selection back to sender
     getEl('sendBackToSenderBtn').addEventListener('click', () => {
-      const selectedProd = boxProducts.find(p => p.id === selectedGiftId);
+      const selectedProd = boxProducts.find(p => p.id == selectedGiftId);
       const chosenOption = getEl('recipientOption').value;
       const optionMsg = chosenOption ? ` (옵션: ${chosenOption})` : '';
       const textMessage = `[SharePresent] ${loadedGiftBox.s}님! 보내주신 특별 큐레이션 선물함에서 상품 수락을 완료했습니다. 🎁\n\n• 선택한 상품: [${selectedProd.brand}] ${selectedProd.name}${optionMsg}\n• 선물 정산 및 배송 주소 확인하기:\n${finalShareUrlForSender}`;
@@ -1683,7 +1683,7 @@
         const decodedStr = decodeURIComponent(atob(encodedResult));
         const resultObj = JSON.parse(decodedStr);
 
-        let chosenProd = PRODUCTS.find(p => p.id === resultObj.i);
+        let chosenProd = PRODUCTS.find(p => p.id == resultObj.i);
         if (!chosenProd && resultObj.cn) {
           // Custom product reconstruction
           chosenProd = {
@@ -1693,6 +1693,16 @@
             url: resultObj.cu,
             isCustom: true,
             isRecipientAdded: resultObj.ir ? true : false
+          };
+        }
+
+        if (!chosenProd) {
+          chosenProd = {
+            id: resultObj.i,
+            brand: "알 수 없음",
+            name: "상품 정보 없음",
+            url: "",
+            isCustom: false
           };
         }
 
