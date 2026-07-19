@@ -1,0 +1,47 @@
+# OS / System Files
+.DS_Store
+Thumbs.db
+*.tmp
+*.bak
+
+# IntelliJ IDEA / Eclipse / VS Code
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+.classpath
+.project
+.settings/
+.metadata/
+
+# Gradle / Java Backend Build Artifacts
+backend/.gradle/
+backend/build/
+backend/out/
+.gradle/
+build/
+out/
+/bin/
+*.class
+*.jar
+*.war
+*.ear
+
+# Node / Frontend Build Artifacts
+node_modules/
+frontend/node_modules/
+.next/
+frontend/.next/
+dist/
+frontend/dist/
+
+# Local Environment Variables & Secrets
+.env
+.env*.local
+frontend/.env*.local
+backend/src/main/resources/application-local.yml
+
+# Logs
+*.log
+logs/

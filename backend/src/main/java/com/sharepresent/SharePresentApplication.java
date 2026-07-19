@@ -1,0 +1,11 @@
+package com.sharepresent;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class SharePresentApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(SharePresentApplication.class, args);
+    }
+}
