@@ -272,7 +272,7 @@ sharepresent/
 ## 8. How to Run (로컬 구동 및 정적 배포)
 
 ### 1) [Phase 0] 단일 HTML 데모 구동
-*   [index.html](file:///Users/juhee/IdeaProjects/sharepresent/index.html) 파일을 브라우저로 직접 실행하거나, VS Code Live Server 등을 이용해 즉각 실행합니다.
+*   [GitHub Pages 실시간 데모](https://juhee77.github.io/share-present/) 또는 [index.html](./index.html) 파일을 브라우저로 직접 실행하거나, VS Code Live Server 등을 이용해 즉각 실행합니다.
 *   **무료 배포 가이드**:
     *   **Vercel/Netlify**: 본 레포지토리를 GitHub에 연동 후 Static Project로 배포하면 1분 안에 고유 URL 생성 ($0/월).
     *   **GitHub Pages**: GitHub Repository 설정의 'Pages' 탭에서 브라우저 배포 채널 활성화 ($0/월).
