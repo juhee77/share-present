@@ -37,7 +37,7 @@ export default function RecipientGiftPage({ params }: { params: Promise<{ token:
         setBoxData(data);
       } catch (err) {
         console.error("Fetch error:", err);
-        // Local Fallback Mock Data if Backend Server is offline
+        // Fallback mock data
         setBoxData({
           id: 1,
           senderName: "주희",
@@ -53,7 +53,7 @@ export default function RecipientGiftPage({ params }: { params: Promise<{ token:
               price: 38000,
               description: "설악산의 모래 질감을 담아낸 아늑하고 미니멀한 핸드메이드 도자기 컵 세트입니다.",
               options: ["샌드 화이트", "클레이 브라운"],
-              icon: "mug",
+              imageUrl: "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=600&auto=format&fit=crop&q=80",
             },
             {
               id: 2,
@@ -62,7 +62,7 @@ export default function RecipientGiftPage({ params }: { params: Promise<{ token:
               price: 45000,
               description: "차분하고 내추럴한 나무와 풀 향으로 방 안을 가득 채우는 섬세한 패브릭 사쉐 퍼퓸입니다.",
               options: ["규장", "마린", "수지발삼"],
-              icon: "perfume",
+              imageUrl: "https://images.unsplash.com/photo-1547887537-6158d64c35b3?w=600&auto=format&fit=crop&q=80",
             },
             {
               id: 3,
@@ -70,7 +70,7 @@ export default function RecipientGiftPage({ params }: { params: Promise<{ token:
               name: "젠틀나잇 핸드워시 (300ml)",
               price: 32000,
               description: "달콤한 스웨이드와 시더우드 향이 어우러져 매일의 일상을 특별하게 해주는 핸드케어.",
-              icon: "wash",
+              imageUrl: "https://images.unsplash.com/photo-1608248597309-45da1e028896?w=600&auto=format&fit=crop&q=80",
             },
           ],
         });
@@ -83,9 +83,16 @@ export default function RecipientGiftPage({ params }: { params: Promise<{ token:
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#f7f6f2] flex items-center justify-center">
-        <p className="text-sm font-semibold text-[#798a75] animate-pulse">
-          선물 상자를 불러오는 중... 🎁
+      <div className="min-h-screen bg-[#faf9f6] flex flex-col items-center justify-center">
+        <div className="insta-story-ring mb-3 animate-bounce">
+          <div className="insta-story-inner">
+            <div className="w-12 h-12 rounded-full bg-[#121212] flex items-center justify-center text-xl text-white">
+              🎁
+            </div>
+          </div>
+        </div>
+        <p className="text-xs font-bold text-[#121212] tracking-wider uppercase">
+          Loading Selection Feed...
         </p>
       </div>
     );
@@ -93,9 +100,9 @@ export default function RecipientGiftPage({ params }: { params: Promise<{ token:
 
   if (!boxData) {
     return (
-      <div className="min-h-screen bg-[#f7f6f2] flex flex-col items-center justify-center p-6 text-center">
-        <h2 className="text-xl font-bold text-[#2a2c2b] mb-2">선물 상자를 찾을 수 없습니다</h2>
-        <p className="text-xs text-[#7c7e7c] mb-4">유효하지 않거나 만료된 선물 링크입니다.</p>
+      <div className="min-h-screen bg-[#faf9f6] flex flex-col items-center justify-center p-6 text-center">
+        <h2 className="text-xl font-bold text-[#121212] mb-2">선물 상자를 찾을 수 없습니다</h2>
+        <p className="text-xs text-[#737373] mb-4">유효하지 않거나 만료된 선물 링크입니다.</p>
       </div>
     );
   }
@@ -146,7 +153,7 @@ export default function RecipientGiftPage({ params }: { params: Promise<{ token:
   const selectedProductName = selectedProductId === "CUSTOM_RECIPIENT" ? customName : selectedProductObj?.name;
 
   return (
-    <div className="flex flex-col min-h-screen pb-12">
+    <div className="flex flex-col min-h-screen pb-16 bg-white">
       {/* 3D Ribbon Opening Overlay */}
       {showRibbon && (
         <UnwrappingRibbon
@@ -157,44 +164,58 @@ export default function RecipientGiftPage({ params }: { params: Promise<{ token:
 
       <Header />
 
-      <main className="p-6 flex-1 max-w-[600px] mx-auto w-full">
+      <main className="p-4 flex-1 max-w-[540px] mx-auto w-full">
         {isCompleted ? (
           /* Completion Screen */
-          <div className="text-center py-12 card-premium animate-fade-in">
-            <span className="text-5xl">🎉</span>
-            <h1 className="font-serif text-2xl font-bold text-[#2a2c2b] mt-4 mb-2">
+          <div className="text-center py-12 insta-card p-6 my-8 animate-fade-in">
+            <div className="insta-story-ring mb-4 inline-block">
+              <div className="insta-story-inner">
+                <div className="w-16 h-16 rounded-full bg-[#121212] flex items-center justify-center text-3xl text-white">
+                  🎉
+                </div>
+              </div>
+            </div>
+            <h1 className="font-serif text-3xl font-bold text-[#121212] mb-2">
               선물 수락 완료!
             </h1>
-            <p className="text-xs text-[#7c7e7c] max-w-xs mx-auto mb-6 leading-relaxed">
-              선택하신 정보가 보낸 분({boxData.senderName})에게 전달되었습니다. 빠르게 배송해드릴게요!
+            <p className="text-xs text-[#737373] max-w-xs mx-auto mb-8 leading-relaxed">
+              선택하신 정보가 보낸 분({boxData.senderName})에게 안전하게 전달되었습니다.
             </p>
 
             <a
               href={`/result/${token}`}
-              className="btn-primary max-w-xs mx-auto block text-center text-sm py-3"
+              className="btn-insta-gradient max-w-xs mx-auto block text-center text-xs py-4"
             >
-              보낸 사람에게 전달할 결과 보기 ↗
+              보낸 사람에게 전달할 정산 결과 보기 ↗
             </a>
           </div>
         ) : (
-          /* Main Gift Options List */
+          /* Main Gift Options Feed */
           <>
             {/* Sender Message Card Header */}
-            <section className="card-premium mb-6">
-              <span className="text-xs uppercase tracking-widest text-[#b58d75] font-semibold">
-                Message From {boxData.senderName}
-              </span>
-              <p className="text-base font-serif font-bold text-[#2a2c2b] mt-2 leading-relaxed">
+            <section className="insta-card p-5 mb-5">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-6 h-6 rounded-full bg-[#121212] text-white flex items-center justify-center text-[10px] font-bold">
+                  {boxData.senderName.substring(0, 1)}
+                </div>
+                <span className="text-xs font-bold text-[#121212]">
+                  {boxData.senderName}님의 큐레이션 선물 카드
+                </span>
+              </div>
+              <p className="text-base font-serif font-bold text-[#121212] leading-relaxed border-t border-[#f5f5f5] pt-3">
                 "{boxData.messageCard}"
               </p>
             </section>
 
-            <h2 className="text-sm font-bold text-[#2a2c2b] mb-3 px-1">
-              {boxData.senderName}님이 제안하는 선물 리스트 (1개 선택)
-            </h2>
+            <div className="flex items-center justify-between mb-3 px-1">
+              <span className="text-xs font-extrabold uppercase tracking-wider text-[#121212]">
+                Select 1 Gift ({boxData.items.length})
+              </span>
+              <span className="text-[11px] text-[#737373]">원하는 상품 터치</span>
+            </div>
 
-            {/* Product Cards */}
-            <div className="space-y-3 mb-6">
+            {/* Product Feed */}
+            <div className="space-y-4">
               {boxData.items.map((product) => (
                 <ProductCard
                   key={product.id}
@@ -203,57 +224,60 @@ export default function RecipientGiftPage({ params }: { params: Promise<{ token:
                   onSelect={() => handleProductSelect(product)}
                   selectedOption={selectedOption}
                   onOptionChange={(opt) => setSelectedOption(opt)}
-                  hidePrice={true} // Hide prices for gift recipients!
+                  hidePrice={true}
                 />
               ))}
             </div>
 
-            {/* Recipient Custom Item Input */}
+            {/* Custom Input */}
             {boxData.allowCustomInput && (
-              <section className="card-premium">
+              <section className="insta-card p-4 my-5">
                 <button
                   onClick={() => setShowCustomInput(!showCustomInput)}
-                  className="w-full flex items-center justify-between text-xs font-bold text-[#b58d75]"
+                  className="w-full flex items-center justify-between text-xs font-bold text-[#121212]"
                 >
-                  <span>+ 원하는 다른 선물 직접 링크 입력하기</span>
+                  <span className="flex items-center gap-1.5">
+                    <span>✨</span>
+                    <span>원하는 다른 선물 직접 링크 입력하기</span>
+                  </span>
                   <span>{showCustomInput ? "▲" : "▼"}</span>
                 </button>
 
                 {showCustomInput && (
-                  <div className="mt-4 pt-4 border-t border-black/5 space-y-3 animate-fade-in">
+                  <div className="mt-3 pt-3 border-t border-[#f5f5f5] space-y-3 animate-fade-in">
                     <div>
-                      <label className="block text-xs text-[#7c7e7c] mb-1">브랜드명</label>
+                      <label className="block text-xs text-[#737373] mb-1">브랜드명</label>
                       <input
                         type="text"
                         placeholder="예: 이솝"
                         value={customBrand}
                         onChange={(e) => setCustomBrand(e.target.value)}
-                        className="input-text"
+                        className="input-insta"
                       />
                     </div>
                     <div>
-                      <label className="block text-xs text-[#7c7e7c] mb-1">상품명</label>
+                      <label className="block text-xs text-[#737373] mb-1">상품명</label>
                       <input
                         type="text"
                         placeholder="예: 레저렉션 아로마틱 핸드 밤"
                         value={customName}
                         onChange={(e) => setCustomName(e.target.value)}
-                        className="input-text"
+                        className="input-insta"
                       />
                     </div>
                     <div>
-                      <label className="block text-xs text-[#7c7e7c] mb-1">상품 링크 (URL)</label>
+                      <label className="block text-xs text-[#737373] mb-1">상품 링크 (URL)</label>
                       <input
                         type="url"
                         placeholder="https://..."
                         value={customUrl}
                         onChange={(e) => setCustomUrl(e.target.value)}
-                        className="input-text"
+                        className="input-insta"
                       />
                     </div>
                     <button
                       onClick={handleCustomSubmit}
-                      className="btn-secondary text-xs py-2.5 mt-2"
+                      className="btn-insta text-xs py-3 mt-2"
                     >
                       이 선물로 신청하기 🚀
                     </button>
@@ -265,7 +289,6 @@ export default function RecipientGiftPage({ params }: { params: Promise<{ token:
         )}
       </main>
 
-      {/* Address Input Drawer */}
       <DeliveryDrawer
         isOpen={isDrawerOpen}
         onClose={() => setIsDrawerOpen(false)}

@@ -33,25 +33,29 @@ export default function DeliveryDrawer({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 backdrop-blur-sm animate-fade-in">
+    <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 backdrop-blur-md animate-fade-in">
       <div
-        className="w-full max-w-[600px] bg-white rounded-t-3xl p-6 shadow-2xl max-h-[90vh] overflow-y-auto"
+        className="w-full max-w-[580px] bg-white/95 backdrop-blur-2xl rounded-t-[36px] p-7 shadow-2xl max-h-[90vh] overflow-y-auto border-t border-white/80"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="w-12 h-1.5 bg-gray-200 rounded-full mx-auto mb-6" />
+        <div className="w-12 h-1.5 bg-gray-300/80 rounded-full mx-auto mb-6" />
 
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center justify-between mb-5 border-b border-black/5 pb-4">
           <div>
-            <h2 className="text-xl font-bold text-[#2a2c2b]">선물 받을 주소 입력</h2>
+            <span className="text-[10px] font-bold uppercase tracking-wider text-[#b58d75]">
+              Shipping Address
+            </span>
+            <h2 className="text-xl font-bold text-[#1c1e1d]">선물 받을 주소 입력</h2>
             {selectedProductName && (
-              <p className="text-xs text-[#798a75] font-semibold mt-1">
-                선택한 선물: {selectedProductName}
+              <p className="text-xs text-[#5d6d5a] font-bold mt-1 flex items-center gap-1">
+                <span>🎁 선택한 선물:</span>
+                <span>{selectedProductName}</span>
               </p>
             )}
           </div>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 p-2 text-lg font-bold"
+            className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center text-gray-500 hover:bg-gray-200 transition-colors font-bold text-sm"
           >
             ✕
           </button>
@@ -59,7 +63,7 @@ export default function DeliveryDrawer({
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-xs font-semibold text-[#2a2c2b] mb-1">
+            <label className="block text-xs font-bold text-[#1c1e1d] mb-1.5">
               수령인 성함
             </label>
             <input
@@ -67,13 +71,13 @@ export default function DeliveryDrawer({
               placeholder="예: 홍길동"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="input-text"
+              className="input-premium"
               required
             />
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-[#2a2c2b] mb-1">
+            <label className="block text-xs font-bold text-[#1c1e1d] mb-1.5">
               연락처
             </label>
             <input
@@ -81,13 +85,13 @@ export default function DeliveryDrawer({
               placeholder="010-0000-0000"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
-              className="input-text"
+              className="input-premium"
               required
             />
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-[#2a2c2b] mb-1">
+            <label className="block text-xs font-bold text-[#1c1e1d] mb-1.5">
               배송지 주소
             </label>
             <textarea
@@ -95,7 +99,7 @@ export default function DeliveryDrawer({
               placeholder="도로명 주소 및 상세주소를 입력해주세요."
               value={address}
               onChange={(e) => setAddress(e.target.value)}
-              className="input-text resize-none"
+              className="input-premium resize-none"
               required
             />
           </div>
@@ -104,7 +108,7 @@ export default function DeliveryDrawer({
             <button
               type="submit"
               disabled={isSubmitting}
-              className="btn-primary"
+              className="btn-primary py-4 text-base shadow-xl"
             >
               {isSubmitting ? "정산 처리 중..." : "이 주소로 선물 수락하기 🚀"}
             </button>
