@@ -23,6 +23,9 @@ public class CurationBox {
     @JoinColumn(name = "sender_id")
     private User sender;
 
+    @Column(name = "min_budget", nullable = false)
+    private Integer minBudget;
+
     @Column(name = "max_budget", nullable = false)
     private Integer maxBudget;
 

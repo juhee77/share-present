@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { ProductDto } from "@/lib/api";
 
@@ -21,136 +21,97 @@ export default function ProductCard({
   onOptionChange,
   hidePrice = false,
 }: ProductCardProps) {
-  const [isLiked, setIsLiked] = useState(false);
-  const [likeCount, setLikeCount] = useState(120);
-
-  useEffect(() => {
-    setLikeCount(Math.floor(Math.random() * 400) + 120);
-  }, []);
-
   const detailUrl =
     product.externalUrl ||
     `https://search.shopping.naver.com/search/all?query=${encodeURIComponent(
       product.brand + " " + product.name
     )}`;
 
-  const handleLikeClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setIsLiked(!isLiked);
-    setLikeCount((prev) => (isLiked ? prev - 1 : prev + 1));
-  };
-
   return (
     <div
       onClick={onSelect}
-      className={`insta-card cursor-pointer relative mb-5 transition-all ${
-        isSelected ? "ring-2 ring-[#121212] border-transparent" : "border-[#e6e6e6]"
+      className={`editorial-card cursor-pointer relative mb-5 transition-all duration-300 ${
+        isSelected ? "ring-1.5 ring-[#3b483a] border-transparent" : "border-[#eae6df]"
       }`}
     >
-      {/* Feed Header */}
-      <div className="p-3.5 flex items-center justify-between border-b border-[#f5f5f5]">
-        <div className="flex items-center gap-2.5">
-          <div className="insta-story-ring">
-            <div className="insta-story-inner">
-              <div className="w-7 h-7 rounded-full bg-gray-900 flex items-center justify-center text-white text-[10px] font-bold">
-                {product.brand.substring(0, 2)}
-              </div>
-            </div>
-          </div>
-          <div>
-            <div className="flex items-center gap-1">
-              <span className="text-xs font-bold text-[#121212]">{product.brand}</span>
-              <span className="text-blue-500 text-xs">✓</span>
-            </div>
-            <span className="text-[10px] text-[#737373]">Curated Selection</span>
-          </div>
-        </div>
-
-        {/* Selected Checkmark Badge */}
-        <div
-          className={`w-6 h-6 rounded-full border flex items-center justify-center transition-all ${
-            isSelected
-              ? "border-[#121212] bg-[#121212] text-white"
-              : "border-gray-300 bg-white"
-          }`}
-        >
-          {isSelected && <span className="text-xs font-bold">✓</span>}
-        </div>
-      </div>
-
       {/* Product Image Aspect Frame */}
       {product.imageUrl && (
-        <div className="aspect-[4/3] relative overflow-hidden bg-gray-50">
+        <div className="aspect-[4/3] relative overflow-hidden bg-gray-50 border-b border-[#eae6df]">
           <Image
             src={product.imageUrl}
             alt={product.name}
             fill
-            className="object-cover transition-transform duration-500 hover:scale-105"
+            className="object-cover transition-transform duration-700 hover:scale-103"
             sizes="(max-width: 600px) 100vw, 600px"
           />
           {product.isCustom && (
-            <span className="absolute top-3 left-3 bg-[#121212]/80 backdrop-blur-md text-white text-[10px] font-bold px-2.5 py-1 rounded-full">
-              ✨ Custom Item
+            <span className="absolute top-4 left-4 bg-[#3b483a] text-white text-[9px] uppercase tracking-widest font-extrabold px-2.5 py-1 rounded-md shadow-sm">
+              Custom proposal
             </span>
           )}
         </div>
       )}
 
-      {/* Instagram Action Icons Bar */}
-      <div className="px-4 pt-3 flex items-center justify-between">
-        <div className="flex items-center gap-4 text-xl">
-          <button onClick={handleLikeClick} className="transition-transform active:scale-125">
-            {isLiked ? "❤️" : "🤍"}
-          </button>
-          <span>💬</span>
-          <span>✈️</span>
+      {/* Product Description details */}
+      <div className="p-4.5">
+        <div className="flex items-start justify-between gap-4">
+          <div className="flex-1">
+            <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#a38974] block mb-1">
+              {product.brand}
+            </span>
+            <h3 className="text-base font-bold text-[#1a1a1a] leading-tight mb-1.5">
+              {product.name}
+            </h3>
+            {!hidePrice && product.price > 0 && (
+              <p className="text-sm font-extrabold text-[#3b483a] mb-2">
+                {product.price.toLocaleString()} KRW
+              </p>
+            )}
+            {product.description && (
+              <p className="text-xs text-[#5e605d] leading-relaxed mb-3">
+                {product.description}
+              </p>
+            )}
+          </div>
+
+          <div className="flex flex-col items-end justify-between h-full gap-5">
+            {/* Selection Check Circle */}
+            <div
+              className={`w-5 h-5 rounded-full border transition-all flex items-center justify-center ${
+                isSelected
+                  ? "border-[#3b483a] bg-[#3b483a] text-white shadow-sm"
+                  : "border-gray-300 bg-white"
+              }`}
+            >
+              {isSelected && (
+                <svg className="w-2.5 h-2.5 fill-none stroke-current stroke-2" viewBox="0 0 24 24">
+                  <path d="M20 6L9 17l-5-5" />
+                </svg>
+              )}
+            </div>
+
+            <a
+              href={detailUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
+              className="text-[10px] font-bold text-[#3b483a] hover:underline flex items-center gap-0.5 tracking-wider uppercase"
+            >
+              상세보기 ↗
+            </a>
+          </div>
         </div>
-        <a
-          href={detailUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={(e) => e.stopPropagation()}
-          className="text-xs font-bold text-[#121212] hover:opacity-70 flex items-center gap-0.5"
-        >
-          <span>상세보기</span>
-          <span>↗</span>
-        </a>
-      </div>
-
-      {/* Likes Count */}
-      <div className="px-4 pt-2 text-xs font-bold text-[#121212]">
-        좋아요 {likeCount.toLocaleString()}개
-      </div>
-
-      {/* Product Info & Caption */}
-      <div className="px-4 pb-4 pt-1">
-        <div className="flex items-baseline gap-2">
-          <span className="text-xs font-bold text-[#121212]">{product.brand}</span>
-          <span className="text-sm font-semibold text-[#262626]">{product.name}</span>
-        </div>
-
-        {!hidePrice && product.price > 0 && (
-          <p className="text-sm font-extrabold text-[#121212] mt-1">
-            {product.price.toLocaleString()} 원
-          </p>
-        )}
-
-        {product.description && (
-          <p className="text-xs text-[#737373] mt-1.5 leading-relaxed line-clamp-2">
-            {product.description}
-          </p>
-        )}
 
         {/* Option Selector Dropdown */}
         {isSelected && product.options && product.options.length > 0 && onOptionChange && (
-          <div className="mt-3 pt-3 border-t border-[#f5f5f5]" onClick={(e) => e.stopPropagation()}>
-            <label className="block text-[11px] font-bold uppercase tracking-wider text-[#737373] mb-1.5">
+          <div className="mt-3.5 pt-3.5 border-t border-[#eae6df]" onClick={(e) => e.stopPropagation()}>
+            <label className="block text-[10px] font-extrabold uppercase tracking-widest text-[#5e605d] mb-1.5">
               Select Option
             </label>
             <select
               value={selectedOption || ""}
               onChange={(e) => onOptionChange(e.target.value)}
-              className="input-insta text-xs py-2 bg-white"
+              className="select-editorial"
             >
               <option value="">-- 옵션을 선택해주세요 --</option>
               {product.options.map((opt) => (

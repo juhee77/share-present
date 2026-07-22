@@ -13,6 +13,10 @@ public class CreateCurationBoxRequest {
     @NotNull(message = "보내는 사람 ID는 필수입니다.")
     private Long senderId;
 
+    @NotNull(message = "최소 예산 한도는 필수입니다.")
+    @Min(value = 0, message = "예산은 0원 이상이어야 합니다.")
+    private Integer minBudget;
+
     @NotNull(message = "최대 예산 한도는 필수입니다.")
     @Min(value = 0, message = "예산은 0원 이상이어야 합니다.")
     private Integer maxBudget;

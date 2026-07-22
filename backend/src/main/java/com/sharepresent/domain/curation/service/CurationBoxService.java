@@ -36,6 +36,7 @@ public class CurationBoxService {
 
         CurationBox curationBox = CurationBox.builder()
                 .sender(sender)
+                .minBudget(request.getMinBudget())
                 .maxBudget(request.getMaxBudget())
                 .messageCard(request.getMessageCard())
                 .sharingToken(token)
@@ -117,6 +118,7 @@ public class CurationBoxService {
                 .id(box.getId())
                 .senderName(box.getSender().getNickname())
                 .messageCard(box.getMessageCard())
+                .minBudget(box.getMinBudget())
                 .maxBudget(box.getMaxBudget())
                 .sharingToken(box.getSharingToken())
                 .allowCustomInput(box.getAllowCustomInput())

@@ -11,6 +11,7 @@ export interface CustomProductPayload {
 
 export interface CreateCurationBoxRequest {
   senderId: number;
+  minBudget: number;
   maxBudget: number;
   messageCard: string;
   allowCustomInput: boolean;
@@ -35,6 +36,7 @@ export interface CurationBoxResponse {
   id: number;
   senderName: string;
   messageCard: string;
+  minBudget: number;
   maxBudget: number;
   sharingToken: string;
   allowCustomInput: boolean;
