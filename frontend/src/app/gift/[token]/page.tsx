@@ -180,12 +180,12 @@ export default function RecipientGiftPage({ params }: { params: Promise<{ token:
                 내 선물 배송 상태 조회하기 📦
               </a>
               
-              <a
-                href={`/result/${token}`}
-                className="btn-editorial-outline block text-center text-xs py-3.5 uppercase tracking-wider font-bold"
+              <button
+                onClick={() => alert(`${boxData.senderName}님에게 "따뜻한 선물 감사합니다!" 답장 카드가 전달되었습니다! 💌`)}
+                className="btn-editorial-outline block text-center text-xs py-3.5 uppercase tracking-wider font-bold w-full"
               >
-                보낸 분의 선물 전달 메시지 확인하기 ↗
-              </a>
+                {boxData.senderName}님에게 감사 카드 보내기 💌
+              </button>
             </div>
           </div>
         ) : (
