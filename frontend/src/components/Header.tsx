@@ -1,11 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 
 export default function Header() {
-  const pathname = usePathname();
-
   return (
     <header className="w-full py-4 px-6 border-b border-[#eae6df] bg-white sticky top-0 z-40">
       <div className="max-w-[540px] mx-auto flex items-center justify-between">
@@ -21,21 +18,13 @@ export default function Header() {
         <nav className="flex items-center gap-2 text-xs font-bold">
           <Link
             href="/"
-            className={`px-3 py-1.5 rounded-full transition-colors ${
-              pathname === "/"
-                ? "bg-[#3b483a] text-white"
-                : "text-[#5e605d] hover:bg-[#f6f4f0]"
-            }`}
+            className="px-3 py-1.5 rounded-full text-[#3b483a] hover:bg-[#f6f4f0] transition-colors"
           >
             선물 생성
           </Link>
           <Link
             href="/dashboard"
-            className={`px-3 py-1.5 rounded-full transition-colors ${
-              pathname === "/dashboard"
-                ? "bg-[#3b483a] text-white"
-                : "text-[#5e605d] hover:bg-[#f6f4f0]"
-            }`}
+            className="px-3 py-1.5 rounded-full text-[#3b483a] hover:bg-[#f6f4f0] transition-colors"
           >
             내 선물 보관함
           </Link>
