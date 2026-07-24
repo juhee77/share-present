@@ -181,6 +181,8 @@ public class OrderService {
                 .selectedProductBrand(prodBrand)
                 .selectedOption(order.getSelectedOption())
                 .shippingStatus(order.getShippingStatus())
+                .carrierName(order.getCarrierName())
+                .trackingNumber(order.getTrackingNumber())
                 .lockedAmount(order.getTotalAmount())
                 .finalAmount(order.getFinalAmount())
                 .refundAmount(order.getRefundAmount())

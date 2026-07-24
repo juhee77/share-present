@@ -62,7 +62,15 @@ public class Order {
 
     @Builder.Default
     @Column(name = "shipping_status", nullable = false)
-    private String shippingStatus = "PENDING";
+    private String shippingStatus = "PREPARING";
+
+    @Builder.Default
+    @Column(name = "carrier_name")
+    private String carrierName = "CJ대한통운";
+
+    @Builder.Default
+    @Column(name = "tracking_number")
+    private String trackingNumber = "6849-3012-9381";
 
     @Column(name = "paid_at")
     private LocalDateTime paidAt;

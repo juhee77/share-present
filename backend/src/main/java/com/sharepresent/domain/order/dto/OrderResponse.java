@@ -13,6 +13,8 @@ public class OrderResponse {
     private String selectedProductBrand;
     private String selectedOption;
     private String shippingStatus;
+    private String carrierName;
+    private String trackingNumber;
     private Integer lockedAmount;
     private Integer finalAmount;
     private Integer refundAmount;

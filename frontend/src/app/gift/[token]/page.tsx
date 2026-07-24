@@ -172,12 +172,21 @@ export default function RecipientGiftPage({ params }: { params: Promise<{ token:
               선택하신 선물과 배송 주소가 {boxData.senderName}님에게 잘 전달되었습니다. 예쁘게 포장하여 빠르게 배송해 드릴게요!
             </p>
 
-            <a
-              href={`/result/${token}`}
-              className="btn-editorial max-w-xs mx-auto block text-center text-xs py-4 uppercase tracking-widest font-bold shadow-md"
-            >
-              보낸 분의 선물 전달 메시지 확인하기 ↗
-            </a>
+            <div className="space-y-3 max-w-xs mx-auto">
+              <a
+                href={`/gift/track/${token}`}
+                className="btn-editorial block text-center text-xs py-4 uppercase tracking-widest font-bold shadow-md"
+              >
+                내 선물 배송 상태 조회하기 📦
+              </a>
+              
+              <a
+                href={`/result/${token}`}
+                className="btn-editorial-outline block text-center text-xs py-3.5 uppercase tracking-wider font-bold"
+              >
+                보낸 분의 선물 전달 메시지 확인하기 ↗
+              </a>
+            </div>
           </div>
         ) : (
           /* Gift Curation Selection Feed (Zero Price Exposure) */

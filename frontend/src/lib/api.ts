@@ -61,6 +61,8 @@ export interface OrderResponse {
   selectedProductBrand: string;
   selectedOption?: string;
   shippingStatus: string;
+  carrierName?: string;
+  trackingNumber?: string;
   lockedAmount: number;
   finalAmount: number;
   refundAmount: number;
