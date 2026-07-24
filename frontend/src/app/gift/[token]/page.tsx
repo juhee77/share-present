@@ -148,7 +148,7 @@ export default function RecipientGiftPage({ params }: { params: Promise<{ token:
 
   return (
     <div className="flex flex-col min-h-screen pb-16 bg-[#faf9f6]">
-      {/* 3D Ribbon Invitation Overlay */}
+      {/* Invitation Overlay */}
       {showRibbon && (
         <UnwrappingRibbon
           senderName={boxData.senderName}
@@ -160,32 +160,32 @@ export default function RecipientGiftPage({ params }: { params: Promise<{ token:
 
       <main className="p-4 flex-1 max-w-[540px] mx-auto w-full">
         {isCompleted ? (
-          /* Completion Screen */
+          /* Recipient Pure Gratitude Completion Screen (Zero Price Mention) */
           <div className="text-center py-12 editorial-card p-6 my-8 animate-fade-in border border-white">
             <div className="w-16 h-16 rounded-full bg-[#3b483a]/5 flex items-center justify-center text-3xl mx-auto mb-4">
-              ✦
+              🎁
             </div>
             <h1 className="font-serif text-3xl font-bold text-[#1a1a1a] mb-2">
               선물 수락 완료
             </h1>
             <p className="text-xs text-[#5e605d] max-w-xs mx-auto mb-8 leading-relaxed">
-              선택하신 선물과 배송지 정보가 보낸 분({boxData.senderName})에게 안전하게 전달되었습니다.
+              선택하신 선물과 배송 주소가 {boxData.senderName}님에게 잘 전달되었습니다. 예쁘게 포장하여 빠르게 배송해 드릴게요!
             </p>
 
             <a
               href={`/result/${token}`}
               className="btn-editorial max-w-xs mx-auto block text-center text-xs py-4 uppercase tracking-widest font-bold shadow-md"
             >
-              정산 결과 확인 ↗
+              보낸 분의 선물 전달 메시지 확인하기 ↗
             </a>
           </div>
         ) : (
-          /* Gift Curation Feed */
+          /* Gift Curation Selection Feed (Zero Price Exposure) */
           <>
-            {/* Sender Message Card Header */}
+            {/* Sender Personal Card */}
             <section className="editorial-card p-5 mb-5 relative overflow-hidden bg-white">
               <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#a38974] block mb-1">
-                Invitation from {boxData.senderName}
+                Personal Message from {boxData.senderName}
               </span>
               <p className="text-lg font-serif font-bold text-[#1a1a1a] mt-2 leading-relaxed border-t border-[#eae6df] pt-3">
                 "{boxData.messageCard}"
@@ -194,14 +194,14 @@ export default function RecipientGiftPage({ params }: { params: Promise<{ token:
 
             <div className="flex items-center justify-between mb-3 px-1">
               <span className="text-xs font-extrabold uppercase tracking-widest text-[#1a1a1a]">
-                Curation Archives ({boxData.items.length})
+                Curated Gift Options ({boxData.items.length})
               </span>
-              <span className="text-[10px] font-bold text-[#3b483a] bg-[#3b483a]/5 px-2 py-0.5 rounded-md">
-                1개 선택
+              <span className="text-[10px] font-bold text-[#3b483a] bg-[#3b483a]/5 px-2.5 py-1 rounded-md">
+                1가지선택
               </span>
             </div>
 
-            {/* Product Feed */}
+            {/* Product Options Feed (Prices 100% hidden) */}
             <div className="space-y-4">
               {boxData.items.map((product) => (
                 <ProductCard
@@ -211,12 +211,12 @@ export default function RecipientGiftPage({ params }: { params: Promise<{ token:
                   onSelect={() => handleProductSelect(product)}
                   selectedOption={selectedOption}
                   onOptionChange={(opt) => setSelectedOption(opt)}
-                  hidePrice={true} // Prices hidden for recipient
+                  hidePrice={true} // Prices completely hidden for recipient!
                 />
               ))}
             </div>
 
-            {/* Recipient Custom Input */}
+            {/* Recipient Custom Wish Proposal */}
             {boxData.allowCustomInput && (
               <section className="editorial-card p-4 my-5">
                 <button
@@ -225,7 +225,7 @@ export default function RecipientGiftPage({ params }: { params: Promise<{ token:
                 >
                   <span className="flex items-center gap-1.5 uppercase tracking-wider text-[11px]">
                     <span>✦</span>
-                    <span>원하는 다른 선물 직접 추가하기</span>
+                    <span>원하는 다른 선물 직접 제안하기</span>
                   </span>
                   <span>{showCustomInput ? "▲" : "▼"}</span>
                 </button>
