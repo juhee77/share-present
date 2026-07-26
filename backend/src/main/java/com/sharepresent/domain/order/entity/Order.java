@@ -8,7 +8,11 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "orders")
+@Table(name = "orders", indexes = {
+    @Index(name = "idx_orders_sender_id", columnList = "sender_id"),
+    @Index(name = "idx_orders_receiver_id", columnList = "receiver_id"),
+    @Index(name = "idx_orders_recipient_phone", columnList = "recipient_phone")
+})
 @Getter
 @Builder(toBuilder = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
