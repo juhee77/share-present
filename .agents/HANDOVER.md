@@ -27,9 +27,10 @@
 ### 4) 수령인 실시간 배송 현황 조회 (`/gift/track/[token]`)
 - 수령인이 주소지 입력 후 자신의 선물이 어느 단계에 있는지 4단계 타임라인(`선물 수락 완료` ➔ `상품 준비중` ➔ `배송 시작` ➔ `배송 완료`) 및 운송장 정보(CJ대한통운 등)로 실시간 조회 가능.
 
-### 5) 보낸 사람 대시보드 & 인기 큐레이션 랭킹 (`/dashboard`)
-- **내가 보낸 선물함**: `🟡 선택 대기 중` 카톡 링크 복사 및 `🟢 선택 완료` 건의 정산 명세서 상세 조회 지원.
-- **주간 인기 큐레이션 선물 랭킹**: 선택률 데이터를 기반으로 인기 아이템 조합 선물 상자 원클릭 생성 지원.
+### 5) 보낸 사람 & 받은 사람 통합 대시보드 (`/dashboard`)
+- **🎁 내가 받은 선물함 (NEW)**: 내가 선물 받은 아이템 리스트 관리. 수령인 가격 비노출 보안을 준수하며 `실시간 배송 조회 📦` 4단계 타임라인 바로가기 제공.
+- **💌 내가 보낸 선물함**: `🟡 선택 대기 중` 카톡 링크 복사 및 `🟢 선택 완료` 건의 정산 명세서 상세 조회 지원.
+- **🔥 주간 인기 큐레이션 랭킹**: 수령인 선택률 데이터를 기반으로 인기 아이템 조합 선물 상자 원클릭 생성 지원.
 
 ### 6) 개발자 샌드박스 오토 폴백 (Sandbox Order Fallback)
 - `OrderService.java`에서 로컬 개발 시 결제 연동(PG)이 생략된 샌드박스 상태에서도 수령인 수락 테스트가 막히지 않도록, `Order` 데이터가 없을 경우 **동적 가결제 주문 레코드를 즉시 생성**하도록 안전장치 탑재.
@@ -38,7 +39,10 @@
 
 ## 3. 주요 파일 및 코드 엔트리 포인트 (Key Code Surfaces)
 
-### 백엔드 (Java 25 / Spring Boot 3.3)
+### 백엔드 & DB 마이그레이션 (Java 25 / Spring Boot 3.3 / Flyway)
+- `backend/src/main/resources/db/migration/V1__initial_schema.sql`: Flyway V1 DDL 테이블 및 B-Tree 인덱스
+- `backend/src/main/resources/db/migration/V2__seed_initial_products.sql`: Flyway V2 초기 럭셔리 상품 시드 데이터
+- `docker-compose.yml`: PostgreSQL 16 DB 컨테이너 1방 구동 Docker 환경 파일
 - `backend/src/main/java/com/sharepresent/domain/curation/entity/CurationBox.java`: `minBudget` 컬럼 포함 JPA 엔티티
 - `backend/src/main/java/com/sharepresent/domain/curation/service/CurationBoxService.java`: 큐레이션 생성 및 토큰 조회 비즈니스 로직
 - `backend/src/main/java/com/sharepresent/domain/order/entity/Order.java`: `carrierName`, `trackingNumber`, `shippingStatus` 포함 주문/정산 엔티티
@@ -57,7 +61,7 @@
 
 ## 4. 환경 설정 및 로컬 구동 방법 (How to Run)
 
-### 1) 백엔드 실행
+### 1) 백엔드 실행 (H2 메모리 DB 기본 모드)
 ```bash
 cd backend
 ./gradlew bootRun
@@ -65,6 +69,12 @@ cd backend
 - **포트**: `8081`
 - **Swagger 문서**: `http://localhost:8081/swagger-ui/index.html`
 - **테스트 수행**: `./gradlew test` (Java 25 호환 Gradle 9.5 적용됨)
+
+### 2) 프로덕션 PostgreSQL DB 실행 (Docker Compose)
+```bash
+docker-compose up -d
+```
+- PostgreSQL 16 컨테이너(포트 5432)가 구동되며 `schema.sql` 및 `data.sql`이 자동 적용됩니다.
 
 ### 2) 프론트엔드 실행
 ```bash
