@@ -31,7 +31,9 @@ dependencies {
     // Swagger UI / OpenAPI docs
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0")
     
-    // Database
+    // Database & Migration
+    implementation("org.flywaydb:flyway-core")
+    implementation("org.flywaydb:flyway-database-postgresql")
     runtimeOnly("org.postgresql:postgresql")
     runtimeOnly("com.h2database:h2") // Local integration testing
     
