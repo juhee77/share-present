@@ -15,6 +15,7 @@ import java.util.List;
 public class ProductController {
 
     private final ProductRepository productRepository;
+    private final com.sharepresent.domain.product.service.NaverProductSearchService naverProductSearchService;
 
     @GetMapping
     public ResponseEntity<List<Product>> getProducts(
@@ -40,5 +41,11 @@ public class ProductController {
         }
 
         return ResponseEntity.ok(products);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<Product>> searchOpenProducts(@RequestParam String query) {
+        List<Product> results = naverProductSearchService.searchProducts(query);
+        return ResponseEntity.ok(results);
     }
 }
