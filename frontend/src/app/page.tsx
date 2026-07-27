@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Header from "@/components/Header";
 import ProductCard from "@/components/ProductCard";
-import { createCurationBox, ProductDto } from "@/lib/api";
+import { createCurationBox, fetchProducts, ProductDto } from "@/lib/api";
 
 const LOOKBOOK_PRODUCTS: ProductDto[] = [
   {
@@ -147,7 +147,7 @@ const LOOKBOOK_PRODUCTS: ProductDto[] = [
 ];
 
 const BUDGET_MIN_OPTIONS = [10000, 20000, 30000, 40000, 50000];
-const BUDGET_MAX_OPTIONS = [30000, 40000, 50000, 60000, 70000, 80000, 90000, 100000];
+const BUDGET_MAX_OPTIONS = [30000, 40000, 50000, 60000, 70000, 80000, 90000, 100000, 150000];
 
 export default function CreateGiftPage() {
   const [senderName, setSenderName] = useState("주희");
@@ -162,6 +162,10 @@ export default function CreateGiftPage() {
   const [allowCustomInput, setAllowCustomInput] = useState(true);
   const [selectedProductIds, setSelectedProductIds] = useState<number[]>([1, 2, 3]);
 
+  // Catalog Search & Filter State
+  const [searchKeyword, setSearchKeyword] = useState("");
+  const [products, setProducts] = useState<ProductDto[]>(LOOKBOOK_PRODUCTS);
+
   // Custom External Product State
   const [showCustomForm, setShowCustomForm] = useState(false);
   const [customBrand, setCustomBrand] = useState("");
@@ -172,6 +176,33 @@ export default function CreateGiftPage() {
   // Modal Share Link State
   const [createdToken, setCreatedToken] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Fetch backend dynamic products or filter
+  useEffect(() => {
+    async function loadDynamicProducts() {
+      try {
+        const fetched = await fetchProducts(searchKeyword, minBudget, maxBudget);
+        if (fetched && fetched.length > 0) {
+          setProducts(fetched);
+        } else {
+          // Fallback to local filtering
+          let filtered = LOOKBOOK_PRODUCTS.filter(
+            (p) => p.price >= minBudget && p.price <= maxBudget
+          );
+          if (searchKeyword) {
+            const kw = searchKeyword.toLowerCase();
+            filtered = filtered.filter(
+              (p) => p.brand.toLowerCase().includes(kw) || p.name.toLowerCase().includes(kw)
+            );
+          }
+          setProducts(filtered.length > 0 ? filtered : LOOKBOOK_PRODUCTS);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+    loadDynamicProducts();
+  }, [searchKeyword, minBudget, maxBudget]);
 
   const toggleProductSelection = (id: number) => {
     if (selectedProductIds.includes(id)) {
@@ -340,18 +371,38 @@ export default function CreateGiftPage() {
           </div>
         </section>
 
-        {/* 3. Products List */}
-        <div className="flex items-center justify-between mb-3.5 px-1">
-          <span className="text-xs font-extrabold uppercase tracking-widest text-[#1a1a1a]">
-            Curation Selection Archive
-          </span>
-          <span className="text-xs font-bold text-[#3b483a] bg-[#3b483a]/5 px-2 py-0.5 rounded-md">
-            {selectedProductIds.length}개 제안됨
-          </span>
+        {/* 3. Catalog Live Search Bar & Products List */}
+        <div className="mb-4">
+          <div className="flex items-center justify-between mb-3 px-1">
+            <span className="text-xs font-extrabold uppercase tracking-widest text-[#1a1a1a]">
+              Catalog & Live Open Search ({products.length})
+            </span>
+            <span className="text-xs font-bold text-[#3b483a] bg-[#3b483a]/5 px-2.5 py-0.5 rounded-md">
+              {selectedProductIds.length}개 제안됨
+            </span>
+          </div>
+
+          <div className="relative mb-4">
+            <input
+              type="text"
+              placeholder="🔍 수천 가지 브랜드 및 상품 실시간 검색... (예: 이솝, 탬버린즈, 딥티크, 머그)"
+              value={searchKeyword}
+              onChange={(e) => setSearchKeyword(e.target.value)}
+              className="input-editorial pl-4 pr-10 text-xs font-medium bg-white shadow-sm"
+            />
+            {searchKeyword && (
+              <button
+                onClick={() => setSearchKeyword("")}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-bold text-gray-400 hover:text-black"
+              >
+                ✕
+              </button>
+            )}
+          </div>
         </div>
 
         <div className="space-y-4">
-          {LOOKBOOK_PRODUCTS.map((product) => {
+          {products.map((product) => {
             const isSelected = selectedProductIds.includes(Number(product.id));
             return (
               <ProductCard

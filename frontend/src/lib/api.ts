@@ -119,3 +119,16 @@ export async function prePayOrder(curationBoxId: number, paymentKey: string): Pr
   }
   return res.json();
 }
+
+export async function fetchProducts(keyword?: string, minBudget?: number, maxBudget?: number): Promise<ProductDto[]> {
+  const params = new URLSearchParams();
+  if (keyword) params.append("keyword", keyword);
+  if (minBudget) params.append("minBudget", minBudget.toString());
+  if (maxBudget) params.append("maxBudget", maxBudget.toString());
+
+  const res = await fetch(`${BASE_URL}/products?${params.toString()}`);
+  if (!res.ok) {
+    return [];
+  }
+  return res.json();
+}
