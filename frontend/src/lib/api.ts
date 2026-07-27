@@ -132,3 +132,11 @@ export async function fetchProducts(keyword?: string, minBudget?: number, maxBud
   }
   return res.json();
 }
+
+export async function searchOpenProducts(query: string): Promise<ProductDto[]> {
+  const res = await fetch(`${BASE_URL}/products/search?query=${encodeURIComponent(query)}`);
+  if (!res.ok) {
+    return [];
+  }
+  return res.json();
+}

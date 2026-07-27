@@ -42,6 +42,7 @@
 ### 백엔드 & DB 마이그레이션 (Java 25 / Spring Boot 3.3 / Flyway)
 - `backend/src/main/resources/db/migration/V1__initial_schema.sql`: Flyway V1 DDL 테이블 및 B-Tree 인덱스
 - `backend/src/main/resources/db/migration/V2__seed_initial_products.sql`: Flyway V2 초기 럭셔리 상품 시드 데이터
+- `backend/src/main/resources/db/migration/V3__expand_popular_gifts_catalog.sql`: Flyway V3 16종 명품 브랜드 카탈로그 확장 시드 데이터
 - `docker-compose.yml`: PostgreSQL 16 DB 컨테이너 1방 구동 Docker 환경 파일
 - `backend/src/main/java/com/sharepresent/domain/curation/entity/CurationBox.java`: `minBudget` 컬럼 포함 JPA 엔티티
 - `backend/src/main/java/com/sharepresent/domain/curation/service/CurationBoxService.java`: 큐레이션 생성 및 토큰 조회 비즈니스 로직

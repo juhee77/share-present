@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Header from "@/components/Header";
 import ProductCard from "@/components/ProductCard";
-import { createCurationBox, fetchProducts, ProductDto } from "@/lib/api";
+import { createCurationBox, fetchProducts, searchOpenProducts, ProductDto } from "@/lib/api";
 
 const LOOKBOOK_PRODUCTS: ProductDto[] = [
   {
@@ -181,6 +181,14 @@ export default function CreateGiftPage() {
   useEffect(() => {
     async function loadDynamicProducts() {
       try {
+        if (searchKeyword && searchKeyword.trim().length >= 2) {
+          const openSearchRes = await searchOpenProducts(searchKeyword.trim());
+          if (openSearchRes && openSearchRes.length > 0) {
+            setProducts(openSearchRes);
+            return;
+          }
+        }
+
         const fetched = await fetchProducts(searchKeyword, minBudget, maxBudget);
         if (fetched && fetched.length > 0) {
           setProducts(fetched);
