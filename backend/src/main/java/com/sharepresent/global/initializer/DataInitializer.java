@@ -78,11 +78,87 @@ public class DataInitializer implements CommandLineRunner {
                     .description("천연 에센셜 오일 블렌딩으로 심신을 안정시키고 평온한 무드를 제안하는 홈 캔들.")
                     .icon("candle")
                     .options(List.of("유칼립투스 라벤더", "패츌리 샌달우드"))
+                    .build(),
+                Product.builder()
+                    .brand("TAMBURINS")
+                    .name("퍼퓸 핸드크림 CHAMO (30ml)")
+                    .price(32000)
+                    .description("진득한 카모마일의 약초 향과 따스한 우디 가드의 부드러움이 감도는 탬버린즈 시그니처 핸드크림.")
+                    .icon("cream")
+                    .options(List.of("CHAMO", "BERGA SANDAL", "LALE"))
+                    .build(),
+                Product.builder()
+                    .brand("AESOP")
+                    .name("레저렉션 아로마틱 핸드 밤 (75ml)")
+                    .price(39000)
+                    .description("지친 손에 유분기 없는 풍부한 수분감을 공급하는 이솝의 아이코닉 시트러스 우디 핸드밤.")
+                    .icon("balm")
+                    .build(),
+                Product.builder()
+                    .brand("DIPTYQUE")
+                    .name("미니 센티드 캔들 베이 (70g)")
+                    .price(68000)
+                    .description("장미 꽃다발의 향과 블랙커런트 잎의 싱그러운 도회적 노트가 조화로운 딥티크 시그니처 캔들.")
+                    .icon("candle")
+                    .options(List.of("베이(Baies)", "장미(Roses)", "피기에(Figuier)"))
+                    .build(),
+                Product.builder()
+                    .brand("SABRE")
+                    .name("비스트로 디너 카트러리 2인 세트")
+                    .price(46000)
+                    .description("파리 카페의 감성을 담아낸 컬러풀하고 세련된 프랑스 프리미엄 카트러리 세트.")
+                    .icon("cutlery")
+                    .options(List.of("아이보리", "티크", "타코이즈"))
+                    .build(),
+                Product.builder()
+                    .brand("KINTO")
+                    .name("데이오프 텀블러 (500ml)")
+                    .price(42000)
+                    .description("부드러운 손잡이와 은은한 파스텔 톤 코팅으로 일상 속 휴식을 선사하는 킨토 스테인리스 텀블러.")
+                    .icon("tumbler")
+                    .options(List.of("무스타치 화이트", "페일 블루", "카키"))
+                    .build(),
+                Product.builder()
+                    .brand("LE LABO")
+                    .name("상탈 33 바디 로션 (237ml)")
+                    .price(98000)
+                    .description("스모키한 피망과 카드멈, 바이올렛 향이 아우러져 개성을 완성하는 르라보의 클래식 로션.")
+                    .icon("lotion")
+                    .build(),
+                Product.builder()
+                    .brand("MAISON MARGIELA")
+                    .name("레이지 선데이 모닝 디퓨저 (185ml)")
+                    .price(118000)
+                    .description("깨끗하게 세탁된 갓 다린 리넨 이불에서 느껴지는 포근하고 부드러운 화이트 머스크 향.")
+                    .icon("diffuser")
+                    .build(),
+                Product.builder()
+                    .brand("HAY")
+                    .name("클리어 그래픽 유리컵 & 트레이 세트")
+                    .price(54000)
+                    .description("덴마크 북유럽 감성의 덴마크 HAY 그래픽 기하학 패턴 테이블웨어 세트.")
+                    .icon("tray")
+                    .options(List.of("옐로우 트레이", "그린 트레이"))
+                    .build(),
+                Product.builder()
+                    .brand("SANTA MARIA NOVELLA")
+                    .name("프리지아 고체 향수 왁스 태블릿")
+                    .price(58000)
+                    .description("피렌체 전통 제조법으로 꽃잎을 굳혀 옷장과 드레스룸을 고급스러운 프리지아 향으로 채워주는 왁스.")
+                    .icon("wax")
+                    .build(),
+                Product.builder()
+                    .brand("BANG & OLUFSEN")
+                    .name("베오사운드 A1 2nd Gen 포터블 스피커")
+                    .price(145000)
+                    .description("덴마크 뱅앤올룹슨의 명품 방수 블루투스 스피커. 아노다이징 알루미늄 돔 케이싱.")
+                    .icon("speaker")
+                    .options(List.of("블랙 앤트러사이트", "샤방 핑크", "골드 톤"))
                     .build()
             );
 
             productRepository.saveAll(defaultProducts);
-            System.out.println("★ [DataInitializer] 6 premium products initialized in database.");
+            System.out.println("★ [DataInitializer] 16 premium luxury products initialized in database.");
         }
     }
 }
