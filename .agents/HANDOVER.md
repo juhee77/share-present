@@ -32,8 +32,10 @@
 - **💌 내가 보낸 선물함**: `🟡 선택 대기 중` 카톡 링크 복사 및 `🟢 선택 완료` 건의 정산 명세서 상세 조회 지원.
 - **🔥 주간 인기 큐레이션 랭킹**: 수령인 선택률 데이터를 기반으로 인기 아이템 조합 선물 상자 원클릭 생성 지원.
 
-### 6) 개발자 샌드박스 오토 폴백 (Sandbox Order Fallback)
-- `OrderService.java`에서 로컬 개발 시 결제 연동(PG)이 생략된 샌드박스 상태에서도 수령인 수락 테스트가 막히지 않도록, `Order` 데이터가 없을 경우 **동적 가결제 주문 레코드를 즉시 생성**하도록 안전장치 탑재.
+### 7) 상황별 프리셋, D-Day 만료 타이머 & 감사 답장 카드 (NEW)
+- **상황별 1초 큐레이션 프리셋**: 생일, 집들이, 이직/퇴사, 신혼/출산, 힐링 5개 칩 버튼으로 1초 만에 예산과 선물 추천 자동 세팅.
+- **선물 수락 기한 D-Day 타이머**: `⏳ 선물 수락 기한: D-7 (미수락 시 자동 환불)` 상단 안내 뱃지 제공.
+- **수령인의 감성 감사 답장 카드**: 수령인이 선물 수락 후 스티커와 답장 메시지를 전송하는 대화형 모달 (`orders` DB 테이블 연동).
 
 ---
 
@@ -43,6 +45,7 @@
 - `backend/src/main/resources/db/migration/V1__initial_schema.sql`: Flyway V1 DDL 테이블 및 B-Tree 인덱스
 - `backend/src/main/resources/db/migration/V2__seed_initial_products.sql`: Flyway V2 초기 럭셔리 상품 시드 데이터
 - `backend/src/main/resources/db/migration/V3__expand_popular_gifts_catalog.sql`: Flyway V3 16종 명품 브랜드 카탈로그 확장 시드 데이터
+- `backend/src/main/resources/db/migration/V4__add_thank_you_reply_card.sql`: Flyway V4 수령인 감사 답장 카드 DB 컬럼 확장 DDL
 - `docker-compose.yml`: PostgreSQL 16 DB 컨테이너 1방 구동 Docker 환경 파일
 - `backend/src/main/java/com/sharepresent/domain/curation/entity/CurationBox.java`: `minBudget` 컬럼 포함 JPA 엔티티
 - `backend/src/main/java/com/sharepresent/domain/curation/service/CurationBoxService.java`: 큐레이션 생성 및 토큰 조회 비즈니스 로직
