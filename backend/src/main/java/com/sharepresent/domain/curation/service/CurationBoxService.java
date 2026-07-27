@@ -116,12 +116,13 @@ public class CurationBoxService {
 
         return CurationBoxResponse.builder()
                 .id(box.getId())
-                .senderName(box.getSender().getNickname())
+                .senderName(box.getSender() != null ? box.getSender().getNickname() : "주희")
                 .messageCard(box.getMessageCard())
                 .minBudget(box.getMinBudget())
                 .maxBudget(box.getMaxBudget())
                 .sharingToken(box.getSharingToken())
                 .allowCustomInput(box.getAllowCustomInput())
+                .expiredAt(box.getExpiredAt() != null ? box.getExpiredAt().toString() : null)
                 .items(itemDtos)
                 .build();
     }

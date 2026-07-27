@@ -81,4 +81,10 @@ public class Order {
 
     @Column(name = "settled_at")
     private LocalDateTime settledAt;
+
+    @Column(name = "thank_you_sticker")
+    private String thankYouSticker;
+
+    @Column(name = "thank_you_message", columnDefinition = "TEXT")
+    private String thankYouMessage;
 }

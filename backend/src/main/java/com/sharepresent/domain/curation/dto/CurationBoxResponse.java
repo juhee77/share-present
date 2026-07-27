@@ -16,6 +16,7 @@ public class CurationBoxResponse {
     private Integer maxBudget;
     private String sharingToken;
     private Boolean allowCustomInput;
+    private String expiredAt;
     private List<ProductDto> items;
 
     @Getter
