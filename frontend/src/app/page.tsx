@@ -149,6 +149,49 @@ const LOOKBOOK_PRODUCTS: ProductDto[] = [
 const BUDGET_MIN_OPTIONS = [10000, 20000, 30000, 40000, 50000];
 const BUDGET_MAX_OPTIONS = [30000, 40000, 50000, 60000, 70000, 80000, 90000, 100000, 150000];
 
+const OCCASION_PRESETS = [
+  {
+    id: "birthday",
+    label: "🎂 생일 축하",
+    minBudget: 30000,
+    maxBudget: 60000,
+    message: "생일 진심으로 축하해! 마음에 드는 선물 하나 골라주면 주소지로 바로 보내줄게 🎁",
+    productIds: [1, 2, 7],
+  },
+  {
+    id: "housewarming",
+    label: "🏡 집들이",
+    minBudget: 40000,
+    maxBudget: 80000,
+    message: "새 보금자리 입주를 축하해! 공간을 아늑하게 채워줄 잇템으로 골라봐 🌿",
+    productIds: [4, 6, 10],
+  },
+  {
+    id: "career",
+    label: "💼 이직/퇴사",
+    minBudget: 30000,
+    maxBudget: 50000,
+    message: "새로운 시작을 축하하고 응원해! 언제나 너의 도전을 응원하고 있어 ✦",
+    productIds: [3, 7, 11],
+  },
+  {
+    id: "wedding",
+    label: "👶 신혼/출산",
+    minBudget: 50000,
+    maxBudget: 120000,
+    message: "소중한 기쁨을 함께 나눠서 너무 기뻐! 행복 가득한 날들 보내 💐",
+    productIds: [5, 9, 14],
+  },
+  {
+    id: "healing",
+    label: "🌿 힐링/위로",
+    minBudget: 30000,
+    maxBudget: 50000,
+    message: "요즘 고생 많았지? 소소하지만 마음 담은 선물로 힐링 타임 갖길 바랄게 ☕",
+    productIds: [2, 8, 15],
+  },
+];
+
 export default function CreateGiftPage() {
   const [senderName, setSenderName] = useState("주희");
   const [messageCard, setMessageCard] = useState(
@@ -158,9 +201,18 @@ export default function CreateGiftPage() {
   // Double-bound budget range states
   const [minBudget, setMinBudget] = useState(30000);
   const [maxBudget, setMaxBudget] = useState(60000);
+  const [activePreset, setActivePreset] = useState<string>("birthday");
   
   const [allowCustomInput, setAllowCustomInput] = useState(true);
-  const [selectedProductIds, setSelectedProductIds] = useState<number[]>([1, 2, 3]);
+  const [selectedProductIds, setSelectedProductIds] = useState<number[]>([1, 2, 7]);
+
+  const applyPreset = (preset: typeof OCCASION_PRESETS[0]) => {
+    setActivePreset(preset.id);
+    setMinBudget(preset.minBudget);
+    setMaxBudget(preset.maxBudget);
+    setMessageCard(preset.message);
+    setSelectedProductIds(preset.productIds);
+  };
 
   // Catalog Search & Filter State
   const [searchKeyword, setSearchKeyword] = useState("");
@@ -283,6 +335,26 @@ export default function CreateGiftPage() {
           <p className="text-xs text-[#5e605d] mt-2 max-w-xs mx-auto leading-relaxed">
             보내는 분의 예산 범위를 설정하고, 제안하고 싶은 프리미엄 선물 리스트를 작성하세요.
           </p>
+
+          {/* Quick Occasion Preset Chips */}
+          <div className="mt-5 flex items-center justify-center gap-2 overflow-x-auto pb-1 scrollbar-none">
+            {OCCASION_PRESETS.map((preset) => {
+              const isActive = activePreset === preset.id;
+              return (
+                <button
+                  key={preset.id}
+                  onClick={() => applyPreset(preset)}
+                  className={`px-3 py-1.5 rounded-full text-[11px] font-bold transition-all whitespace-nowrap border ${
+                    isActive
+                      ? "bg-[#3b483a] text-white border-[#3b483a] shadow-sm"
+                      : "bg-white text-[#5e605d] border-[#eae6df] hover:border-[#3b483a]"
+                  }`}
+                >
+                  {preset.label}
+                </button>
+              );
+            })}
+          </div>
         </div>
 
         {/* 1. Sender Info Card */}

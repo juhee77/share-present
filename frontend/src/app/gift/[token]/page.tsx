@@ -30,6 +30,12 @@ export default function RecipientGiftPage({ params }: { params: Promise<{ token:
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isCompleted, setIsCompleted] = useState(false);
 
+  // Feature 4: Thank-You Reply Card Modal State
+  const [showThankYouModal, setShowThankYouModal] = useState(false);
+  const [thankYouSticker, setThankYouSticker] = useState("💖 취향저격 고마워!");
+  const [thankYouMsg, setThankYouMsg] = useState("예쁜 선물 골라줘서 너무 고마워! 예쁘게 잘 쓸게 🎁");
+  const [thankYouSent, setThankYouSent] = useState(false);
+
   useEffect(() => {
     async function loadBox() {
       try {
@@ -158,6 +164,17 @@ export default function RecipientGiftPage({ params }: { params: Promise<{ token:
 
       <Header />
 
+      {/* Feature 3: Gift Expiration D-Day Banner */}
+      <div className="bg-[#3b483a]/10 border-b border-[#3b483a]/20 py-2.5 px-4 text-center">
+        <p className="text-[11px] font-bold text-[#3b483a] flex items-center justify-center gap-1.5">
+          <span>⏳</span>
+          <span>선물 수락 기한: D-7 (6일 23시간 남음)</span>
+          <span className="text-[10px] text-[#5e605d] font-normal hidden sm:inline">
+            · 기한 내 미수락 시 보내는 이에게 자동 환불됩니다
+          </span>
+        </p>
+      </div>
+
       <main className="p-4 flex-1 max-w-[540px] mx-auto w-full">
         {isCompleted ? (
           /* Recipient Pure Gratitude Completion Screen (Zero Price Mention) */
@@ -172,6 +189,16 @@ export default function RecipientGiftPage({ params }: { params: Promise<{ token:
               선택하신 선물과 배송 주소가 {boxData.senderName}님에게 잘 전달되었습니다. 예쁘게 포장하여 빠르게 배송해 드릴게요!
             </p>
 
+            {thankYouSent && (
+              <div className="mb-6 p-4 bg-[#f6f4f0] rounded-xl border border-[#eae6df] text-left">
+                <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#a38974] block mb-1">
+                  Sent Thank-You Reply
+                </span>
+                <p className="text-xs font-bold text-[#1a1a1a] mb-1">{thankYouSticker}</p>
+                <p className="text-xs text-[#5e605d] font-serif">"{thankYouMsg}"</p>
+              </div>
+            )}
+
             <div className="space-y-3 max-w-xs mx-auto">
               <a
                 href={`/gift/track/${token}`}
@@ -181,10 +208,10 @@ export default function RecipientGiftPage({ params }: { params: Promise<{ token:
               </a>
               
               <button
-                onClick={() => alert(`${boxData.senderName}님에게 "따뜻한 선물 감사합니다!" 답장 카드가 전달되었습니다! 💌`)}
+                onClick={() => setShowThankYouModal(true)}
                 className="btn-editorial-outline block text-center text-xs py-3.5 uppercase tracking-wider font-bold w-full"
               >
-                {boxData.senderName}님에게 감사 카드 보내기 💌
+                {thankYouSent ? "감사 카드 수정하기 💌" : `${boxData.senderName}님에게 감사 카드 보내기 💌`}
               </button>
             </div>
           </div>
@@ -292,6 +319,79 @@ export default function RecipientGiftPage({ params }: { params: Promise<{ token:
         selectedProductName={selectedProductName}
         isSubmitting={isSubmitting}
       />
+
+      {/* Feature 4: Recipient Thank-You Reply Card Modal */}
+      {showThankYouModal && (
+        <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex items-center justify-center p-5 animate-fade-in">
+          <div className="bg-white rounded-2xl p-6 max-w-sm w-full shadow-2xl border border-[#eae6df]">
+            <div className="flex items-center justify-between mb-3 pb-2 border-b border-[#eae6df]">
+              <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#a38974]">
+                Thank-You Card
+              </span>
+              <button
+                onClick={() => setShowThankYouModal(false)}
+                className="text-xs font-bold text-gray-400 hover:text-black"
+              >
+                ✕
+              </button>
+            </div>
+
+            <h2 className="text-lg font-bold text-[#1a1a1a] mb-1">
+              {boxData.senderName}님에게 감사 카드 작성
+            </h2>
+            <p className="text-xs text-[#5e605d] mb-4">
+              따뜻한 마음을 담아 스티커와 답장 메시지를 전달해보세요.
+            </p>
+
+            {/* Sticker Selection */}
+            <div className="space-y-2 mb-4">
+              <label className="block text-[11px] font-bold text-[#5e605d] uppercase tracking-wider">
+                감사 스티커 선택
+              </label>
+              <div className="grid grid-cols-2 gap-2">
+                {["💖 취향저격 고마워!", "✨ 예쁜 선물 감동이야", "🎁 예쁘게 잘 쓸게!", "☕ 힐링 타임 가질게"].map((stk) => (
+                  <button
+                    key={stk}
+                    type="button"
+                    onClick={() => setThankYouSticker(stk)}
+                    className={`p-2.5 rounded-xl text-xs font-bold transition-all text-left border ${
+                      thankYouSticker === stk
+                        ? "bg-[#3b483a] text-white border-[#3b483a]"
+                        : "bg-[#faf9f6] text-[#1a1a1a] border-[#eae6df]"
+                    }`}
+                  >
+                    {stk}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Message Textarea */}
+            <div className="mb-5">
+              <label className="block text-[11px] font-bold text-[#5e605d] uppercase tracking-wider mb-1.5">
+                답장 메시지
+              </label>
+              <textarea
+                rows={3}
+                value={thankYouMsg}
+                onChange={(e) => setThankYouMsg(e.target.value)}
+                className="input-editorial resize-none font-serif text-xs"
+              />
+            </div>
+
+            <button
+              onClick={() => {
+                setThankYouSent(true);
+                setShowThankYouModal(false);
+                alert(`${boxData.senderName}님에게 감사 카드와 답장이 전달되었습니다! 💌`);
+              }}
+              className="btn-editorial py-3.5 text-xs tracking-wider uppercase font-bold"
+            >
+              감사 카드 전송하기 💌
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
