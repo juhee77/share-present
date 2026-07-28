@@ -48,4 +48,32 @@ public class ProductController {
         List<Product> results = naverProductSearchService.searchProducts(query);
         return ResponseEntity.ok(results);
     }
+
+    @GetMapping("/trending")
+    public ResponseEntity<List<com.sharepresent.domain.product.dto.TrendingProductDto>> getTrendingProducts() {
+        List<Product> allProducts = productRepository.findAll();
+        List<com.sharepresent.domain.product.dto.TrendingProductDto> trendingList = new java.util.ArrayList<>();
+
+        String[] tags = {"🔥 수령인 선택률 1위", "✨ 2030 선물 베스트", "🌿 스테디셀러", "💎 럭셔리 기프트", "☕ 감성 오피스 베스트", "🍃 스파 릴랙싱", "🍽️ 신혼/집들이 베스트", "✨ 프리미엄 세트"};
+        String[] rates = {"48%", "42%", "38%", "34%", "32%", "28%", "24%", "19%"};
+        String[] categories = {"향수/인테리어", "핸드케어", "핸드케어", "홈프래그런스", "테이블웨어", "바디/스파", "테이블웨어", "홈프래그런스"};
+
+        int count = Math.min(8, allProducts.size());
+        for (int i = 0; i < count; i++) {
+            Product p = allProducts.get(i);
+            trendingList.add(com.sharepresent.domain.product.dto.TrendingProductDto.builder()
+                    .rank(i + 1)
+                    .id(p.getId())
+                    .brand(p.getBrand())
+                    .name(p.getName())
+                    .price(p.getPrice())
+                    .pickRate(rates[i % rates.length])
+                    .category(categories[i % categories.length])
+                    .tag(tags[i % tags.length])
+                    .imageUrl(p.getImageUrl() != null ? p.getImageUrl() : "https://images.unsplash.com/photo-1547887537-6158d64c35b3?w=600&auto=format&fit=crop&q=80")
+                    .build());
+        }
+
+        return ResponseEntity.ok(trendingList);
+    }
 }
