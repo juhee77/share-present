@@ -76,4 +76,50 @@ public class ProductController {
 
         return ResponseEntity.ok(trendingList);
     }
+
+    @GetMapping("/md-picks")
+    public ResponseEntity<List<com.sharepresent.domain.product.dto.MdPickProductDto>> getMdPicks() {
+        List<Product> allProducts = productRepository.findAll();
+        List<com.sharepresent.domain.product.dto.MdPickProductDto> mdPicks = new java.util.ArrayList<>();
+
+        if (allProducts.size() >= 3) {
+            mdPicks.add(com.sharepresent.domain.product.dto.MdPickProductDto.builder()
+                    .id(allProducts.get(1).getId())
+                    .brand(allProducts.get(1).getBrand())
+                    .name(allProducts.get(1).getName())
+                    .price(allProducts.get(1).getPrice())
+                    .description(allProducts.get(1).getDescription())
+                    .editorBadge("🌟 Editor's Top Pick")
+                    .mdComment("방 안을 감싸는 서늘하고 은은한 오크모스 향. 남녀노소 호불호 없이 모두가 만족하는 시그니처 1위 선물.")
+                    .imageUrl(allProducts.get(1).getImageUrl())
+                    .options(allProducts.get(1).getOptions())
+                    .build());
+
+            mdPicks.add(com.sharepresent.domain.product.dto.MdPickProductDto.builder()
+                    .id(allProducts.get(0).getId())
+                    .brand(allProducts.get(0).getBrand())
+                    .name(allProducts.get(0).getName())
+                    .price(allProducts.get(0).getPrice())
+                    .description(allProducts.get(0).getDescription())
+                    .editorBadge("☕ Tableware Pick")
+                    .mdComment("설악산의 모래 질감을 미니멀하게 표현한 내추럴 도자기 컵. 데일리 오피스 머그로 강력 추천합니다.")
+                    .imageUrl(allProducts.get(0).getImageUrl())
+                    .options(allProducts.get(0).getOptions())
+                    .build());
+
+            mdPicks.add(com.sharepresent.domain.product.dto.MdPickProductDto.builder()
+                    .id(allProducts.get(6).getId())
+                    .brand("TAMBURINS")
+                    .name("퍼퓸 핸드크림 CHAMO (30ml)")
+                    .price(32000)
+                    .description("진득한 카모마일과 부드러운 우디 가드의 부드러움.")
+                    .editorBadge("✨ Fragrance Pick")
+                    .mdComment("진득한 카모마일의 약초 향과 은은한 세이지의 조화. 주는 이와 받는 이 모두 감각적인 기분 유도.")
+                    .imageUrl("https://images.unsplash.com/photo-1617897903246-719242758050?w=600&auto=format&fit=crop&q=80")
+                    .options(List.of("CHAMO", "BERGA SANDAL", "LALE"))
+                    .build());
+        }
+
+        return ResponseEntity.ok(mdPicks);
+    }
 }

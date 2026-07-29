@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Header from "@/components/Header";
 import ProductCard from "@/components/ProductCard";
+import MdPickSection from "@/components/MdPickSection";
 import { createCurationBox, fetchProducts, searchOpenProducts, ProductDto } from "@/lib/api";
 
 const LOOKBOOK_PRODUCTS: ProductDto[] = [
@@ -356,6 +357,16 @@ export default function CreateGiftPage() {
             })}
           </div>
         </div>
+
+        {/* Feature: Today's MD Pick Showcase */}
+        <MdPickSection
+          onSelectMdPick={(id) => {
+            if (!selectedProductIds.includes(id)) {
+              setSelectedProductIds([...selectedProductIds, id]);
+            }
+            alert("선택하신 MD Pick 아이템이 큐레이션 세팅에 추가되었습니다! ✦");
+          }}
+        />
 
         {/* 1. Sender Info Card */}
         <section className="editorial-card p-5 mb-5">
