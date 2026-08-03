@@ -17,6 +17,8 @@ interface MockSentBox {
   selectedOption?: string;
   refundAmount?: number;
   shippingStatus?: string;
+  thankYouSticker?: string;
+  thankYouMessage?: string;
 }
 
 interface MockReceivedBox {
@@ -48,6 +50,8 @@ const MOCK_SENT_BOXES: MockSentBox[] = [
     selectedOption: "샌드 화이트",
     refundAmount: 22000,
     shippingStatus: "PREPARING",
+    thankYouSticker: "💖 취향저격 고마워!",
+    thankYouMessage: "예쁜 선물 골라줘서 너무 고마워! 오피스 머그로 너무 예쁘게 잘 쓸게 ☕",
   },
   {
     id: 2,
@@ -361,6 +365,20 @@ export default function SenderDashboardPage() {
                     </>
                   )}
                 </div>
+
+                {box.thankYouMessage && (
+                  <div className="mb-4 p-3.5 bg-white rounded-xl border border-[#3b483a]/30 shadow-sm relative overflow-hidden">
+                    <span className="text-[9px] font-extrabold uppercase tracking-widest text-[#a38974] block mb-1">
+                      💌 Recipient's Thank-You Card
+                    </span>
+                    <span className="text-xs font-bold text-[#3b483a] block mb-1">
+                      {box.thankYouSticker}
+                    </span>
+                    <p className="text-xs text-[#1a1a1a] font-serif leading-relaxed italic">
+                      "{box.thankYouMessage}"
+                    </p>
+                  </div>
+                )}
 
                 <div className="flex gap-2">
                   {box.status === "COMPLETED" ? (

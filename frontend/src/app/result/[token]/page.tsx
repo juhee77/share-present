@@ -65,6 +65,102 @@ export default function OrderResultPage({ params }: { params: Promise<{ token: s
     alert("선물 정산 정보가 클립보드에 복사되었습니다!");
   };
 
+  const handleDownloadReceiptImage = () => {
+    // Generate SVG/Canvas Graphic for Settlement Card
+    const canvas = document.createElement("canvas");
+    canvas.width = 600;
+    canvas.height = 750;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    // Background
+    ctx.fillStyle = "#faf9f6";
+    ctx.fillRect(0, 0, 600, 750);
+
+    // Card background
+    ctx.fillStyle = "#ffffff";
+    ctx.roundRect(40, 40, 520, 670, 24);
+    ctx.fill();
+    ctx.strokeStyle = "#eae6df";
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // Brand Header
+    ctx.fillStyle = "#a38974";
+    ctx.font = "bold 12px sans-serif";
+    ctx.fillText("SHAREPRESENT SETTLEMENT REPORT", 70, 90);
+
+    ctx.fillStyle = "#1a1a1a";
+    ctx.font = "bold 26px serif";
+    ctx.fillText("선물 선택 및 정산 명세서", 70, 130);
+
+    // Divider
+    ctx.strokeStyle = "#eae6df";
+    ctx.beginPath();
+    ctx.moveTo(70, 160);
+    ctx.lineTo(530, 160);
+    ctx.stroke();
+
+    // Selected Item
+    ctx.fillStyle = "#3b483a";
+    ctx.font = "bold 13px sans-serif";
+    ctx.fillText(order.selectedProductBrand.toUpperCase(), 70, 200);
+
+    ctx.fillStyle = "#1a1a1a";
+    ctx.font = "bold 20px sans-serif";
+    ctx.fillText(order.selectedProductName, 70, 235);
+
+    if (order.selectedOption) {
+      ctx.fillStyle = "#5e605d";
+      ctx.font = "14px sans-serif";
+      ctx.fillText(`선택 옵션: ${order.selectedOption}`, 70, 270);
+    }
+
+    // Amounts Box
+    ctx.fillStyle = "#faf9f6";
+    ctx.roundRect(70, 310, 460, 280, 16);
+    ctx.fill();
+    ctx.strokeStyle = "#eae6df";
+    ctx.stroke();
+
+    ctx.fillStyle = "#5e605d";
+    ctx.font = "14px sans-serif";
+    ctx.fillText("상한 예산 가결제 보관액", 95, 360);
+    ctx.fillStyle = "#1a1a1a";
+    ctx.font = "bold 16px sans-serif";
+    ctx.fillText(`${order.lockedAmount.toLocaleString()} 원`, 380, 360);
+
+    ctx.fillStyle = "#5e605d";
+    ctx.font = "14px sans-serif";
+    ctx.fillText("선택 상품 최종 결제액", 95, 410);
+    ctx.fillStyle = "#3b483a";
+    ctx.font = "bold 18px sans-serif";
+    ctx.fillText(`${order.finalAmount.toLocaleString()} 원`, 380, 410);
+
+    ctx.strokeStyle = "#eae6df";
+    ctx.beginPath();
+    ctx.moveTo(95, 445);
+    ctx.lineTo(505, 445);
+    ctx.stroke();
+
+    ctx.fillStyle = "#3b483a";
+    ctx.font = "bold 16px sans-serif";
+    ctx.fillText("카드 자동 부분 취소 환불액", 95, 490);
+    ctx.font = "bold 22px sans-serif";
+    ctx.fillText(`${order.refundAmount.toLocaleString()} 원`, 380, 490);
+
+    // Footer
+    ctx.fillStyle = "#a38974";
+    ctx.font = "italic 13px serif";
+    ctx.fillText("✦ SharePresent - 마음을 전하는 가장 세련된 방법", 70, 655);
+
+    // Trigger PNG Download
+    const link = document.createElement("a");
+    link.download = `sharepresent_settlement_${token}.png`;
+    link.href = canvas.toDataURL("image/png");
+    link.click();
+  };
+
   return (
     <div className="flex flex-col min-h-screen pb-16 bg-[#faf9f6]">
       <Header />
@@ -137,18 +233,25 @@ export default function OrderResultPage({ params }: { params: Promise<{ token: s
 
         {/* Action Buttons */}
         <div className="space-y-3">
+          <button
+            onClick={handleDownloadReceiptImage}
+            className="btn-editorial py-4 text-xs font-bold uppercase tracking-widest text-center block w-full shadow-md"
+          >
+            정산 명세서 카드 이미지 저장하기 📸
+          </button>
+
           {order.externalUrl && (
             <a
               href={order.externalUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="btn-editorial py-4 text-xs font-bold uppercase tracking-widest text-center block shadow-md"
+              className="btn-editorial-outline py-3.5 text-xs font-bold uppercase tracking-widest text-center block"
             >
               외부 쇼핑몰에서 직접 구매하기 ↗
             </a>
           )}
 
-          <button onClick={handleCopyAddress} className="btn-editorial-outline py-3.5 text-xs font-bold uppercase tracking-wider">
+          <button onClick={handleCopyAddress} className="btn-editorial-outline py-3.5 text-xs font-bold uppercase tracking-wider w-full">
             선물 정산 및 배송 내역 복사하기 📋
           </button>
         </div>
