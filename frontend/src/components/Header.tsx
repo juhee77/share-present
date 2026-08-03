@@ -28,6 +28,12 @@ export default function Header() {
           >
             내 선물 보관함
           </Link>
+          <Link
+            href="/support"
+            className="px-3 py-1.5 rounded-full text-[#3b483a] hover:bg-[#f6f4f0] transition-colors"
+          >
+            고객센터
+          </Link>
         </nav>
       </div>
     </header>
