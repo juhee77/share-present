@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Header from "@/components/Header";
 import ProductCard from "@/components/ProductCard";
 import MdPickSection from "@/components/MdPickSection";
+import ShareModal from "@/components/ShareModal";
 import { createCurationBox, fetchProducts, searchOpenProducts, ProductDto } from "@/lib/api";
 
 const LOOKBOOK_PRODUCTS: ProductDto[] = [
@@ -198,6 +199,7 @@ export default function CreateGiftPage() {
   const [messageCard, setMessageCard] = useState(
     "생일 축하해! 마음에 드는 선물 하나 골라주면 주소지로 바로 보내줄게 🎁"
   );
+  const [cardTheme, setCardTheme] = useState<"ivory" | "emerald" | "noir" | "rose">("ivory");
   
   // Double-bound budget range states
   const [minBudget, setMinBudget] = useState(30000);
@@ -397,6 +399,37 @@ export default function CreateGiftPage() {
                 className="input-editorial resize-none font-serif text-sm"
               />
             </div>
+
+            {/* Stationery Theme Selector */}
+            <div>
+              <label className="block text-[11px] font-bold text-[#5e605d] uppercase tracking-wider mb-1.5">
+                인비테이션 레터 테마 (Stationery Theme)
+              </label>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                {[
+                  { id: "ivory" as const, label: "아이보리 린넨", chip: "bg-[#f5f2eb] border-[#d8d0c2] text-[#333]" },
+                  { id: "emerald" as const, label: "포레스트 에메랄드", chip: "bg-[#1f2e24] border-[#3b4d40] text-white" },
+                  { id: "noir" as const, label: "미드나잇 노아르", chip: "bg-[#181818] border-[#333] text-white" },
+                  { id: "rose" as const, label: "더스티 로즈", chip: "bg-[#f9f1f0] border-[#ebd7d5] text-[#333]" },
+                ].map((item) => (
+                  <button
+                    key={item.id}
+                    type="button"
+                    onClick={() => setCardTheme(item.id)}
+                    className={`py-2 px-2.5 rounded-xl border text-[11px] font-semibold flex items-center justify-center gap-1.5 transition-all ${
+                      item.chip
+                    } ${
+                      cardTheme === item.id
+                        ? "ring-2 ring-[#3b483a] ring-offset-1 font-bold shadow-sm"
+                        : "opacity-70 hover:opacity-100"
+                    }`}
+                  >
+                    <span>{cardTheme === item.id ? "✓" : "✦"}</span>
+                    <span>{item.label}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
         </section>
 
@@ -565,45 +598,15 @@ export default function CreateGiftPage() {
         </button>
       </main>
 
-      {/* Share Link Modal */}
-      {createdToken && (
-        <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex items-center justify-center p-5 animate-fade-in">
-          <div className="bg-white rounded-2xl p-6 max-w-sm w-full text-center shadow-2xl border border-[#eae6df]">
-            <div className="w-12 h-12 rounded-full bg-[#3b483a]/5 flex items-center justify-center text-xl mx-auto mb-4">
-              ✉️
-            </div>
-            <h2 className="text-xl font-bold text-[#1a1a1a] mb-1">
-              선물 링크 생성 완료!
-            </h2>
-            <p className="text-xs text-[#5e605d] mb-5">
-              아래 링크를 복사하여 선물 받을 분에게 카카오톡 또는 이메일로 전달해보세요.
-            </p>
-
-            <div className="p-3.5 bg-[#f6f4f0] rounded-xl break-all text-xs font-mono text-[#3b483a] mb-5 border border-[#eae6df] select-all font-semibold">
-              {generatedGiftUrl}
-            </div>
-
-            <div className="space-y-2">
-              <button
-                onClick={() => {
-                  navigator.clipboard.writeText(generatedGiftUrl);
-                  alert("선물 링크가 클립보드에 복사되었습니다!");
-                }}
-                className="btn-editorial py-3.5 text-xs tracking-wider uppercase font-bold"
-              >
-                선물 링크 복사하기 📋
-              </button>
-
-              <a
-                href={`/gift/${createdToken}`}
-                className="btn-editorial-outline block py-3.5 text-xs font-bold uppercase tracking-wider"
-              >
-                수령인 페이지 미리보기 ↗
-              </a>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Luxury Share Modal */}
+      <ShareModal
+        isOpen={!!createdToken}
+        onClose={() => setCreatedToken(null)}
+        token={createdToken || ""}
+        senderName={senderName}
+        messageCard={messageCard}
+        cardTheme={cardTheme}
+      />
     </div>
   );
 }

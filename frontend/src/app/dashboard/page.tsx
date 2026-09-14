@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Header from "@/components/Header";
 import Link from "next/link";
+import ShareModal from "@/components/ShareModal";
 
 interface MockSentBox {
   id: number;
@@ -183,6 +184,7 @@ export default function SenderDashboardPage() {
   const [activeTab, setActiveTab] = useState<DashboardTab>("RECEIVED");
   const [sentBoxes] = useState<MockSentBox[]>(MOCK_SENT_BOXES);
   const [receivedBoxes] = useState<MockReceivedBox[]>(MOCK_RECEIVED_BOXES);
+  const [shareModalBox, setShareModalBox] = useState<MockSentBox | null>(null);
 
   return (
     <div className="flex flex-col min-h-screen pb-16 bg-[#faf9f6]">
@@ -390,14 +392,10 @@ export default function SenderDashboardPage() {
                     </Link>
                   ) : (
                     <button
-                      onClick={() => {
-                        const url = `${window.location.origin}/gift/${box.token}`;
-                        navigator.clipboard.writeText(url);
-                        alert("카카오톡 선물 링크가 복사되었습니다!");
-                      }}
-                      className="btn-editorial text-center text-xs py-3 font-bold uppercase tracking-wider w-full"
+                      onClick={() => setShareModalBox(box)}
+                      className="btn-editorial text-center text-xs py-3 font-bold uppercase tracking-wider w-full shadow-sm"
                     >
-                      선물 링크 복사하기 📋
+                      선물 링크 공유하기 💌
                     </button>
                   )}
                 </div>
@@ -460,6 +458,16 @@ export default function SenderDashboardPage() {
               </Link>
             </div>
           </div>
+        )}
+        {/* Luxury Share Modal */}
+        {shareModalBox && (
+          <ShareModal
+            isOpen={!!shareModalBox}
+            onClose={() => setShareModalBox(null)}
+            token={shareModalBox.token}
+            senderName="주희"
+            messageCard={shareModalBox.messageCard}
+          />
         )}
       </main>
     </div>
