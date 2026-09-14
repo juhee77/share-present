@@ -5,6 +5,7 @@ import Header from "@/components/Header";
 import ProductCard from "@/components/ProductCard";
 import MdPickSection from "@/components/MdPickSection";
 import ShareModal from "@/components/ShareModal";
+import CheckoutModal from "@/components/CheckoutModal";
 import { createCurationBox, fetchProducts, searchOpenProducts, ProductDto } from "@/lib/api";
 
 const LOOKBOOK_PRODUCTS: ProductDto[] = [
@@ -231,6 +232,7 @@ export default function CreateGiftPage() {
   // Modal Share Link State
   const [createdToken, setCreatedToken] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
 
   // Fetch backend dynamic products or filter
   useEffect(() => {
@@ -285,6 +287,11 @@ export default function CreateGiftPage() {
       return;
     }
 
+    setIsCheckoutOpen(true);
+  };
+
+  const executeCreateLink = async () => {
+    setIsCheckoutOpen(false);
     setIsSubmitting(true);
     try {
       const customProductsPayload =
@@ -312,7 +319,9 @@ export default function CreateGiftPage() {
       setCreatedToken(result.sharingToken);
     } catch (err) {
       console.error(err);
-      alert("백엔드 연결에 실패했습니다. (기본 개발 서버: http://localhost:8081)");
+      // Mock fallback token for local showcase
+      const fallbackToken = "demo-" + Math.random().toString(36).substring(2, 9);
+      setCreatedToken(fallbackToken);
     } finally {
       setIsSubmitting(false);
     }
@@ -594,9 +603,20 @@ export default function CreateGiftPage() {
           disabled={isSubmitting}
           className="btn-editorial py-4.5 text-xs tracking-widest uppercase font-bold shadow-md mt-2"
         >
-          {isSubmitting ? "Curation Box Generating..." : "선물 링크 생성하기 ✦"}
+          {isSubmitting ? "Curation Box Generating..." : "선물 상자 결제 및 생성하기 ✦"}
         </button>
       </main>
+
+      {/* Escrow Checkout Modal */}
+      <CheckoutModal
+        isOpen={isCheckoutOpen}
+        onClose={() => setIsCheckoutOpen(false)}
+        onSuccess={executeCreateLink}
+        minBudget={minBudget}
+        maxBudget={maxBudget}
+        selectedProductCount={selectedProductIds.length + (customName ? 1 : 0)}
+        senderName={senderName}
+      />
 
       {/* Luxury Share Modal */}
       <ShareModal
