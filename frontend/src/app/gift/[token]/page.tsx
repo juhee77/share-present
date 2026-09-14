@@ -158,6 +158,7 @@ export default function RecipientGiftPage({ params }: { params: Promise<{ token:
       {showRibbon && (
         <UnwrappingRibbon
           senderName={boxData.senderName}
+          messageCard={boxData.messageCard}
           onOpen={() => setShowRibbon(false)}
         />
       )}
