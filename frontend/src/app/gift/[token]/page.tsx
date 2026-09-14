@@ -318,6 +318,8 @@ export default function RecipientGiftPage({ params }: { params: Promise<{ token:
         onClose={() => setIsDrawerOpen(false)}
         onSubmit={handleAddressSubmit}
         selectedProductName={selectedProductName}
+        selectedProductBrand={selectedProductObj?.brand || (selectedProductId === "CUSTOM_RECIPIENT" ? customBrand || "직접입력" : undefined)}
+        selectedOption={selectedOption}
         isSubmitting={isSubmitting}
       />
 
