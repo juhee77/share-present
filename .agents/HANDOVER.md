@@ -32,10 +32,13 @@
 - **💌 내가 보낸 선물함**: `🟡 선택 대기 중` 카톡 링크 복사 및 `🟢 선택 완료` 건의 정산 명세서 상세 조회 지원.
 - **🔥 주간 인기 큐레이션 랭킹**: 수령인 선택률 데이터를 기반으로 인기 아이템 조합 선물 상자 원클릭 생성 지원.
 
-### 7) 상황별 프리셋, D-Day 만료 타이머 & 감사 답장 카드 (NEW)
-- **상황별 1초 큐레이션 프리셋**: 생일, 집들이, 이직/퇴사, 신혼/출산, 힐링 5개 칩 버튼으로 1초 만에 예산과 선물 추천 자동 세팅.
-- **선물 수락 기한 D-Day 타이머**: `⏳ 선물 수락 기한: D-7 (미수락 시 자동 환불)` 상단 안내 뱃지 제공.
-- **수령인의 감성 감사 답장 카드**: 수령인이 선물 수락 후 스티커와 답장 메시지를 전송하는 대화형 모달 (`orders` DB 테이블 연동).
+### 8) 3D 왁스 씰 개봉 경험 & 럭셔리 레터 테마 (NEW)
+- **3D 왁스 씰 인비테이션 개봉 (`UnwrappingRibbon.tsx`)**: 수령인이 선물 링크를 열었을 때 중앙 `SP` 모노그램 인장 씰을 눌러 봉투를 개봉하는 럭셔리 인터랙션.
+- **인비테이션 레터 테마 4종**: 클래식 아이보리 린넨, 포레스트 에메랄드, 미드나잇 노아르, 더스티 로즈.
+- **원클릭 카카오톡 & SNS 공유 모달 (`ShareModal.tsx`)**: Web Share API, 카카오톡 초대 문구 복사, 인스타 DM 복사.
+- **에스크로 카드 결제 모달 (`CheckoutModal.tsx`)**: 최대 예산 한도 가승인 및 차액 자동 환불 시뮬레이션.
+- **도로명 주소 검색 & 배송 메모 드로어 (`DeliveryDrawer.tsx`)**: 도로명 주소 추천 검색, 배송 요청 칩, 전화번호 자동 하이픈, 수령인 안심 보안 배지.
+- **동적 배송 추적 & 타임라인 히스토리 (`/gift/track/[token]`)**: 실시간 배송 상태 매핑, 택배사 물류센터 이벤트 로그, 1-Click 운송장 복사.
 
 ---
 
@@ -48,17 +51,21 @@
 - `backend/src/main/resources/db/migration/V4__add_thank_you_reply_card.sql`: Flyway V4 수령인 감사 답장 카드 DB 컬럼 확장 DDL
 - `docker-compose.yml`: PostgreSQL 16 DB 컨테이너 1방 구동 Docker 환경 파일
 - `backend/src/main/java/com/sharepresent/domain/curation/entity/CurationBox.java`: `minBudget` 컬럼 포함 JPA 엔티티
-- `backend/src/main/java/com/sharepresent/domain/curation/service/CurationBoxService.java`: 큐레이션 생성 및 토큰 조회 비즈니스 로직
-- `backend/src/main/java/com/sharepresent/domain/order/entity/Order.java`: `carrierName`, `trackingNumber`, `shippingStatus` 포함 주문/정산 엔티티
-- `backend/src/main/java/com/sharepresent/domain/order/service/OrderService.java`: 수락 처리 및 자동 샌드박스 폴백 주문 생성, 차액 부분 환불 로직
+- `backend/src/main/java/com/sharepresent/domain/curation/service/CurationBoxService.java`: 큐레이션 생성 및 이중 예산 유효성 검증
+- `backend/src/main/java/com/sharepresent/domain/order/entity/Order.java`: 주문 및 차액 정산 엔티티
+- `backend/src/main/java/com/sharepresent/domain/order/service/OrderService.java`: 선물 수락, 정산, 차액 부분 환불 계산
+- `backend/src/test/java/com/sharepresent/domain/`: MockMvc 컨트롤러 테스트 및 JPA 단위 테스트 스위트
 
 ### 프론트엔드 (Next.js 16 / TypeScript / Tailwind CSS)
-- `frontend/src/app/page.tsx`: 이중 예산 셀렉터 및 선물 큐레이션 설계 페이지 (보내는 이)
-- `frontend/src/app/dashboard/page.tsx`: 내가 보낸 선물함 목록 및 주간 인기 큐레이션 랭킹 대시보드
-- `frontend/src/app/gift/[token]/page.tsx`: 수령인 선물 선택 및 배송지 입력 페이지 (가격 100% 비노출)
-- `frontend/src/app/gift/track/[token]/page.tsx`: 수령인 4단계 배송 조회 타임라인 페이지
-- `frontend/src/app/result/[token]/page.tsx`: 보내는 사람 전용 최종 정산 명세서 및 차액 환불 리포트
-- `frontend/src/components/Header.tsx`: 네비게이션 헤더 컴포넌트
+- `frontend/src/app/page.tsx`: 이중 예산 셀렉터, 레터 테마, 상품 큐레이션 설계 및 결제 모달 연동
+- `frontend/src/app/dashboard/page.tsx`: 보낸 선물함 / 받은 선물함 대시보드 및 공유 모달 연동
+- `frontend/src/app/gift/[token]/page.tsx`: 수령인 3D 왁스 씰 개봉 및 주소지 입력 (가격 100% 비노출)
+- `frontend/src/app/gift/track/[token]/page.tsx`: 수령인 동적 4단계 배송 타임라인 & 운송장 조회
+- `frontend/src/app/result/[token]/page.tsx`: 보내는 사람 전용 최종 정산 명세서 및 영수증 이미지 다운로드
+- `frontend/src/components/CheckoutModal.tsx`: 에스크로 가승인 결제 샌드박스 모달
+- `frontend/src/components/ShareModal.tsx`: 카카오톡 / 인스타 DM / Web Share API 공유 모달
+- `frontend/src/components/DeliveryDrawer.tsx`: 도로명 주소 검색 및 배송 메모 드로어
+- `frontend/src/components/UnwrappingRibbon.tsx`: 3D 왁스 씰 개봉 애니메이션 컴포넌트
 - `frontend/src/lib/api.ts`: 백엔드 REST API 연동 클라이언트 모듈
 
 ---
@@ -80,7 +87,7 @@ docker-compose up -d
 ```
 - PostgreSQL 16 컨테이너(포트 5432)가 구동되며 `schema.sql` 및 `data.sql`이 자동 적용됩니다.
 
-### 2) 프론트엔드 실행
+### 3) 프론트엔드 실행
 ```bash
 cd frontend
 npm install
@@ -94,9 +101,8 @@ npm run dev
 
 ## 5. 다음 개발자를 위한 후속 로드맵 (Roadmap for Next Developer)
 
-1. **실제 PG 결제 모듈 연동 (Sprint 2)**:
-   - 토스페이먼츠(Toss Payments) 또는 포트원(PortOne) SDK를 결합하여 보내는 이의 상한 예산 실제 카드 결제 팝업 연동.
-2. **카카오 알림톡(Notification Talk) API 연동**:
+1. **카카오 알림톡(Notification Talk) API 연동**:
    - 수령인 배송지 입력 시 송신자에게 카톡 알림 발송 및 택배 출고 시 수령인에게 운송장 알림톡 자동 발송.
-3. **프로덕션 PostgreSQL DB 환경 구축**:
+2. **프로덕션 PostgreSQL DB 환경 구축**:
    - `application-prod.yml` 환경 설정 및 AWS RDS/Supabase 연결.
+
