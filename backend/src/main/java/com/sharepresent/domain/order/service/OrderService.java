@@ -25,6 +25,7 @@ public class OrderService {
     private final CurationBoxRepository curationBoxRepository;
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
+    private final KakaoNotificationService kakaoNotificationService;
 
     /**
      * 보내는 사람이 예산 한도로 가결제를 마쳤을 때 호출되는 메서드
@@ -147,6 +148,19 @@ public class OrderService {
         // TODO: 실제 토스페이먼츠/포트원 API를 사용하여 partial refund API 호출 실행부 (환불액 > 0 일 때)
         if (refundAmount > 0) {
             triggerActualPaymentCancel(order.getPaymentKey(), refundAmount);
+        }
+
+        // 카카오 알림톡 자동 발송 (송신자 대상 선물 수락 및 정산 알림)
+        if (savedOrder.getSender() != null) {
+            String phone = savedOrder.getSender().getPhoneNumber() != null ? savedOrder.getSender().getPhoneNumber() : "010-0000-0000";
+            String senderNick = savedOrder.getSender().getNickname() != null ? savedOrder.getSender().getNickname() : "고객";
+            kakaoNotificationService.sendGiftAcceptedNotification(
+                    phone,
+                    senderNick,
+                    savedOrder.getRecipientName(),
+                    selectedProduct.getName(),
+                    refundAmount
+            );
         }
 
         return convertToResponse(savedOrder);

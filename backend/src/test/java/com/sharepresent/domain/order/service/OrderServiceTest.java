@@ -39,6 +39,9 @@ class OrderServiceTest {
     @Mock
     private ProductRepository productRepository;
 
+    @Mock
+    private KakaoNotificationService kakaoNotificationService;
+
     @InjectMocks
     private OrderService orderService;
 
