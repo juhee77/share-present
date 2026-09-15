@@ -29,6 +29,10 @@ public class CurationBoxService {
 
     @Transactional
     public CurationBoxResponse createCurationBox(CreateCurationBoxRequest request) {
+        if (request.getMinBudget() != null && request.getMaxBudget() != null && request.getMinBudget() > request.getMaxBudget()) {
+            throw new IllegalArgumentException("최소 예산이 최대 예산보다 클 수 없습니다.");
+        }
+
         User sender = userRepository.findById(request.getSenderId())
                 .orElseThrow(() -> new IllegalArgumentException("보내는 사람을 찾을 수 없습니다. ID: " + request.getSenderId()));
 
