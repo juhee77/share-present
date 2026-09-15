@@ -1,0 +1,75 @@
+package com.sharepresent.domain.product.controller;
+
+import com.sharepresent.domain.product.entity.Product;
+import com.sharepresent.domain.product.repository.ProductRepository;
+import com.sharepresent.domain.product.service.NaverProductSearchService;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.web.servlet.MockMvc;
+
+import java.util.List;
+
+import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+@WebMvcTest(ProductController.class)
+class ProductControllerTest {
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @MockBean
+    private ProductRepository productRepository;
+
+    @MockBean
+    private NaverProductSearchService naverProductSearchService;
+
+    @Test
+    @DisplayName("GET /api/v1/products - 예산 범위 및 키워드 필터링 조회 성공")
+    void getProducts_withBudgetFilter_success() throws Exception {
+        // given
+        Product p1 = Product.builder()
+                .id(1L)
+                .brand("OIMU")
+                .name("도자기 머그")
+                .price(38000)
+                .build();
+
+        Product p2 = Product.builder()
+                .id(2L)
+                .brand("LE LABO")
+                .name("상탈 33 로션")
+                .price(98000)
+                .build();
+
+        given(productRepository.findAll()).willReturn(List.of(p1, p2));
+
+        // when & then
+        mockMvc.perform(get("/api/v1/products")
+                        .param("minBudget", "30000")
+                        .param("maxBudget", "50000"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(1))
+                .andExpect(jsonPath("$[0].brand").value("OIMU"))
+                .andExpect(jsonPath("$[0].price").value(38000));
+    }
+
+    @Test
+    @DisplayName("GET /api/v1/products/trending - 실시간 인기 선물 랭킹 조회 성공")
+    void getTrendingProducts_success() throws Exception {
+        // given
+        Product p1 = Product.builder().id(1L).brand("GRANHAND").name("사쉐 퍼퓸").price(45000).build();
+        given(productRepository.findAll()).willReturn(List.of(p1));
+
+        // when & then
+        mockMvc.perform(get("/api/v1/products/trending"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].rank").value(1))
+                .andExpect(jsonPath("$[0].brand").value("GRANHAND"));
+    }
+}
