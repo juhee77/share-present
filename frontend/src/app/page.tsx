@@ -6,6 +6,7 @@ import ProductCard from "@/components/ProductCard";
 import MdPickSection from "@/components/MdPickSection";
 import ShareModal from "@/components/ShareModal";
 import CheckoutModal from "@/components/CheckoutModal";
+import { useToast } from "@/context/ToastContext";
 import { createCurationBox, fetchProducts, searchOpenProducts, ProductDto } from "@/lib/api";
 
 const LOOKBOOK_PRODUCTS: ProductDto[] = [
@@ -196,6 +197,7 @@ const OCCASION_PRESETS = [
 ];
 
 export default function CreateGiftPage() {
+  const { showToast } = useToast();
   const [senderName, setSenderName] = useState("주희");
   const [messageCard, setMessageCard] = useState(
     "생일 축하해! 마음에 드는 선물 하나 골라주면 주소지로 바로 보내줄게 🎁"
@@ -279,11 +281,11 @@ export default function CreateGiftPage() {
 
   const handleCreateLink = async () => {
     if (minBudget > maxBudget) {
-      alert("최소 예산이 최대 예산보다 클 수 없습니다.");
+      showToast("최소 예산이 최대 예산보다 클 수 없습니다.", "error");
       return;
     }
     if (selectedProductIds.length === 0 && !customName) {
-      alert("적어도 하나 이상의 선물 아이템을 선택하거나 제안해주세요.");
+      showToast("적어도 하나 이상의 선물 아이템을 선택하거나 제안해주세요.", "error");
       return;
     }
 
@@ -375,7 +377,7 @@ export default function CreateGiftPage() {
             if (!selectedProductIds.includes(id)) {
               setSelectedProductIds([...selectedProductIds, id]);
             }
-            alert("선택하신 MD Pick 아이템이 큐레이션 세팅에 추가되었습니다! ✦");
+            showToast("선택하신 MD Pick 아이템이 큐레이션 세팅에 추가되었습니다! ✦", "success");
           }}
         />
 
