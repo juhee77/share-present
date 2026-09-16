@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useToast } from "@/context/ToastContext";
 
 interface DeliveryDrawerProps {
   isOpen: boolean;
@@ -37,6 +38,7 @@ export default function DeliveryDrawer({
   selectedOption,
   isSubmitting = false,
 }: DeliveryDrawerProps) {
+  const { showToast } = useToast();
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [baseAddress, setBaseAddress] = useState("");
@@ -68,7 +70,7 @@ export default function DeliveryDrawer({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim() || !phone.trim() || !baseAddress.trim()) {
-      alert("수령인 성함, 연락처, 배송 주소를 모두 입력해주세요.");
+      showToast("수령인 성함, 연락처, 배송 주소를 모두 입력해주세요.", "error");
       return;
     }
 

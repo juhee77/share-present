@@ -3,8 +3,10 @@
 import { use, useEffect, useState } from "react";
 import Header from "@/components/Header";
 import { getOrderResult, OrderResponse } from "@/lib/api";
+import { useToast } from "@/context/ToastContext";
 
 export default function OrderResultPage({ params }: { params: Promise<{ token: string }> }) {
+  const { showToast } = useToast();
   const resolvedParams = use(params);
   const token = resolvedParams.token;
 
@@ -62,7 +64,7 @@ export default function OrderResultPage({ params }: { params: Promise<{ token: s
 
   const handleCopyAddress = () => {
     navigator.clipboard.writeText(formattedAddressText);
-    alert("선물 정산 정보가 클립보드에 복사되었습니다!");
+    showToast("선물 정산 정보가 클립보드에 복사되었습니다! 📋", "success");
   };
 
   const handleDownloadReceiptImage = () => {

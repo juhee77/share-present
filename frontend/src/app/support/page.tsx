@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Header from "@/components/Header";
+import { useToast } from "@/context/ToastContext";
 
 interface FaqItem {
   id: number;
@@ -44,6 +45,7 @@ const FAQ_LIST: FaqItem[] = [
 ];
 
 export default function CustomerSupportPage() {
+  const { showToast } = useToast();
   const [openFaqId, setOpenFaqId] = useState<number | null>(1);
   
   // 1:1 Support Inquiry Form State
@@ -57,7 +59,7 @@ export default function CustomerSupportPage() {
   const handleSubmitInquiry = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name || !email || !content) {
-      alert("모든 필수 입력 항목을 작성해주세요.");
+      showToast("모든 필수 입력 항목을 작성해주세요.", "error");
       return;
     }
 
@@ -69,9 +71,11 @@ export default function CustomerSupportPage() {
         body: JSON.stringify({ name, email, category: inquiryCategory, content }),
       });
       setSubmitted(true);
+      showToast("고객님의 문의가 성공적으로 접수되었습니다! ✦", "success");
     } catch (err) {
       console.error(err);
       setSubmitted(true);
+      showToast("고객님의 문의가 성공적으로 접수되었습니다! ✦", "success");
     } finally {
       setIsSubmitting(false);
     }
@@ -105,7 +109,7 @@ export default function CustomerSupportPage() {
             평일 10:00 ~ 18:00 (점심시간 12:00 ~ 13:00) 전문 상담원이 친절히 답변 드립니다.
           </p>
           <button
-            onClick={() => alert("카카오톡 1:1 실시간 상담 채팅창으로 이동합니다! 💬")}
+            onClick={() => showToast("카카오톡 1:1 실시간 상담 채팅창으로 이동합니다! 💬", "info")}
             className="w-full bg-white text-[#3b483a] font-bold text-xs py-3 rounded-xl hover:bg-[#faf9f6] transition-all shadow-sm uppercase tracking-wider"
           >
             카카오톡 1:1 상담 시작하기 💬

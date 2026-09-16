@@ -5,9 +5,11 @@ import Header from "@/components/Header";
 import ProductCard from "@/components/ProductCard";
 import UnwrappingRibbon from "@/components/UnwrappingRibbon";
 import DeliveryDrawer from "@/components/DeliveryDrawer";
+import { useToast } from "@/context/ToastContext";
 import { getCurationBox, acceptGift, CurationBoxResponse, ProductDto } from "@/lib/api";
 
 export default function RecipientGiftPage({ params }: { params: Promise<{ token: string }> }) {
+  const { showToast } = useToast();
   const resolvedParams = use(params);
   const token = resolvedParams.token;
 
@@ -115,7 +117,7 @@ export default function RecipientGiftPage({ params }: { params: Promise<{ token:
 
   const handleCustomSubmit = () => {
     if (!customName || !customUrl) {
-      alert("원하시는 선물명과 링크를 입력해주세요.");
+      showToast("원하시는 선물명과 링크를 입력해주세요.", "error");
       return;
     }
     setSelectedProductId("CUSTOM_RECIPIENT");
@@ -141,9 +143,10 @@ export default function RecipientGiftPage({ params }: { params: Promise<{ token:
 
       setIsDrawerOpen(false);
       setIsCompleted(true);
+      showToast("선물 수락 및 배송지 접수가 완료되었습니다! 🎁", "success");
     } catch (err) {
       console.error(err);
-      alert("선물 수락 처리에 실패했습니다.");
+      showToast("선물 수락 처리에 실패했습니다.", "error");
     } finally {
       setIsSubmitting(false);
     }
@@ -386,7 +389,7 @@ export default function RecipientGiftPage({ params }: { params: Promise<{ token:
               onClick={() => {
                 setThankYouSent(true);
                 setShowThankYouModal(false);
-                alert(`${boxData.senderName}님에게 감사 카드와 답장이 전달되었습니다! 💌`);
+                showToast(`${boxData.senderName}님에게 감사 카드와 답장이 전달되었습니다! 💌`, "success");
               }}
               className="btn-editorial py-3.5 text-xs tracking-wider uppercase font-bold"
             >

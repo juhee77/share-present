@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useToast } from "@/context/ToastContext";
 
 interface ShareModalProps {
   isOpen: boolean;
@@ -19,6 +20,7 @@ export default function ShareModal({
   messageCard = "당신을 위해 정성껏 고른 선물입니다.",
   cardTheme = "ivory",
 }: ShareModalProps) {
+  const { showToast } = useToast();
   const [copiedType, setCopiedType] = useState<string | null>(null);
 
   if (!isOpen) return null;
@@ -40,9 +42,10 @@ ${giftUrl}`;
     try {
       await navigator.clipboard.writeText(text);
       setCopiedType(type);
+      showToast(type === "kakao" ? "카카오톡 초대 문구가 복사되었습니다! 💌" : "인스타 DM 초대 링크가 복사되었습니다! ✨", "success");
       setTimeout(() => setCopiedType(null), 2500);
     } catch {
-      alert("클립보드 복사에 실패했습니다.");
+      showToast("클립보드 복사에 실패했습니다.", "error");
     }
   };
 
