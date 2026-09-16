@@ -196,6 +196,14 @@ const OCCASION_PRESETS = [
   },
 ];
 
+const PRODUCT_CATEGORIES = [
+  { id: "ALL", label: "전체 ✦" },
+  { id: "FRAGRANCE", label: "향수/디퓨저 🌿", keywords: ["향수", "사쉐", "캔들", "디퓨저", "르라보", "딥티크", "그랑핸드", "산타마리아노벨라", "perfume", "fragrance"] },
+  { id: "BODYCARE", label: "핸드/바디 🧴", keywords: ["핸드", "바디", "워시", "밤", "이솝", "논픽션", "탬버린즈", "로션"] },
+  { id: "LIVING", label: "홈/테이블웨어 ☕", keywords: ["머그", "도자기", "컵", "트레이", "오이뮤", "하야", "킨토", "사브르"] },
+  { id: "TECH", label: "테크/라이프 🎧", keywords: ["스피커", "뱅앤올룹슨", "텀블러"] },
+];
+
 export default function CreateGiftPage() {
   const { showToast } = useToast();
   const [senderName, setSenderName] = useState("주희");
@@ -222,6 +230,7 @@ export default function CreateGiftPage() {
 
   // Catalog Search & Filter State
   const [searchKeyword, setSearchKeyword] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("ALL");
   const [products, setProducts] = useState<ProductDto[]>(LOOKBOOK_PRODUCTS);
 
   // Custom External Product State
@@ -262,6 +271,15 @@ export default function CreateGiftPage() {
               (p) => p.brand.toLowerCase().includes(kw) || p.name.toLowerCase().includes(kw)
             );
           }
+          if (selectedCategory !== "ALL") {
+            const catObj = PRODUCT_CATEGORIES.find((c) => c.id === selectedCategory);
+            if (catObj && catObj.keywords) {
+              filtered = filtered.filter((p) => {
+                const combined = (p.brand + " " + p.name + " " + (p.description || "")).toLowerCase();
+                return catObj.keywords.some((kw) => combined.includes(kw.toLowerCase()));
+              });
+            }
+          }
           setProducts(filtered.length > 0 ? filtered : LOOKBOOK_PRODUCTS);
         }
       } catch (err) {
@@ -269,7 +287,7 @@ export default function CreateGiftPage() {
       }
     }
     loadDynamicProducts();
-  }, [searchKeyword, minBudget, maxBudget]);
+  }, [searchKeyword, selectedCategory, minBudget, maxBudget]);
 
   const toggleProductSelection = (id: number) => {
     if (selectedProductIds.includes(id)) {
@@ -533,6 +551,24 @@ export default function CreateGiftPage() {
                 ✕
               </button>
             )}
+          </div>
+
+          {/* Category Filter Chips */}
+          <div className="flex items-center gap-2 overflow-x-auto pb-1.5 scrollbar-none mb-4 -mx-1 px-1">
+            {PRODUCT_CATEGORIES.map((cat) => (
+              <button
+                key={cat.id}
+                type="button"
+                onClick={() => setSelectedCategory(cat.id)}
+                className={`whitespace-nowrap px-3 py-1.5 rounded-full text-[11px] font-bold tracking-tight transition-all ${
+                  selectedCategory === cat.id
+                    ? "bg-[#3b483a] text-white shadow-sm scale-[1.02]"
+                    : "bg-white text-[#5e605d] border border-[#e5e1da] hover:border-[#3b483a]/40 hover:text-[#1a1a1a]"
+                }`}
+              >
+                {cat.label}
+              </button>
+            ))}
           </div>
         </div>
 
