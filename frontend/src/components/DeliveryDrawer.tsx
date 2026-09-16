@@ -6,10 +6,11 @@ import { useToast } from "@/context/ToastContext";
 interface DeliveryDrawerProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (data: { name: string; phone: string; address: string; deliveryMemo?: string }) => void;
+  onSubmit: (data: { name: string; phone: string; address: string; deliveryMemo?: string; selectedOption?: string }) => void;
   selectedProductName?: string;
   selectedProductBrand?: string;
   selectedOption?: string;
+  availableOptions?: string[];
   isSubmitting?: boolean;
 }
 
@@ -36,9 +37,13 @@ export default function DeliveryDrawer({
   selectedProductName,
   selectedProductBrand,
   selectedOption,
+  availableOptions,
   isSubmitting = false,
 }: DeliveryDrawerProps) {
   const { showToast } = useToast();
+  const [currentOption, setCurrentOption] = useState(
+    selectedOption || (availableOptions && availableOptions.length > 0 ? availableOptions[0] : "")
+  );
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [baseAddress, setBaseAddress] = useState("");
@@ -86,6 +91,7 @@ export default function DeliveryDrawer({
       phone: phone.trim(),
       address: fullAddress,
       deliveryMemo: finalMemo || undefined,
+      selectedOption: currentOption || selectedOption || undefined,
     });
   };
 
@@ -130,11 +136,37 @@ export default function DeliveryDrawer({
                 {selectedProductBrand ? `[${selectedProductBrand}] ` : ""}
                 {selectedProductName}
               </span>
-              {selectedOption && (
+              {(currentOption || selectedOption) && (
                 <span className="text-[10px] font-semibold text-[#3b483a] bg-[#3b483a]/10 px-2 py-0.5 rounded-full flex-shrink-0">
-                  {selectedOption}
+                  {currentOption || selectedOption}
                 </span>
               )}
+            </div>
+          </div>
+        )}
+
+        {/* Option Selection Chips (Colors, Scents, Sizes) */}
+        {availableOptions && availableOptions.length > 0 && (
+          <div className="p-3.5 bg-white rounded-xl border border-[#eae6df] mb-4 shadow-sm">
+            <label className="block text-[11px] font-bold text-[#5e605d] uppercase tracking-wider mb-2">
+              선물 옵션 선택 (색상 / 향 / 사이즈)
+            </label>
+            <div className="flex flex-wrap gap-2">
+              {availableOptions.map((opt) => (
+                <button
+                  key={opt}
+                  type="button"
+                  onClick={() => setCurrentOption(opt)}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                    currentOption === opt
+                      ? "bg-[#3b483a] text-white shadow-sm ring-1 ring-[#3b483a]"
+                      : "bg-[#f5f3ef] text-[#5e605d] border border-[#e5e1da] hover:bg-[#eae6df]"
+                  }`}
+                >
+                  {currentOption === opt && "✓ "}
+                  {opt}
+                </button>
+              ))}
             </div>
           </div>
         )}

@@ -124,17 +124,27 @@ export default function RecipientGiftPage({ params }: { params: Promise<{ token:
     setIsDrawerOpen(true);
   };
 
-  const handleAddressSubmit = async (addressData: { name: string; phone: string; address: string }) => {
+  const handleAddressSubmit = async (addressData: {
+    name: string;
+    phone: string;
+    address: string;
+    deliveryMemo?: string;
+    selectedOption?: string;
+  }) => {
     setIsSubmitting(true);
     try {
       const isCustomRecipient = selectedProductId === "CUSTOM_RECIPIENT";
+      const finalOption = addressData.selectedOption || selectedOption;
+      if (finalOption) {
+        setSelectedOption(finalOption);
+      }
 
       await acceptGift(token, {
         receiverName: addressData.name,
         receiverPhone: addressData.phone,
         shippingAddress: addressData.address,
         selectedProductId: typeof selectedProductId === "number" ? selectedProductId : undefined,
-        selectedOption: selectedOption,
+        selectedOption: finalOption,
         isRecipientAdded: isCustomRecipient,
         recipientCustomBrand: isCustomRecipient ? customBrand || "직접입력" : undefined,
         recipientCustomName: isCustomRecipient ? customName : undefined,
@@ -323,6 +333,7 @@ export default function RecipientGiftPage({ params }: { params: Promise<{ token:
         selectedProductName={selectedProductName}
         selectedProductBrand={selectedProductObj?.brand || (selectedProductId === "CUSTOM_RECIPIENT" ? customBrand || "직접입력" : undefined)}
         selectedOption={selectedOption}
+        availableOptions={selectedProductObj?.options}
         isSubmitting={isSubmitting}
       />
 
