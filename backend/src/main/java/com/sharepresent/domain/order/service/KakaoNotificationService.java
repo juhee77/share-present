@@ -43,4 +43,22 @@ public class KakaoNotificationService {
         log.info("[Kakao Alimtalk Sent to Recipient ({})]\n{}", receiverPhone, message);
         return true;
     }
+
+    /**
+     * 선물 수락 기한(7일) 만료 시 송신자에게 발송하는 자동 전액 환불 알림톡
+     */
+    public boolean sendGiftExpiredNotification(String senderPhone, String senderName, int refundAmount) {
+        String message = String.format(
+                "[SharePresent 알림톡] ⏳\n\n" +
+                "안녕하세요, %s님!\n" +
+                "보내주신 선물함의 수락 기한(7일)이 만료되었습니다.\n\n" +
+                "• 가승인 취소/환불액: %d원 (전액 100%% 자동 환불)\n" +
+                "• 결제하신 카드사를 통해 1~3 영업일 내 취소 완료됩니다.\n\n" +
+                "언제든 새로운 선물 큐레이션을 시작해보세요 ✦",
+                senderName, refundAmount
+        );
+
+        log.info("[Kakao Alimtalk Sent to Sender ({})]\n{}", senderPhone, message);
+        return true;
+    }
 }

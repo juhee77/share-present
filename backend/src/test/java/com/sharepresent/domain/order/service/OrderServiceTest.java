@@ -119,4 +119,23 @@ class OrderServiceTest {
         assertThat(response.getRefundAmount()).isEqualTo(22000); // 60,000 - 38,000 = 22,000 KRW
         assertThat(response.getShippingStatus()).isEqualTo("COMPLETED");
     }
+
+    @Test
+    @DisplayName("7일 미수락 선물 만료 처리 - 상태 EXPIRED 갱신 및 가승인 60,000원 100% 전액 환불 검증")
+    void expireAndRefundUnclaimedGiftBoxes_expiredBoxes_processesFullRefund() {
+        // given
+        java.time.LocalDateTime threshold = java.time.LocalDateTime.now().minusDays(7);
+        given(curationBoxRepository.findByStatusInAndCreatedAtBefore(any(), any()))
+                .willReturn(java.util.List.of(testBox));
+        given(orderRepository.findByCurationBoxId(100L))
+                .willReturn(Optional.of(testPrePaidOrder));
+        given(curationBoxRepository.save(any(CurationBox.class))).willAnswer(inv -> inv.getArgument(0));
+        given(orderRepository.save(any(Order.class))).willAnswer(inv -> inv.getArgument(0));
+
+        // when
+        int count = orderService.expireAndRefundUnclaimedGiftBoxes(threshold);
+
+        // then
+        assertThat(count).isEqualTo(1);
+    }
 }

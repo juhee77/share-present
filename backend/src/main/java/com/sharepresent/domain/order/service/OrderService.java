@@ -179,6 +179,52 @@ public class OrderService {
         return convertToResponse(order);
     }
 
+    /**
+     * D-7 기한 만료(미수락) 선물 박스 자동 취소 및 전액 100% 환불 처리
+     */
+    @Transactional
+    public int expireAndRefundUnclaimedGiftBoxes(LocalDateTime threshold) {
+        java.util.List<CurationBox> expiredBoxes = curationBoxRepository.findByStatusInAndCreatedAtBefore(
+                java.util.List.of("WAITING", "CREATED", "PAID"),
+                threshold
+        );
+
+        int processedCount = 0;
+        for (CurationBox box : expiredBoxes) {
+            // 1. CurationBox 상태를 EXPIRED 로 갱신
+            CurationBox updatedBox = box.toBuilder()
+                    .status("EXPIRED")
+                    .build();
+            curationBoxRepository.save(updatedBox);
+
+            // 2. 연관 Order 가 있을 경우 100% 전액 환불 및 EXPIRED_REFUNDED 처리
+            orderRepository.findByCurationBoxId(box.getId()).ifPresent(order -> {
+                int fullRefund = order.getTotalAmount();
+                Order refundedOrder = order.toBuilder()
+                        .finalAmount(0)
+                        .refundAmount(fullRefund)
+                        .shippingStatus("EXPIRED_REFUNDED")
+                        .settledAt(LocalDateTime.now())
+                        .build();
+                orderRepository.save(refundedOrder);
+
+                if (order.getPaymentKey() != null) {
+                    triggerActualPaymentCancel(order.getPaymentKey(), fullRefund);
+                }
+
+                if (refundedOrder.getSender() != null) {
+                    String phone = refundedOrder.getSender().getPhoneNumber() != null ? refundedOrder.getSender().getPhoneNumber() : "010-0000-0000";
+                    String name = refundedOrder.getSender().getNickname() != null ? refundedOrder.getSender().getNickname() : "고객";
+                    kakaoNotificationService.sendGiftExpiredNotification(phone, name, fullRefund);
+                }
+            });
+
+            processedCount++;
+        }
+
+        return processedCount;
+    }
+
     private void triggerActualPaymentCancel(String paymentKey, int cancelAmount) {
         // PG사 REST cancel API 호출 모킹 (실제 개발 스프린트 2단계에서 구현 예정)
         System.out.printf("[Toss Payments API] Settle complete. Succeeded in partial refund. Key: %s, Refunded: %d KRW\n", paymentKey, cancelAmount);
