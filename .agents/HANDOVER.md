@@ -45,6 +45,7 @@
 - **선물 수락 D-7 만료 자동 환불 배치 (`GiftExpirationScheduler.java`)**: 7일간 미수락된 선물 자동 EXPIRED 처리 및 가승인 100% 전액 환불 배치 스케줄러.
 - **수령인 포토 감사 카드 & 폴라로이드 뷰 (`Order.java`, `dashboard/page.tsx`)**: 수령인 언박싱/인증 포토 첨부 및 보낸 사람 대시보드 폴라로이드 감성 렌더링.
 - **PG사 결제 웹훅 & HMAC-SHA256 무결성 검증 (`PaymentWebhookController.java`)**: 토스/카카오페이 비동기 상태 전이(`PAID`, `COMPLETED`, `CANCELLED`) 웹훅 처리.
+- **정산 명세서 현금영수증 신청 & 실시간 배송 연동 (`result/[token]/page.tsx`)**: 소득공제/지출증빙 현금영수증 신청 모달 및 실시간 배송 타임라인 다이렉트 링크 지원.
 
 ---
 
