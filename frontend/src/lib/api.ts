@@ -140,3 +140,23 @@ export async function searchOpenProducts(query: string): Promise<ProductDto[]> {
   }
   return res.json();
 }
+
+export interface SupportInquiryRequest {
+  name: string;
+  email: string;
+  category: string;
+  content: string;
+}
+
+export async function submitSupportInquiry(payload: SupportInquiryRequest): Promise<{ id: number; message: string }> {
+  const res = await fetch(`${BASE_URL}/support/inquiries`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) {
+    throw new Error("문의 접수에 실패했습니다.");
+  }
+  return res.json();
+}
+

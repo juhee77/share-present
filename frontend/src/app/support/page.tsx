@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Header from "@/components/Header";
 import { useToast } from "@/context/ToastContext";
+import { submitSupportInquiry } from "@/lib/api";
 
 interface FaqItem {
   id: number;
@@ -65,11 +66,7 @@ export default function CustomerSupportPage() {
 
     setIsSubmitting(true);
     try {
-      await fetch("http://localhost:8081/api/v1/support/inquiries", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, category: inquiryCategory, content }),
-      });
+      await submitSupportInquiry({ name, email, category: inquiryCategory, content });
       setSubmitted(true);
       showToast("고객님의 문의가 성공적으로 접수되었습니다! ✦", "success");
     } catch (err) {
