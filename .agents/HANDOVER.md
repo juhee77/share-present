@@ -41,6 +41,10 @@
 - **동적 배송 추적 & 타임라인 히스토리 (`/gift/track/[token]`)**: 실시간 배송 상태 매핑, 택배사 물류센터 이벤트 로그, 1-Click 운송장 복사.
 - **플로팅 럭셔리 토스트 시스템 (`ToastContext.tsx`)**: 브라우저 블로킹 `alert()` 전면 제거 및 반응형 럭셔리 알림창 통일.
 - **카테고리 칩 필터링 (`page.tsx`)**: 테마별 카테고리(`전체`, `향수/디퓨저`, `핸드/바디`, `홈/테이블웨어`, `테크/라이프`) 필터 칩 연동.
+- **카카오 알림톡 실시간 미리보기 시뮬레이터 (`AlimtalkPreviewModal.tsx`)**: 선물 도착/수락/배송 출발 카카오 비즈메시지 템플릿 실시간 모바일 프리뷰 지원.
+- **선물 수락 D-7 만료 자동 환불 배치 (`GiftExpirationScheduler.java`)**: 7일간 미수락된 선물 자동 EXPIRED 처리 및 가승인 100% 전액 환불 배치 스케줄러.
+- **수령인 포토 감사 카드 & 폴라로이드 뷰 (`Order.java`, `dashboard/page.tsx`)**: 수령인 언박싱/인증 포토 첨부 및 보낸 사람 대시보드 폴라로이드 감성 렌더링.
+- **PG사 결제 웹훅 & HMAC-SHA256 무결성 검증 (`PaymentWebhookController.java`)**: 토스/카카오페이 비동기 상태 전이(`PAID`, `COMPLETED`, `CANCELLED`) 웹훅 처리.
 
 ---
 
@@ -51,12 +55,13 @@
 - `backend/src/main/resources/db/migration/V2__seed_initial_products.sql`: Flyway V2 초기 럭셔리 상품 시드 데이터
 - `backend/src/main/resources/db/migration/V3__expand_popular_gifts_catalog.sql`: Flyway V3 16종 명품 브랜드 카탈로그 확장 시드 데이터
 - `backend/src/main/resources/db/migration/V4__add_thank_you_reply_card.sql`: Flyway V4 수령인 감사 답장 카드 DB 컬럼 확장 DDL
+- `backend/src/main/resources/db/migration/V5__add_thank_you_photo_url.sql`: Flyway V5 수령인 포토 감사 카드 DB 컬럼 확장 DDL
 - `docker-compose.yml`: PostgreSQL 16 DB 컨테이너 1방 구동 Docker 환경 파일
 - `backend/src/main/java/com/sharepresent/domain/curation/entity/CurationBox.java`: `minBudget` 컬럼 포함 JPA 엔티티
-- `backend/src/main/java/com/sharepresent/domain/curation/service/CurationBoxService.java`: 큐레이션 생성 및 이중 예산 유효성 검증
-- `backend/src/main/java/com/sharepresent/domain/order/entity/Order.java`: 주문 및 차액 정산 엔티티
-- `backend/src/main/java/com/sharepresent/domain/order/service/OrderService.java`: 선물 수락, 정산, 차액 부분 환불 계산
-- `backend/src/test/java/com/sharepresent/domain/`: MockMvc 컨트롤러 테스트 및 JPA 단위 테스트 스위트
+- `backend/src/main/java/com/sharepresent/domain/order/scheduler/GiftExpirationScheduler.java`: 7일 만료 자동 환불 스케줄러
+- `backend/src/main/java/com/sharepresent/domain/payment/controller/PaymentWebhookController.java`: PG사 결제 웹훅 엔드포인트
+- `backend/src/main/java/com/sharepresent/domain/order/service/OrderService.java`: 선물 수락, 정산, 차액 부분 환불 및 만료 전액 환불 계산
+- `backend/src/test/java/com/sharepresent/domain/`: MockMvc 컨트롤러 테스트 및 JPA 단위 테스트 스위트 (100% 통과)
 
 ### 프론트엔드 (Next.js 16 / TypeScript / Tailwind CSS)
 - `frontend/src/app/page.tsx`: 이중 예산 셀렉터, 레터 테마, 상품 큐레이션 설계 및 결제 모달 연동
