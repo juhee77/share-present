@@ -4,6 +4,7 @@ import { useState } from "react";
 import Header from "@/components/Header";
 import Link from "next/link";
 import ShareModal from "@/components/ShareModal";
+import AlimtalkPreviewModal from "@/components/AlimtalkPreviewModal";
 
 interface MockSentBox {
   id: number;
@@ -185,6 +186,15 @@ export default function SenderDashboardPage() {
   const [sentBoxes] = useState<MockSentBox[]>(MOCK_SENT_BOXES);
   const [receivedBoxes] = useState<MockReceivedBox[]>(MOCK_RECEIVED_BOXES);
   const [shareModalBox, setShareModalBox] = useState<MockSentBox | null>(null);
+  const [alimtalkPreview, setAlimtalkPreview] = useState<{
+    isOpen: boolean;
+    senderName?: string;
+    receiverName?: string;
+    messageCard?: string;
+    productName?: string;
+    refundAmount?: number;
+    trackingNumber?: string;
+  }>({ isOpen: false });
 
   return (
     <div className="flex flex-col min-h-screen pb-16 bg-[#faf9f6]">
@@ -293,12 +303,29 @@ export default function SenderDashboardPage() {
                   </div>
                 </div>
 
-                <Link
-                  href={`/gift/track/${box.token}`}
-                  className="btn-editorial text-center text-xs py-3 font-bold uppercase tracking-wider block shadow-sm"
-                >
-                  실시간 배송 상태 조회 📦
-                </Link>
+                <div className="flex gap-2">
+                  <Link
+                    href={`/gift/track/${box.token}`}
+                    className="flex-1 btn-editorial text-center text-xs py-2.5 font-bold uppercase tracking-wider block shadow-sm"
+                  >
+                    실시간 배송 상태 조회 📦
+                  </Link>
+                  <button
+                    onClick={() =>
+                      setAlimtalkPreview({
+                        isOpen: true,
+                        senderName: box.senderName,
+                        messageCard: box.messageCard,
+                        productName: box.selectedProductName,
+                        trackingNumber: box.trackingNumber,
+                      })
+                    }
+                    className="px-3 py-2.5 bg-[#fee500]/20 hover:bg-[#fee500]/40 border border-[#fee500] text-[#3c1e1e] rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1"
+                  >
+                    <span>💬</span>
+                    <span>알림톡</span>
+                  </button>
+                </div>
               </div>
             ))}
           </div>
@@ -384,19 +411,51 @@ export default function SenderDashboardPage() {
 
                 <div className="flex gap-2">
                   {box.status === "COMPLETED" ? (
-                    <Link
-                      href={`/result/${box.token}`}
-                      className="btn-editorial-outline text-center text-xs py-3 font-bold uppercase tracking-wider w-full"
-                    >
-                      정산 및 배송 내역 상세 ↗
-                    </Link>
+                    <>
+                      <Link
+                        href={`/result/${box.token}`}
+                        className="flex-1 btn-editorial-outline text-center text-xs py-2.5 font-bold uppercase tracking-wider block"
+                      >
+                        정산 및 배송 내역 상세 ↗
+                      </Link>
+                      <button
+                        onClick={() =>
+                          setAlimtalkPreview({
+                            isOpen: true,
+                            senderName: "주희",
+                            receiverName: "수령인",
+                            productName: box.selectedProductName,
+                            refundAmount: box.refundAmount,
+                          })
+                        }
+                        className="px-3 py-2.5 bg-[#fee500]/20 hover:bg-[#fee500]/40 border border-[#fee500] text-[#3c1e1e] rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1"
+                      >
+                        <span>💬</span>
+                        <span>알림톡</span>
+                      </button>
+                    </>
                   ) : (
-                    <button
-                      onClick={() => setShareModalBox(box)}
-                      className="btn-editorial text-center text-xs py-3 font-bold uppercase tracking-wider w-full shadow-sm"
-                    >
-                      선물 링크 공유하기 💌
-                    </button>
+                    <>
+                      <button
+                        onClick={() => setShareModalBox(box)}
+                        className="flex-1 btn-editorial text-center text-xs py-2.5 font-bold uppercase tracking-wider shadow-sm"
+                      >
+                        선물 링크 공유하기 💌
+                      </button>
+                      <button
+                        onClick={() =>
+                          setAlimtalkPreview({
+                            isOpen: true,
+                            senderName: "주희",
+                            messageCard: box.messageCard,
+                          })
+                        }
+                        className="px-3 py-2.5 bg-[#fee500]/20 hover:bg-[#fee500]/40 border border-[#fee500] text-[#3c1e1e] rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1"
+                      >
+                        <span>💬</span>
+                        <span>알림톡</span>
+                      </button>
+                    </>
                   )}
                 </div>
               </div>
@@ -469,6 +528,18 @@ export default function SenderDashboardPage() {
             messageCard={shareModalBox.messageCard}
           />
         )}
+
+        {/* Alimtalk Preview Simulator Modal */}
+        <AlimtalkPreviewModal
+          isOpen={alimtalkPreview.isOpen}
+          onClose={() => setAlimtalkPreview({ isOpen: false })}
+          senderName={alimtalkPreview.senderName}
+          receiverName={alimtalkPreview.receiverName}
+          messageCard={alimtalkPreview.messageCard}
+          productName={alimtalkPreview.productName}
+          refundAmount={alimtalkPreview.refundAmount}
+          trackingNumber={alimtalkPreview.trackingNumber}
+        />
       </main>
     </div>
   );

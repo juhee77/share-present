@@ -1,7 +1,7 @@
 "use client";
-
 import { useState } from "react";
 import { useToast } from "@/context/ToastContext";
+import AlimtalkPreviewModal from "./AlimtalkPreviewModal";
 
 interface ShareModalProps {
   isOpen: boolean;
@@ -22,6 +22,7 @@ export default function ShareModal({
 }: ShareModalProps) {
   const { showToast } = useToast();
   const [copiedType, setCopiedType] = useState<string | null>(null);
+  const [showAlimtalkModal, setShowAlimtalkModal] = useState(false);
 
   if (!isOpen) return null;
 
@@ -190,6 +191,15 @@ ${giftUrl}`;
             </button>
           </div>
 
+          {/* Alimtalk Simulator Trigger */}
+          <button
+            onClick={() => setShowAlimtalkModal(true)}
+            className="w-full flex items-center justify-center gap-2 py-2.5 bg-[#fee500]/15 hover:bg-[#fee500]/30 border border-[#fee500]/70 rounded-xl text-xs font-bold text-[#3c1e1e] transition-all"
+          >
+            <span>💬</span>
+            <span>카카오 알림톡 실시간 미리보기 / 시뮬레이터</span>
+          </button>
+
           {/* Simple Link Copy */}
           <div className="flex items-center gap-2 p-2 bg-[#f0ede6] rounded-xl border border-[#dedad0]">
             <input
@@ -214,6 +224,14 @@ ${giftUrl}`;
           </p>
         </div>
       </div>
+
+      {/* Alimtalk Preview Simulator Modal */}
+      <AlimtalkPreviewModal
+        isOpen={showAlimtalkModal}
+        onClose={() => setShowAlimtalkModal(false)}
+        senderName={senderName}
+        messageCard={messageCard}
+      />
     </div>
   );
 }
