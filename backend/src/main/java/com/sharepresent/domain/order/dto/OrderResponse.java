@@ -20,4 +20,7 @@ public class OrderResponse {
     private Integer refundAmount;
     private String status;
     private String externalUrl;
+    private String thankYouSticker;
+    private String thankYouMessage;
+    private String thankYouPhotoUrl;
 }

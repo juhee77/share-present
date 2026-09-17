@@ -137,6 +137,9 @@ public class OrderService {
                 .shippingAddress(request.getShippingAddress())
                 .shippingStatus("COMPLETED")
                 .settledAt(LocalDateTime.now())
+                .thankYouSticker(request.getThankYouSticker())
+                .thankYouMessage(request.getThankYouMessage())
+                .thankYouPhotoUrl(request.getThankYouPhotoUrl())
                 .build();
 
         Order savedOrder = orderRepository.save(settledOrder);
@@ -248,6 +251,9 @@ public class OrderService {
                 .refundAmount(order.getRefundAmount())
                 .externalUrl(extUrl)
                 .status(order.getShippingStatus())
+                .thankYouSticker(order.getThankYouSticker())
+                .thankYouMessage(order.getThankYouMessage())
+                .thankYouPhotoUrl(order.getThankYouPhotoUrl())
                 .build();
     }
 }

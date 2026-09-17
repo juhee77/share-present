@@ -87,4 +87,7 @@ public class Order {
 
     @Column(name = "thank_you_message", columnDefinition = "TEXT")
     private String thankYouMessage;
+
+    @Column(name = "thank_you_photo_url")
+    private String thankYouPhotoUrl;
 }

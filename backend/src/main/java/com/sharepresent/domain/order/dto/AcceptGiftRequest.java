@@ -29,4 +29,9 @@ public class AcceptGiftRequest {
     private String recipientCustomBrand;
     private String recipientCustomName;
     private String recipientCustomUrl;
+
+    // Optional thank-you reply card fields
+    private String thankYouSticker;
+    private String thankYouMessage;
+    private String thankYouPhotoUrl;
 }

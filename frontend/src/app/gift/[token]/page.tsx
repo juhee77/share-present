@@ -36,6 +36,7 @@ export default function RecipientGiftPage({ params }: { params: Promise<{ token:
   const [showThankYouModal, setShowThankYouModal] = useState(false);
   const [thankYouSticker, setThankYouSticker] = useState("💖 취향저격 고마워!");
   const [thankYouMsg, setThankYouMsg] = useState("예쁜 선물 골라줘서 너무 고마워! 예쁘게 잘 쓸게 🎁");
+  const [thankYouPhoto, setThankYouPhoto] = useState<string>("https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=500&auto=format&fit=crop&q=80");
   const [thankYouSent, setThankYouSent] = useState(false);
 
   useEffect(() => {
@@ -383,6 +384,35 @@ export default function RecipientGiftPage({ params }: { params: Promise<{ token:
               </div>
             </div>
 
+            {/* Photo Attachment Presets */}
+            <div className="space-y-2 mb-4">
+              <label className="block text-[11px] font-bold text-[#5e605d] uppercase tracking-wider">
+                📸 언박싱 / 인증 포토 첨부
+              </label>
+              <div className="grid grid-cols-2 gap-2">
+                {[
+                  { label: "🎁 언박싱 샷", url: "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=500&auto=format&fit=crop&q=80" },
+                  { label: "☕ 홈카페 머그", url: "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=500&auto=format&fit=crop&q=80" },
+                  { label: "🌿 향기/인테리어", url: "https://images.unsplash.com/photo-1547887537-6158d64c35b3?w=500&auto=format&fit=crop&q=80" },
+                  { label: "🧴 핸드/바디", url: "https://images.unsplash.com/photo-1608248597309-45da1e028896?w=500&auto=format&fit=crop&q=80" },
+                ].map((p) => (
+                  <button
+                    key={p.label}
+                    type="button"
+                    onClick={() => setThankYouPhoto(p.url)}
+                    className={`p-2 rounded-xl text-[11px] font-bold transition-all text-left border flex items-center justify-between ${
+                      thankYouPhoto === p.url
+                        ? "bg-[#3b483a] text-white border-[#3b483a]"
+                        : "bg-[#faf9f6] text-[#1a1a1a] border-[#eae6df]"
+                    }`}
+                  >
+                    <span>{p.label}</span>
+                    {thankYouPhoto === p.url && <span className="text-[10px]">✓</span>}
+                  </button>
+                ))}
+              </div>
+            </div>
+
             {/* Message Textarea */}
             <div className="mb-5">
               <label className="block text-[11px] font-bold text-[#5e605d] uppercase tracking-wider mb-1.5">
@@ -402,9 +432,9 @@ export default function RecipientGiftPage({ params }: { params: Promise<{ token:
                 setShowThankYouModal(false);
                 showToast(`${boxData.senderName}님에게 감사 카드와 답장이 전달되었습니다! 💌`, "success");
               }}
-              className="btn-editorial py-3.5 text-xs tracking-wider uppercase font-bold"
+              className="btn-editorial w-full py-3.5 text-xs font-bold uppercase tracking-wider shadow-md"
             >
-              감사 카드 전송하기 💌
+              감사 답장 보내기 💌
             </button>
           </div>
         </div>

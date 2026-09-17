@@ -21,6 +21,7 @@ interface MockSentBox {
   shippingStatus?: string;
   thankYouSticker?: string;
   thankYouMessage?: string;
+  thankYouPhotoUrl?: string;
 }
 
 interface MockReceivedBox {
@@ -54,6 +55,7 @@ const MOCK_SENT_BOXES: MockSentBox[] = [
     shippingStatus: "PREPARING",
     thankYouSticker: "💖 취향저격 고마워!",
     thankYouMessage: "예쁜 선물 골라줘서 너무 고마워! 오피스 머그로 너무 예쁘게 잘 쓸게 ☕",
+    thankYouPhotoUrl: "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=600&auto=format&fit=crop&q=80",
   },
   {
     id: 2,
@@ -396,14 +398,30 @@ export default function SenderDashboardPage() {
                 </div>
 
                 {box.thankYouMessage && (
-                  <div className="mb-4 p-3.5 bg-white rounded-xl border border-[#3b483a]/30 shadow-sm relative overflow-hidden">
-                    <span className="text-[9px] font-extrabold uppercase tracking-widest text-[#a38974] block mb-1">
-                      💌 Recipient's Thank-You Card
-                    </span>
-                    <span className="text-xs font-bold text-[#3b483a] block mb-1">
-                      {box.thankYouSticker}
-                    </span>
-                    <p className="text-xs text-[#1a1a1a] font-serif leading-relaxed italic">
+                  <div className="mb-4 p-4 bg-white rounded-2xl border border-[#dedad0] shadow-md relative overflow-hidden">
+                    <div className="flex items-center justify-between mb-2.5">
+                      <span className="text-[9px] font-extrabold uppercase tracking-widest text-[#a38974] block">
+                        💌 Recipient's Polaroid Thank-You Card
+                      </span>
+                      <span className="text-xs font-bold text-[#3b483a] bg-[#3b483a]/10 px-2.5 py-0.5 rounded-full">
+                        {box.thankYouSticker}
+                      </span>
+                    </div>
+
+                    {box.thankYouPhotoUrl && (
+                      <div className="aspect-[16/10] relative rounded-xl overflow-hidden bg-gray-100 mb-3 border border-[#eae6df]">
+                        <img
+                          src={box.thankYouPhotoUrl}
+                          alt="Thank you photo"
+                          className="object-cover w-full h-full"
+                        />
+                        <div className="absolute bottom-2 right-2 bg-black/60 text-white text-[9px] font-medium px-2 py-0.5 rounded-md backdrop-blur-xs">
+                          📸 수령인 인증샷
+                        </div>
+                      </div>
+                    )}
+
+                    <p className="text-xs text-[#1a1a1a] font-serif leading-relaxed italic bg-[#faf9f6] p-3 rounded-xl border border-[#eae6df]">
                       "{box.thankYouMessage}"
                     </p>
                   </div>
