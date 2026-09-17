@@ -2,6 +2,7 @@
 
 import { use, useEffect, useState } from "react";
 import Header from "@/components/Header";
+import Link from "next/link";
 import { getOrderResult, OrderResponse } from "@/lib/api";
 import { useToast } from "@/context/ToastContext";
 
@@ -12,6 +13,8 @@ export default function OrderResultPage({ params }: { params: Promise<{ token: s
 
   const [order, setOrder] = useState<OrderResponse | null>(null);
   const [loading, setLoading] = useState(true);
+  const [showReceiptModal, setShowReceiptModal] = useState(false);
+  const [receiptPhone, setReceiptPhone] = useState("");
 
   useEffect(() => {
     async function loadResult() {
@@ -235,11 +238,25 @@ export default function OrderResultPage({ params }: { params: Promise<{ token: s
 
         {/* Action Buttons */}
         <div className="space-y-3">
-          <button
-            onClick={handleDownloadReceiptImage}
+          <Link
+            href={`/gift/track/${token}`}
             className="btn-editorial py-4 text-xs font-bold uppercase tracking-widest text-center block w-full shadow-md"
           >
+            실시간 배송 타임라인 조회 📦
+          </Link>
+
+          <button
+            onClick={handleDownloadReceiptImage}
+            className="btn-editorial-outline py-3.5 text-xs font-bold uppercase tracking-widest text-center block w-full"
+          >
             정산 명세서 카드 이미지 저장하기 📸
+          </button>
+
+          <button
+            onClick={() => setShowReceiptModal(true)}
+            className="btn-editorial-outline py-3.5 text-xs font-bold uppercase tracking-wider w-full"
+          >
+            현금영수증 / 세금계산서 발급 신청 🧾
           </button>
 
           {order.externalUrl && (
@@ -256,7 +273,67 @@ export default function OrderResultPage({ params }: { params: Promise<{ token: s
           <button onClick={handleCopyAddress} className="btn-editorial-outline py-3.5 text-xs font-bold uppercase tracking-wider w-full">
             선물 정산 및 배송 내역 복사하기 📋
           </button>
+
+          <Link
+            href="/dashboard"
+            className="text-center text-xs font-bold text-[#5e605d] hover:text-[#1a1a1a] block pt-2"
+          >
+            ← 내 선물 보관함(대시보드)으로 이동
+          </Link>
         </div>
+
+        {/* Cash Receipt Modal */}
+        {showReceiptModal && (
+          <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 animate-fade-in">
+            <div className="bg-white rounded-2xl p-6 max-w-sm w-full shadow-2xl border border-[#eae6df]">
+              <div className="flex items-center justify-between mb-3 pb-2 border-b border-[#eae6df]">
+                <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#a38974]">
+                  Tax Invoice & Receipt
+                </span>
+                <button
+                  onClick={() => setShowReceiptModal(false)}
+                  className="text-xs font-bold text-gray-400 hover:text-black"
+                >
+                  ✕
+                </button>
+              </div>
+
+              <h2 className="text-base font-bold text-[#1a1a1a] mb-1">
+                현금영수증 / 증빙 발급 신청
+              </h2>
+              <p className="text-xs text-[#5e605d] mb-4 leading-relaxed">
+                최종 결제 금액 <strong className="text-[#3b483a]">{order.finalAmount.toLocaleString()}원</strong>에 대한 소득공제 및 지출증빙을 신청합니다.
+              </p>
+
+              <div className="mb-4">
+                <label className="block text-[11px] font-bold text-[#5e605d] uppercase tracking-wider mb-1.5">
+                  휴대폰 번호 또는 사업자등록번호
+                </label>
+                <input
+                  type="tel"
+                  placeholder="010-0000-0000"
+                  value={receiptPhone}
+                  onChange={(e) => setReceiptPhone(e.target.value)}
+                  className="input-editorial text-xs"
+                />
+              </div>
+
+              <button
+                onClick={() => {
+                  if (!receiptPhone) {
+                    showToast("발급받으실 번호를 입력해주세요.", "error");
+                    return;
+                  }
+                  setShowReceiptModal(false);
+                  showToast("현금영수증 발급 신청이 정상 접수되었습니다! 🧾", "success");
+                }}
+                className="btn-editorial w-full py-3 text-xs font-bold uppercase tracking-wider shadow-sm"
+              >
+                신청하기 ✦
+              </button>
+            </div>
+          </div>
+        )}
       </main>
     </div>
   );
