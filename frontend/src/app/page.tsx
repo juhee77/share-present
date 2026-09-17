@@ -226,6 +226,7 @@ export default function CreateGiftPage() {
     setMaxBudget(preset.maxBudget);
     setMessageCard(preset.message);
     setSelectedProductIds(preset.productIds);
+    showToast(`${preset.label} 테마와 추천 선물 구성이 적용되었습니다! 🎁`, "success");
   };
 
   // Catalog Search & Filter State
