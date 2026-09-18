@@ -1,5 +1,8 @@
 package com.sharepresent.domain.support.controller;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,7 +18,7 @@ import java.util.Map;
 public class SupportInquiryController {
 
     @PostMapping("/inquiries")
-    public ResponseEntity<Map<String, Object>> submitInquiry(@RequestBody InquiryRequest request) {
+    public ResponseEntity<Map<String, Object>> submitInquiry(@Valid @RequestBody InquiryRequest request) {
         System.out.println("★ [SupportInquiryController] New 1:1 Customer Support Inquiry Received: " + request.getName());
         return ResponseEntity.ok(Map.of(
                 "status", "SUCCESS",
@@ -28,9 +31,17 @@ public class SupportInquiryController {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class InquiryRequest {
+        @NotBlank(message = "이름은 필수 입력입니다.")
         private String name;
+
+        @NotBlank(message = "이메일은 필수 입력입니다.")
+        @Email(message = "올바른 이메일 형식이어야 합니다.")
         private String email;
+
         private String category;
+
+        @NotBlank(message = "문의 내용은 필수 입력입니다.")
         private String content;
     }
 }
+
