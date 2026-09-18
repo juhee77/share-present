@@ -46,6 +46,8 @@
 - **수령인 포토 감사 카드 & 폴라로이드 뷰 (`Order.java`, `dashboard/page.tsx`)**: 수령인 언박싱/인증 포토 첨부 및 보낸 사람 대시보드 폴라로이드 감성 렌더링.
 - **PG사 결제 웹훅 & HMAC-SHA256 무결성 검증 (`PaymentWebhookController.java`)**: 토스/카카오페이 비동기 상태 전이(`PAID`, `COMPLETED`, `CANCELLED`) 웹훅 처리.
 - **정산 명세서 현금영수증 신청 & 실시간 배송 연동 (`result/[token]/page.tsx`)**: 소득공제/지출증빙 현금영수증 신청 모달 및 실시간 배송 타임라인 다이렉트 링크 지원.
+- **카테고리 다이나믹 쿼리 & 백엔드 필터링 (`ProductController.java`, `V6__add_product_category.sql`)**: 카테고리(`FRAGRANCE`, `HAND_BODY`, `TABLEWARE`, `TECH`) 필터링 지원 및 프론트 연동.
+- **수령인 대체 추천 선물 탐색 및 교체 수락 (`AlternativeGiftsDrawer.tsx`, `gift/[token]/page.tsx`)**: 수령인 가격 비노출 보안을 준수하면서 동일 감도의 추천 상품으로 원클릭 교체 수락 기능 지원.
 
 ---
 
@@ -57,19 +59,22 @@
 - `backend/src/main/resources/db/migration/V3__expand_popular_gifts_catalog.sql`: Flyway V3 16종 명품 브랜드 카탈로그 확장 시드 데이터
 - `backend/src/main/resources/db/migration/V4__add_thank_you_reply_card.sql`: Flyway V4 수령인 감사 답장 카드 DB 컬럼 확장 DDL
 - `backend/src/main/resources/db/migration/V5__add_thank_you_photo_url.sql`: Flyway V5 수령인 포토 감사 카드 DB 컬럼 확장 DDL
+- `backend/src/main/resources/db/migration/V6__add_product_category.sql`: Flyway V6 상품 카테고리 컬럼 및 초기 카테고리 매핑 DDL
 - `docker-compose.yml`: PostgreSQL 16 DB 컨테이너 1방 구동 Docker 환경 파일
 - `backend/src/main/java/com/sharepresent/domain/curation/entity/CurationBox.java`: `minBudget` 컬럼 포함 JPA 엔티티
+- `backend/src/main/java/com/sharepresent/domain/product/controller/ProductController.java`: 카테고리/예산/키워드 다이나믹 필터링 API
 - `backend/src/main/java/com/sharepresent/domain/order/scheduler/GiftExpirationScheduler.java`: 7일 만료 자동 환불 스케줄러
 - `backend/src/main/java/com/sharepresent/domain/payment/controller/PaymentWebhookController.java`: PG사 결제 웹훅 엔드포인트
 - `backend/src/main/java/com/sharepresent/domain/order/service/OrderService.java`: 선물 수락, 정산, 차액 부분 환불 및 만료 전액 환불 계산
 - `backend/src/test/java/com/sharepresent/domain/`: MockMvc 컨트롤러 테스트 및 JPA 단위 테스트 스위트 (100% 통과)
 
 ### 프론트엔드 (Next.js 16 / TypeScript / Tailwind CSS)
-- `frontend/src/app/page.tsx`: 이중 예산 셀렉터, 레터 테마, 상품 큐레이션 설계 및 결제 모달 연동
+- `frontend/src/app/page.tsx`: 이중 예산 셀렉터, 카테고리 필터 칩, 레터 테마, 상품 큐레이션 설계 및 결제 모달 연동
 - `frontend/src/app/dashboard/page.tsx`: 보낸 선물함 / 받은 선물함 대시보드 및 공유 모달 연동
-- `frontend/src/app/gift/[token]/page.tsx`: 수령인 3D 왁스 씰 개봉 및 주소지 입력 (가격 100% 비노출)
+- `frontend/src/app/gift/[token]/page.tsx`: 수령인 3D 왁스 씰 개봉, 대체 선물 교체 및 주소지 입력 (가격 100% 비노출)
 - `frontend/src/app/gift/track/[token]/page.tsx`: 수령인 동적 4단계 배송 타임라인 & 운송장 조회
 - `frontend/src/app/result/[token]/page.tsx`: 보내는 사람 전용 최종 정산 명세서 및 영수증 이미지 다운로드
+- `frontend/src/components/AlternativeGiftsDrawer.tsx`: 수령인용 대체 추천 선물 탐색 드로어
 - `frontend/src/components/CheckoutModal.tsx`: 에스크로 가승인 결제 샌드박스 모달
 - `frontend/src/components/ShareModal.tsx`: 카카오톡 / 인스타 DM / Web Share API 공유 모달
 - `frontend/src/components/DeliveryDrawer.tsx`: 도로명 주소 검색 및 배송 메모 드로어
