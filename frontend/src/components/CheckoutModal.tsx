@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useToast } from "@/context/ToastContext";
 
 interface CheckoutModalProps {
   isOpen: boolean;
@@ -28,6 +29,7 @@ export default function CheckoutModal({
   selectedProductCount,
   senderName,
 }: CheckoutModalProps) {
+  const { showToast } = useToast();
   const [selectedMethod, setSelectedMethod] = useState("toss");
   const [isProcessing, setIsProcessing] = useState(false);
   const [step, setStep] = useState<"SELECT" | "PROCESSING" | "APPROVED">("SELECT");
@@ -40,6 +42,7 @@ export default function CheckoutModal({
 
     setTimeout(() => {
       setStep("APPROVED");
+      showToast(`${maxBudget.toLocaleString()}원 가승인 결제가 완료되었습니다! 💳`, "success");
       setTimeout(() => {
         setIsProcessing(false);
         setStep("SELECT");
