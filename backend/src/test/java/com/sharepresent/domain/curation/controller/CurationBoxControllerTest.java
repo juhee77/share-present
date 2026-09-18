@@ -69,6 +69,22 @@ class CurationBoxControllerTest {
     }
 
     @Test
+    @DisplayName("POST /api/v1/curation-boxes - 필수 파라미터 누락 시 400 Bad Request 검증")
+    void createCurationBox_validationFailure() throws Exception {
+        // given: minBudget과 maxBudget이 누락된 잘못된 요청
+        CreateCurationBoxRequest invalidRequest = CreateCurationBoxRequest.builder()
+                .senderId(1L)
+                .messageCard("누락 테스트")
+                .build();
+
+        // when & then
+        mockMvc.perform(post("/api/v1/curation-boxes")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(invalidRequest)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
     @DisplayName("GET /api/v1/curation-boxes/{token} - 수령인 선물 상자 조회 성공")
     void getCurationBox_success() throws Exception {
         // given
