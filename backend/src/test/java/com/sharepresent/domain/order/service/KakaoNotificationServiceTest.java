@@ -37,4 +37,16 @@ class KakaoNotificationServiceTest {
 
         assertThat(result).isTrue();
     }
+
+    @Test
+    @DisplayName("선물 기한(7일) 만료 전액 환불 알림톡 발송 성공")
+    void sendGiftExpiredNotification_success() {
+        boolean result = kakaoNotificationService.sendGiftExpiredNotification(
+                "010-1234-5678",
+                "주희",
+                60000
+        );
+
+        assertThat(result).isTrue();
+    }
 }
