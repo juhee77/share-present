@@ -114,7 +114,14 @@ export default function UnwrappingRibbon({
               <div className="relative my-4">
                 <button
                   onClick={handleBreakSeal}
-                  className={`w-24 h-24 rounded-full flex flex-col items-center justify-center border-2 shadow-2xl transition-transform transform active:scale-95 hover:scale-105 animate-seal-pulse cursor-pointer relative z-10 ${
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      handleBreakSeal();
+                    }
+                  }}
+                  aria-label="왁스 씰을 눌러 선물 봉투 개봉하기"
+                  className={`w-24 h-24 rounded-full flex flex-col items-center justify-center border-2 shadow-2xl transition-transform transform active:scale-95 hover:scale-105 animate-seal-pulse cursor-pointer relative z-10 focus:outline-none focus:ring-4 focus:ring-current/30 ${
                     themeStyles.sealBg
                   } ${themeStyles.sealText} ${themeStyles.sealBorder}`}
                 >
@@ -125,7 +132,7 @@ export default function UnwrappingRibbon({
                     SEAL
                   </span>
                 </button>
-                <div className="absolute -inset-2 rounded-full border border-dashed border-current opacity-30 animate-spin-slow"></div>
+                <div className="absolute -inset-2 rounded-full border border-dashed border-current opacity-30 animate-spin-slow pointer-events-none"></div>
               </div>
 
               <p className="text-xs mt-6 opacity-80 animate-pulse">
