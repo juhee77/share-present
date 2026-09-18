@@ -38,6 +38,7 @@ class ProductControllerTest {
                 .brand("OIMU")
                 .name("도자기 머그")
                 .price(38000)
+                .category("TABLEWARE")
                 .build();
 
         Product p2 = Product.builder()
@@ -45,6 +46,7 @@ class ProductControllerTest {
                 .brand("LE LABO")
                 .name("상탈 33 로션")
                 .price(98000)
+                .category("HAND_BODY")
                 .build();
 
         given(productRepository.findAll()).willReturn(List.of(p1, p2));
@@ -57,6 +59,37 @@ class ProductControllerTest {
                 .andExpect(jsonPath("$.length()").value(1))
                 .andExpect(jsonPath("$[0].brand").value("OIMU"))
                 .andExpect(jsonPath("$[0].price").value(38000));
+    }
+
+    @Test
+    @DisplayName("GET /api/v1/products - 카테고리 필터링 조회 성공")
+    void getProducts_withCategoryFilter_success() throws Exception {
+        // given
+        Product p1 = Product.builder()
+                .id(1L)
+                .brand("GRANHAND")
+                .name("사쉐 퍼퓸")
+                .price(45000)
+                .category("FRAGRANCE")
+                .build();
+
+        Product p2 = Product.builder()
+                .id(2L)
+                .brand("OIMU")
+                .name("도자기 머그")
+                .price(38000)
+                .category("TABLEWARE")
+                .build();
+
+        given(productRepository.findAll()).willReturn(List.of(p1, p2));
+
+        // when & then
+        mockMvc.perform(get("/api/v1/products")
+                        .param("category", "FRAGRANCE"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(1))
+                .andExpect(jsonPath("$[0].brand").value("GRANHAND"))
+                .andExpect(jsonPath("$[0].category").value("FRAGRANCE"));
     }
 
     @Test

@@ -40,6 +40,9 @@ public class Product {
     @Column(length = 50)
     private String icon;
 
+    @Column(length = 50)
+    private String category;
+
     @Builder.Default
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "product_options", joinColumns = @JoinColumn(name = "product_id"))

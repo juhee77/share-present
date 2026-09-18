@@ -33,6 +33,13 @@ public class ProductController {
                     .toList();
         }
 
+        if (category != null && !category.isBlank() && !"ALL".equalsIgnoreCase(category)) {
+            String upperCat = category.toUpperCase();
+            products = products.stream()
+                    .filter(p -> p.getCategory() != null && (p.getCategory().equalsIgnoreCase(upperCat) || p.getCategory().toUpperCase().contains(upperCat)))
+                    .toList();
+        }
+
         if (keyword != null && !keyword.isBlank()) {
             String lowerKw = keyword.toLowerCase();
             products = products.stream()

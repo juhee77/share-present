@@ -120,11 +120,12 @@ export async function prePayOrder(curationBoxId: number, paymentKey: string): Pr
   return res.json();
 }
 
-export async function fetchProducts(keyword?: string, minBudget?: number, maxBudget?: number): Promise<ProductDto[]> {
+export async function fetchProducts(keyword?: string, minBudget?: number, maxBudget?: number, category?: string): Promise<ProductDto[]> {
   const params = new URLSearchParams();
   if (keyword) params.append("keyword", keyword);
   if (minBudget) params.append("minBudget", minBudget.toString());
   if (maxBudget) params.append("maxBudget", maxBudget.toString());
+  if (category && category !== "ALL") params.append("category", category);
 
   const res = await fetch(`${BASE_URL}/products?${params.toString()}`);
   if (!res.ok) {

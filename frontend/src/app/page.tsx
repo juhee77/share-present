@@ -258,7 +258,7 @@ export default function CreateGiftPage() {
           }
         }
 
-        const fetched = await fetchProducts(searchKeyword, minBudget, maxBudget);
+        const fetched = await fetchProducts(searchKeyword, minBudget, maxBudget, selectedCategory);
         if (fetched && fetched.length > 0) {
           setProducts(fetched);
         } else {
