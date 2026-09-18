@@ -2,9 +2,12 @@
 
 import { use, useEffect, useState } from "react";
 import Header from "@/components/Header";
+import Link from "next/link";
 import { getOrderResult, OrderResponse } from "@/lib/api";
+import { useToast } from "@/context/ToastContext";
 
 export default function RecipientTrackingPage({ params }: { params: Promise<{ token: string }> }) {
+  const { showToast } = useToast();
   const resolvedParams = use(params);
   const token = resolvedParams.token;
 
@@ -79,6 +82,7 @@ export default function RecipientTrackingPage({ params }: { params: Promise<{ to
     const num = order.trackingNumber || "6849-3012-9381";
     navigator.clipboard.writeText(num.replace(/[^0-9]/g, ""));
     setCopiedTracking(true);
+    showToast("운송장 번호가 클립보드에 복사되었습니다! 📋", "success");
     setTimeout(() => setCopiedTracking(false), 2000);
   };
 
@@ -219,9 +223,20 @@ export default function RecipientTrackingPage({ params }: { params: Promise<{ to
           </div>
         </section>
 
-        <p className="text-[11px] text-[#5e605d] text-center leading-relaxed">
-          💡 출고 완료 시 수령인 휴대폰 번호로 카카오 알림톡이 자동 발송됩니다.
-        </p>
+        <div className="text-center space-y-3 pt-2">
+          <p className="text-[11px] text-[#5e605d] leading-relaxed">
+            💡 출고 완료 시 수령인 휴대폰 번호로 카카오 알림톡이 자동 발송됩니다.
+          </p>
+          <div className="flex items-center justify-center gap-4 text-xs font-bold text-[#5e605d]">
+            <Link href="/dashboard" className="hover:text-[#1a1a1a] transition-colors">
+              🎁 내 선물 보관함
+            </Link>
+            <span>·</span>
+            <Link href="/support" className="hover:text-[#1a1a1a] transition-colors">
+              📞 고객센터 문의
+            </Link>
+          </div>
+        </div>
       </main>
     </div>
   );
