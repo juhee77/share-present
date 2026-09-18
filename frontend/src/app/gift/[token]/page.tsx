@@ -5,6 +5,7 @@ import Header from "@/components/Header";
 import ProductCard from "@/components/ProductCard";
 import UnwrappingRibbon from "@/components/UnwrappingRibbon";
 import DeliveryDrawer from "@/components/DeliveryDrawer";
+import { AlternativeGiftsDrawer } from "@/components/AlternativeGiftsDrawer";
 import { useToast } from "@/context/ToastContext";
 import { getCurationBox, acceptGift, CurationBoxResponse, ProductDto } from "@/lib/api";
 
@@ -29,6 +30,7 @@ export default function RecipientGiftPage({ params }: { params: Promise<{ token:
 
   // Drawer state
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [isAlternativeDrawerOpen, setIsAlternativeDrawerOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isCompleted, setIsCompleted] = useState(false);
 
@@ -116,6 +118,16 @@ export default function RecipientGiftPage({ params }: { params: Promise<{ token:
     setIsDrawerOpen(true);
   };
 
+  const [selectedAltProduct, setSelectedAltProduct] = useState<ProductDto | null>(null);
+
+  const handleAlternativeProductSelect = (product: ProductDto) => {
+    setSelectedAltProduct(product);
+    setSelectedProductId(product.id);
+    setSelectedOption(product.options?.[0] || "");
+    setIsDrawerOpen(true);
+    showToast(`'${product.brand} - ${product.name}' 선물이 선택되었습니다! 🎁`, "success");
+  };
+
   const handleCustomSubmit = () => {
     if (!customName || !customUrl) {
       showToast("원하시는 선물명과 링크를 입력해주세요.", "error");
@@ -163,7 +175,10 @@ export default function RecipientGiftPage({ params }: { params: Promise<{ token:
     }
   };
 
-  const selectedProductObj = boxData.items.find((p) => p.id === selectedProductId);
+  const selectedProductObj =
+    selectedAltProduct && selectedAltProduct.id === selectedProductId
+      ? selectedAltProduct
+      : boxData?.items.find((p) => p.id === selectedProductId);
   const selectedProductName = selectedProductId === "CUSTOM_RECIPIENT" ? customName : selectedProductObj?.name;
 
   return (
@@ -267,6 +282,22 @@ export default function RecipientGiftPage({ params }: { params: Promise<{ token:
               ))}
             </div>
 
+            {/* Alternative Gifts Button (Gift Swap Exploration) */}
+            <div className="mt-5 p-4 rounded-2xl bg-white border border-[#eae6df] text-center shadow-sm">
+              <p className="text-xs text-[#5e605d] mb-3 leading-relaxed">
+                마음에 드는 다른 감도의 선물을 직접 탐색하고 싶으신가요?
+              </p>
+              <button
+                type="button"
+                onClick={() => setIsAlternativeDrawerOpen(true)}
+                className="btn-editorial-outline text-xs py-3 w-full font-bold uppercase tracking-wider flex items-center justify-center gap-1.5"
+              >
+                <span>✦</span>
+                <span>다른 추천 선물 둘러보기 (선물 교체)</span>
+                <span>✦</span>
+              </button>
+            </div>
+
             {/* Recipient Custom Wish Proposal */}
             {boxData.allowCustomInput && (
               <section className="editorial-card p-4 my-5">
@@ -336,6 +367,12 @@ export default function RecipientGiftPage({ params }: { params: Promise<{ token:
         selectedOption={selectedOption}
         availableOptions={selectedProductObj?.options}
         isSubmitting={isSubmitting}
+      />
+
+      <AlternativeGiftsDrawer
+        isOpen={isAlternativeDrawerOpen}
+        onClose={() => setIsAlternativeDrawerOpen(false)}
+        onSelectProduct={handleAlternativeProductSelect}
       />
 
       {/* Feature 4: Recipient Thank-You Reply Card Modal */}
