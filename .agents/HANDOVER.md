@@ -52,6 +52,8 @@
 - **수령인 배송 트래커 부티크 패키징 인증 배지 (`gift/track/[token]/page.tsx`)**: 프리미엄 린넨 리본 포장 검수 완료 배지 렌더링.
 - **고객센터 접수 세부 확인 카드 (`support/page.tsx`)**: 접수 번호, 문의 유형 요약, 평균 회신 안내 및 알림톡 알림 배지 연동.
 - **메인 큐레이션 요약 바 (`page.tsx`)**: 선택된 선물 개수 펄스 인디케이터 및 최대 가승인 한도 플로팅 서머리 바 지원.
+- **카탈로그 다이나믹 정렬 & 프론트엔드 셀렉터 (`ProductController.java`, `page.tsx`)**: 추천순, 가격 낮은순(`PRICE_ASC`), 가격 높은순(`PRICE_DESC`), 브랜드 가나다순(`NAME_ASC`) 다이나믹 정렬 API 및 UI 셀렉터 연동.
+- **카카오 알림톡 알림 엔진 확장 (`KakaoNotificationService.java`, `KakaoNotificationServiceTest.java`)**: 선물 수락 D-Day 리마인더 알림톡 및 수령인 포토/감사 카드 도착 알림톡 발송 기능 및 테스트 완비.
 - **컨트롤러 계층 Bean Validation 400 Bad Request 방어 테스트 완비 (`OrderControllerTest`, `CurationBoxControllerTest`, `SupportInquiryControllerTest`)**: 유효성 검증 테스트 스위트 100% 그린 유지.
 
 ---

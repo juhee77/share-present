@@ -22,7 +22,8 @@ public class ProductController {
             @RequestParam(required = false) Integer minBudget,
             @RequestParam(required = false) Integer maxBudget,
             @RequestParam(required = false) String category,
-            @RequestParam(required = false) String keyword
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) String sort
     ) {
         List<Product> products = productRepository.findAll();
 
@@ -43,8 +44,26 @@ public class ProductController {
         if (keyword != null && !keyword.isBlank()) {
             String lowerKw = keyword.toLowerCase();
             products = products.stream()
-                    .filter(p -> p.getBrand().toLowerCase().contains(lowerKw) || p.getName().toLowerCase().contains(lowerKw))
+                    .filter(p -> (p.getBrand() != null && p.getBrand().toLowerCase().contains(lowerKw)) || 
+                                 (p.getName() != null && p.getName().toLowerCase().contains(lowerKw)))
                     .toList();
+        }
+
+        if (sort != null && !sort.isBlank()) {
+            if ("PRICE_ASC".equalsIgnoreCase(sort)) {
+                products = products.stream()
+                        .sorted(java.util.Comparator.comparing(Product::getPrice))
+                        .toList();
+            } else if ("PRICE_DESC".equalsIgnoreCase(sort)) {
+                products = products.stream()
+                        .sorted(java.util.Comparator.comparing(Product::getPrice).reversed())
+                        .toList();
+            } else if ("NAME_ASC".equalsIgnoreCase(sort)) {
+                products = products.stream()
+                        .sorted(java.util.Comparator.comparing((Product p) -> p.getBrand() != null ? p.getBrand() : "")
+                                .thenComparing(p -> p.getName() != null ? p.getName() : ""))
+                        .toList();
+            }
         }
 
         return ResponseEntity.ok(products);

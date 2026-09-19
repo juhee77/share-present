@@ -232,6 +232,7 @@ export default function CreateGiftPage() {
   // Catalog Search & Filter State
   const [searchKeyword, setSearchKeyword] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("ALL");
+  const [sortOrder, setSortOrder] = useState<"DEFAULT" | "PRICE_ASC" | "PRICE_DESC" | "NAME_ASC">("DEFAULT");
   const [showOnlySelected, setShowOnlySelected] = useState(false);
   const [products, setProducts] = useState<ProductDto[]>(LOOKBOOK_PRODUCTS);
 
@@ -259,7 +260,7 @@ export default function CreateGiftPage() {
           }
         }
 
-        const fetched = await fetchProducts(searchKeyword, minBudget, maxBudget, selectedCategory);
+        const fetched = await fetchProducts(searchKeyword, minBudget, maxBudget, selectedCategory, sortOrder);
         if (fetched && fetched.length > 0) {
           setProducts(fetched);
         } else {
@@ -282,6 +283,13 @@ export default function CreateGiftPage() {
               });
             }
           }
+          if (sortOrder === "PRICE_ASC") {
+            filtered = [...filtered].sort((a, b) => a.price - b.price);
+          } else if (sortOrder === "PRICE_DESC") {
+            filtered = [...filtered].sort((a, b) => b.price - a.price);
+          } else if (sortOrder === "NAME_ASC") {
+            filtered = [...filtered].sort((a, b) => a.brand.localeCompare(b.brand) || a.name.localeCompare(b.name));
+          }
           setProducts(filtered.length > 0 ? filtered : LOOKBOOK_PRODUCTS);
         }
       } catch (err) {
@@ -289,7 +297,7 @@ export default function CreateGiftPage() {
       }
     }
     loadDynamicProducts();
-  }, [searchKeyword, selectedCategory, minBudget, maxBudget]);
+  }, [searchKeyword, selectedCategory, minBudget, maxBudget, sortOrder]);
 
   const toggleProductSelection = (id: number) => {
     if (selectedProductIds.includes(id)) {
@@ -557,11 +565,32 @@ export default function CreateGiftPage() {
 
         {/* 3. Catalog Live Search Bar & Products List */}
         <div className="mb-4">
-          <div className="flex items-center justify-between mb-3 px-1">
+          <div className="flex flex-wrap items-center justify-between gap-2 mb-3 px-1">
             <span className="text-xs font-extrabold uppercase tracking-widest text-[#1a1a1a]">
               Catalog & Live Open Search ({products.length})
             </span>
             <div className="flex items-center gap-2">
+              <select
+                value={sortOrder}
+                onChange={(e) => {
+                  const newSort = e.target.value as "DEFAULT" | "PRICE_ASC" | "PRICE_DESC" | "NAME_ASC";
+                  setSortOrder(newSort);
+                  const sortLabels = {
+                    DEFAULT: "추천 큐레이션순",
+                    PRICE_ASC: "가격 낮은순",
+                    PRICE_DESC: "가격 높은순",
+                    NAME_ASC: "브랜드 가나다순",
+                  };
+                  showToast(`${sortLabels[newSort]}으로 정렬되었습니다. ✦`, "info");
+                }}
+                className="text-[11px] font-bold px-2 py-1 rounded-md bg-white border border-[#e5e1da] text-[#1a1a1a] shadow-xs cursor-pointer focus:outline-none focus:ring-1 focus:ring-[#3b483a]"
+              >
+                <option value="DEFAULT">✦ 추천 큐레이션순</option>
+                <option value="PRICE_ASC">💰 가격 낮은순</option>
+                <option value="PRICE_DESC">💎 가격 높은순</option>
+                <option value="NAME_ASC">🔤 브랜드 가나다순</option>
+              </select>
+
               <button
                 type="button"
                 onClick={() => {

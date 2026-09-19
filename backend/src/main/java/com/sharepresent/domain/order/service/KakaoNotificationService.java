@@ -61,4 +61,38 @@ public class KakaoNotificationService {
         log.info("[Kakao Alimtalk Sent to Sender ({})]\n{}", senderPhone, message);
         return true;
     }
+
+    /**
+     * 수령인에게 선물 수락 마감 임박을 알리는 리마인더 알림톡
+     */
+    public boolean sendGiftReminderNotification(String receiverPhone, String receiverName, String senderName, int daysLeft, String giftLink) {
+        String message = String.format(
+                "[SharePresent 알림톡] 🎁\n\n" +
+                "안녕하세요, %s님!\n" +
+                "%s님이 보내신 마음 담긴 선물의 수락 기한이 %d일 남았습니다.\n\n" +
+                "• 선물 링크: %s\n\n" +
+                "마음에 드는 옵션을 고르고 배송지를 입력하시면 프리미엄 부티크 패키징으로 전해드립니다 ✦",
+                receiverName, senderName, daysLeft, giftLink
+        );
+
+        log.info("[Kakao Alimtalk Reminder Sent to Recipient ({})]\n{}", receiverPhone, message);
+        return true;
+    }
+
+    /**
+     * 수령인이 감사 답장 카드를 등록했을 때 송신자에게 발송하는 알림톡
+     */
+    public boolean sendThankYouCardNotification(String senderPhone, String senderName, String receiverName, String thankYouSnippet) {
+        String message = String.format(
+                "[SharePresent 알림톡] 💌\n\n" +
+                "안녕하세요, %s님!\n" +
+                "%s님이 소중한 감사 답장 카드를 남겨주셨습니다.\n\n" +
+                "\"%s\"\n\n" +
+                "SharePresent 대시보드에서 전문을 확인하실 수 있습니다.",
+                senderName, receiverName, thankYouSnippet
+        );
+
+        log.info("[Kakao Alimtalk Thank You Card Sent to Sender ({})]\n{}", senderPhone, message);
+        return true;
+    }
 }
