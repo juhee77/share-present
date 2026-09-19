@@ -165,6 +165,12 @@ export default function CheckoutModal({
             >
               <span>{maxBudget.toLocaleString()}원 결제 및 선물 상자 활성화 ✦</span>
             </button>
+
+            {/* Escrow Trust Security Footer */}
+            <p className="text-[10px] text-[#7a7266] text-center mt-3 flex items-center justify-center gap-1">
+              <span>🔒</span>
+              <span>금융감독원 전자금융거래법 기준 100% 에스크로 안전 결제</span>
+            </p>
           </>
         )}
       </div>
