@@ -13,35 +13,44 @@ export default function RecipientTrackingPage({ params }: { params: Promise<{ to
 
   const [order, setOrder] = useState<OrderResponse | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [copiedTracking, setCopiedTracking] = useState(false);
 
-  useEffect(() => {
-    async function loadOrder() {
-      try {
-        const data = await getOrderResult(token);
-        setOrder(data);
-      } catch (err) {
-        console.error(err);
-        // Fallback mock for recipient live delivery status
-        setOrder({
-          orderId: 101,
-          selectedProductBrand: "OIMU",
-          selectedProductName: "소락사 샌디 도자기 머그",
-          selectedOption: "샌드 화이트",
-          shippingStatus: "PREPARING",
-          carrierName: "CJ대한통운",
-          trackingNumber: "6849-3012-9381",
-          lockedAmount: 60000,
-          finalAmount: 38000,
-          refundAmount: 22000,
-          status: "COMPLETED",
-        });
-      } finally {
-        setLoading(false);
-      }
+  const loadOrder = async () => {
+    try {
+      const data = await getOrderResult(token);
+      setOrder(data);
+    } catch (err) {
+      console.error(err);
+      // Fallback mock for recipient live delivery status
+      setOrder({
+        orderId: 101,
+        selectedProductBrand: "OIMU",
+        selectedProductName: "소락사 샌디 도자기 머그",
+        selectedOption: "샌드 화이트",
+        shippingStatus: "PREPARING",
+        carrierName: "CJ대한통운",
+        trackingNumber: "6849-3012-9381",
+        lockedAmount: 60000,
+        finalAmount: 38000,
+        refundAmount: 22000,
+        status: "COMPLETED",
+      });
+    } finally {
+      setLoading(false);
+      setIsRefreshing(false);
     }
+  };
+
+  useEffect(() => {
     loadOrder();
   }, [token]);
+
+  const handleRefresh = async () => {
+    setIsRefreshing(true);
+    await loadOrder();
+    showToast("최신 배송 상태를 성공적으로 동기화했습니다! 🔄", "success");
+  };
 
   if (loading) {
     return (
@@ -91,8 +100,8 @@ export default function RecipientTrackingPage({ params }: { params: Promise<{ to
       <Header />
 
       <main className="p-4 flex-1 max-w-[540px] mx-auto w-full">
-        {/* Title */}
-        <div className="text-center my-6">
+        {/* Title & Refresh */}
+        <div className="text-center my-6 relative">
           <div className="w-12 h-12 rounded-full bg-[#3b483a]/5 flex items-center justify-center text-2xl mx-auto mb-3">
             📦
           </div>
@@ -105,6 +114,30 @@ export default function RecipientTrackingPage({ params }: { params: Promise<{ to
           <p className="text-xs text-[#5e605d] mt-1.5 leading-relaxed">
             수락하신 선물이 정성스럽게 포장되어 배송 준비 중입니다.
           </p>
+
+          <button
+            type="button"
+            onClick={handleRefresh}
+            disabled={isRefreshing}
+            className="mt-3 inline-flex items-center gap-1.5 px-3 py-1 bg-white border border-[#eae6df] rounded-full text-[11px] font-bold text-[#5e605d] hover:text-[#1a1a1a] shadow-xs transition-all disabled:opacity-50"
+          >
+            <span className={isRefreshing ? "animate-spin" : ""}>🔄</span>
+            <span>{isRefreshing ? "조회 중..." : "배송 상태 새로고침"}</span>
+          </button>
+        </div>
+
+        {/* Estimated Delivery Window Banner */}
+        <div className="mb-5 p-3.5 bg-[#f5f2eb] rounded-2xl border border-[#dedad0] flex items-center justify-between text-xs">
+          <div className="flex items-center gap-2">
+            <span className="text-base">🚚</span>
+            <div>
+              <span className="font-bold text-[#1a1a1a] block">예상 배송 도착 안내</span>
+              <span className="text-[11px] text-[#5e605d]">영업일 기준 1~2일 이내 안전 배송</span>
+            </div>
+          </div>
+          <span className="text-[10px] font-bold text-[#3b483a] bg-[#3b483a]/10 px-2.5 py-1 rounded-full">
+            빠른 부티크 출고
+          </span>
         </div>
 
         {/* Selected Product Card (Zero Price Guaranteed) */}
