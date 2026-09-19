@@ -627,17 +627,42 @@ export default function CreateGiftPage() {
         </div>
 
         <div className="space-y-4">
-          {products.map((product) => {
-            const isSelected = selectedProductIds.includes(Number(product.id));
-            return (
-              <ProductCard
-                key={product.id}
-                product={product}
-                isSelected={isSelected}
-                onSelect={() => toggleProductSelection(Number(product.id))}
-              />
-            );
-          })}
+          {products.length === 0 ? (
+            <div className="editorial-card p-8 text-center bg-white my-4">
+              <div className="w-12 h-12 rounded-full bg-[#3b483a]/5 flex items-center justify-center text-2xl mx-auto mb-3">
+                🔍
+              </div>
+              <h3 className="text-sm font-bold text-[#1a1a1a] mb-1">
+                일치하는 상품을 찾지 못했습니다
+              </h3>
+              <p className="text-xs text-[#5e605d] mb-4">
+                검색어 또는 예산 범위를 조절하거나 아래 버튼을 눌러 전체 카탈로그를 확인해보세요.
+              </p>
+              <button
+                type="button"
+                onClick={() => {
+                  setSearchKeyword("");
+                  setSelectedCategory("ALL");
+                  showToast("검색 조건이 초기화되었습니다! ✦", "success");
+                }}
+                className="btn-editorial-outline text-xs py-2 px-4 font-bold"
+              >
+                검색 조건 초기화 ↺
+              </button>
+            </div>
+          ) : (
+            products.map((product) => {
+              const isSelected = selectedProductIds.includes(Number(product.id));
+              return (
+                <ProductCard
+                  key={product.id}
+                  product={product}
+                  isSelected={isSelected}
+                  onSelect={() => toggleProductSelection(Number(product.id))}
+                />
+              );
+            })
+          )}
         </div>
 
         {/* 4. External Custom proposal */}
