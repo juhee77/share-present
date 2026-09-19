@@ -127,4 +127,25 @@ class OrderControllerTest {
                 .andExpect(jsonPath("$.selectedProductName").value("소락사 샌디 도자기 머그"))
                 .andExpect(jsonPath("$.refundAmount").value(22000));
     }
+
+    @Test
+    @DisplayName("POST /api/v1/orders/cancel/{sharingToken} - 송신자 선물 상자 취소 및 전액 환불 성공")
+    void cancelGiftBox_success() throws Exception {
+        // given
+        OrderResponse mockResponse = OrderResponse.builder()
+                .orderId(1L)
+                .lockedAmount(60000)
+                .finalAmount(0)
+                .refundAmount(60000)
+                .shippingStatus("CANCELLED_REFUNDED")
+                .build();
+
+        given(orderService.cancelAndRefundGiftBox("sample-token")).willReturn(mockResponse);
+
+        // when & then
+        mockMvc.perform(post("/api/v1/orders/cancel/sample-token"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.refundAmount").value(60000))
+                .andExpect(jsonPath("$.shippingStatus").value("CANCELLED_REFUNDED"));
+    }
 }

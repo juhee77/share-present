@@ -6,6 +6,7 @@ import Link from "next/link";
 import ShareModal from "@/components/ShareModal";
 import AlimtalkPreviewModal from "@/components/AlimtalkPreviewModal";
 import { useToast } from "@/context/ToastContext";
+import { cancelGiftBox } from "@/lib/api";
 
 interface MockSentBox {
   id: number;
@@ -13,7 +14,7 @@ interface MockSentBox {
   createdAt: string;
   minBudget: number;
   maxBudget: number;
-  status: "WAITING" | "COMPLETED";
+  status: "WAITING" | "COMPLETED" | "CANCELLED";
   messageCard: string;
   selectedProductName?: string;
   selectedProductBrand?: string;
@@ -187,7 +188,7 @@ type DashboardTab = "RECEIVED" | "SENT" | "TRENDS";
 export default function SenderDashboardPage() {
   const { showToast } = useToast();
   const [activeTab, setActiveTab] = useState<DashboardTab>("RECEIVED");
-  const [sentBoxes] = useState<MockSentBox[]>(MOCK_SENT_BOXES);
+  const [sentBoxes, setSentBoxes] = useState<MockSentBox[]>(MOCK_SENT_BOXES);
   const [receivedBoxes] = useState<MockReceivedBox[]>(MOCK_RECEIVED_BOXES);
   const [shareModalBox, setShareModalBox] = useState<MockSentBox | null>(null);
   const [alimtalkPreview, setAlimtalkPreview] = useState<{
@@ -202,6 +203,23 @@ export default function SenderDashboardPage() {
 
   const handleSendReminder = (box: MockSentBox) => {
     showToast(`수령인에게 선물 수락 리마인더 알림톡이 성공적으로 재전송되었습니다! 💌 (남은 기한: D-5)`, "success");
+  };
+
+  const handleCancelGift = async (box: MockSentBox) => {
+    if (!confirm(`'${box.messageCard.slice(0, 20)}...' 선물 상자를 취소하고 최대 예산(${box.maxBudget.toLocaleString()}원)을 전액 즉시 환불하시겠습니까?`)) {
+      return;
+    }
+    try {
+      await cancelGiftBox(box.token);
+    } catch (err) {
+      console.error(err);
+    }
+    setSentBoxes((prev) =>
+      prev.map((b) =>
+        b.id === box.id ? { ...b, status: "CANCELLED" as const, refundAmount: b.maxBudget } : b
+      )
+    );
+    showToast(`선물이 취소되었으며 보관 예산(${box.maxBudget.toLocaleString()}원)이 전액 자동 환불되었습니다! 💳`, "info");
   };
 
   return (
@@ -364,10 +382,16 @@ export default function SenderDashboardPage() {
                     className={`text-[10px] font-extrabold px-2.5 py-1 rounded-full uppercase tracking-wider ${
                       box.status === "COMPLETED"
                         ? "bg-[#3b483a] text-white"
+                        : box.status === "CANCELLED"
+                        ? "bg-red-50 text-red-700 border border-red-200"
                         : "bg-[#a38974]/15 text-[#a38974]"
                     }`}
                   >
-                    {box.status === "COMPLETED" ? "🟢 선택 완료 & 정산 완료" : "🟡 수령인 선택 대기 중"}
+                    {box.status === "COMPLETED"
+                      ? "🟢 선택 완료 & 정산 완료"
+                      : box.status === "CANCELLED"
+                      ? "🔴 취소 및 전액 환불 완료"
+                      : "🟡 수령인 선택 대기 중"}
                   </span>
                 </div>
 
@@ -400,6 +424,13 @@ export default function SenderDashboardPage() {
                         <span>{box.refundAmount?.toLocaleString()}원 환불 완료</span>
                       </div>
                     </>
+                  )}
+
+                  {box.status === "CANCELLED" && (
+                    <div className="flex justify-between text-red-600 font-bold pt-1 border-t border-[#eae6df]">
+                      <span>보관 예산 전액 환불</span>
+                      <span>{box.refundAmount?.toLocaleString()}원 환불 완료</span>
+                    </div>
                   )}
                 </div>
 
@@ -458,6 +489,10 @@ export default function SenderDashboardPage() {
                         <span>알림톡</span>
                       </button>
                     </>
+                  ) : box.status === "CANCELLED" ? (
+                    <div className="w-full text-center py-2 text-xs font-semibold text-[#7a7266] bg-[#faf9f6] rounded-xl border border-[#eae6df]">
+                      취소 및 전액 환불 처리가 완료되었습니다
+                    </div>
                   ) : (
                     <>
                       <button
@@ -490,6 +525,18 @@ export default function SenderDashboardPage() {
                     </>
                   )}
                 </div>
+
+                {box.status === "WAITING" && (
+                  <div className="mt-2.5 text-right">
+                    <button
+                      type="button"
+                      onClick={() => handleCancelGift(box)}
+                      className="text-[10px] text-gray-400 hover:text-red-600 font-medium underline underline-offset-2 transition-colors"
+                    >
+                      선물 취소 및 전액 환불
+                    </button>
+                  </div>
+                )}
               </div>
             ))}
           </div>

@@ -43,4 +43,11 @@ public class OrderController {
         OrderResponse response = orderService.getOrderResult(sharingToken);
         return ResponseEntity.ok(response);
     }
+
+    @PostMapping("/cancel/{sharingToken}")
+    @Operation(summary = "선물 상자 취소 및 전액 환불", description = "수령인이 수락하기 전 보내는 사람이 선물 상자를 취소하고 가승인된 금액을 전액 즉시 환불 처리합니다.")
+    public ResponseEntity<OrderResponse> cancelGiftBox(@PathVariable("sharingToken") String sharingToken) {
+        OrderResponse response = orderService.cancelAndRefundGiftBox(sharingToken);
+        return ResponseEntity.ok(response);
+    }
 }

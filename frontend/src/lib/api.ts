@@ -120,6 +120,16 @@ export async function prePayOrder(curationBoxId: number, paymentKey: string): Pr
   return res.json();
 }
 
+export async function cancelGiftBox(token: string): Promise<OrderResponse> {
+  const res = await fetch(`${BASE_URL}/orders/cancel/${token}`, {
+    method: "POST",
+  });
+  if (!res.ok) {
+    throw new Error("선물 상자 취소 처리에 실패했습니다.");
+  }
+  return res.json();
+}
+
 export async function fetchProducts(keyword?: string, minBudget?: number, maxBudget?: number, category?: string, sort?: string): Promise<ProductDto[]> {
   const params = new URLSearchParams();
   if (keyword) params.append("keyword", keyword);

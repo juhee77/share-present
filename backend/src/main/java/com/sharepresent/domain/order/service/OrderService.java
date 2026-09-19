@@ -228,6 +228,57 @@ public class OrderService {
         return processedCount;
     }
 
+    /**
+     * 송신자가 미수락 선물 상자를 직접 취소하고 전액 100% 환불 처리
+     */
+    @Transactional
+    public OrderResponse cancelAndRefundGiftBox(String sharingToken) {
+        CurationBox box = curationBoxRepository.findBySharingToken(sharingToken)
+                .orElseThrow(() -> new IllegalArgumentException("선물 박스를 찾을 수 없습니다. Token: " + sharingToken));
+
+        if ("COMPLETED".equalsIgnoreCase(box.getStatus()) || "ACCEPTED".equalsIgnoreCase(box.getStatus())) {
+            throw new IllegalStateException("이미 수령인이 수락한 선물은 취소할 수 없습니다.");
+        }
+
+        // 1. CurationBox 상태 갱신
+        CurationBox cancelledBox = box.toBuilder()
+                .status("CANCELLED")
+                .build();
+        curationBoxRepository.save(cancelledBox);
+
+        // 2. Order 가 있을 경우 전액 환불 처리
+        Order order = orderRepository.findByCurationBoxId(box.getId())
+                .orElseGet(() -> Order.builder()
+                        .curationBox(cancelledBox)
+                        .sender(box.getSender())
+                        .totalAmount(box.getMaxBudget())
+                        .paymentKey("mock_cancel_key_" + System.currentTimeMillis())
+                        .shippingStatus("CANCELLED_REFUNDED")
+                        .paidAt(LocalDateTime.now())
+                        .build());
+
+        int fullRefund = order.getTotalAmount() != null ? order.getTotalAmount() : box.getMaxBudget();
+        Order refundedOrder = order.toBuilder()
+                .finalAmount(0)
+                .refundAmount(fullRefund)
+                .shippingStatus("CANCELLED_REFUNDED")
+                .settledAt(LocalDateTime.now())
+                .build();
+        Order savedOrder = orderRepository.save(refundedOrder);
+
+        if (order.getPaymentKey() != null) {
+            triggerActualPaymentCancel(order.getPaymentKey(), fullRefund);
+        }
+
+        if (savedOrder.getSender() != null) {
+            String phone = savedOrder.getSender().getPhoneNumber() != null ? savedOrder.getSender().getPhoneNumber() : "010-0000-0000";
+            String name = savedOrder.getSender().getNickname() != null ? savedOrder.getSender().getNickname() : "고객";
+            kakaoNotificationService.sendGiftExpiredNotification(phone, name, fullRefund);
+        }
+
+        return convertToResponse(savedOrder);
+    }
+
     private void triggerActualPaymentCancel(String paymentKey, int cancelAmount) {
         // PG사 REST cancel API 호출 모킹 (실제 개발 스프린트 2단계에서 구현 예정)
         System.out.printf("[Toss Payments API] Settle complete. Succeeded in partial refund. Key: %s, Refunded: %d KRW\n", paymentKey, cancelAmount);
