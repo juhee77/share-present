@@ -54,6 +54,7 @@
 - **메인 큐레이션 요약 바 (`page.tsx`)**: 선택된 선물 개수 펄스 인디케이터 및 최대 가승인 한도 플로팅 서머리 바 지원.
 - **카탈로그 다이나믹 정렬 & 프론트엔드 셀렉터 (`ProductController.java`, `page.tsx`)**: 추천순, 가격 낮은순(`PRICE_ASC`), 가격 높은순(`PRICE_DESC`), 브랜드 가나다순(`NAME_ASC`) 다이나믹 정렬 API 및 UI 셀렉터 연동.
 - **카카오 알림톡 알림 엔진 확장 (`KakaoNotificationService.java`, `KakaoNotificationServiceTest.java`)**: 선물 수락 D-Day 리마인더 알림톡 및 수령인 포토/감사 카드 도착 알림톡 발송 기능 및 테스트 완비.
+- **수령인 완료 화면 선택 내역 요약 및 배송 링크 복사 (`gift/[token]/page.tsx`)**: 수령인이 주소지 입력 완료 시 선택한 브랜드/상품명/옵션 요약 카드 및 1-Click 실시간 배송 조회 링크 복사 버튼 연동 (가격 100% 비노출 원칙 유지).
 - **컨트롤러 계층 Bean Validation 400 Bad Request 방어 테스트 완비 (`OrderControllerTest`, `CurationBoxControllerTest`, `SupportInquiryControllerTest`)**: 유효성 검증 테스트 스위트 100% 그린 유지.
 
 ---

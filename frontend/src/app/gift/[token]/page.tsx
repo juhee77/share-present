@@ -219,6 +219,33 @@ export default function RecipientGiftPage({ params }: { params: Promise<{ token:
               선택하신 선물과 배송 주소가 {boxData.senderName}님에게 잘 전달되었습니다. 예쁘게 포장하여 빠르게 배송해 드릴게요!
             </p>
 
+            {/* Selected Gift Summary */}
+            {selectedProductName && (
+              <div className="mb-6 p-4 bg-[#fbf9f5] rounded-xl border border-[#eae6df] text-left">
+                <div className="flex items-center justify-between mb-1.5">
+                  <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#a38974]">
+                    선택하신 선물
+                  </span>
+                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#3b483a]/10 text-[#3b483a] font-bold">
+                    ✓ 접수 완료
+                  </span>
+                </div>
+                <p className="text-xs font-bold text-[#1a1a1a]">
+                  {selectedProductObj?.brand ? `[${selectedProductObj.brand}] ` : ""}
+                  {selectedProductName}
+                </p>
+                {selectedOption && (
+                  <p className="text-[11px] text-[#5e605d] mt-0.5">
+                    선택 옵션: <span className="font-semibold text-[#1a1a1a]">{selectedOption}</span>
+                  </p>
+                )}
+                <div className="mt-2 pt-2 border-t border-[#eae6df] flex items-center gap-1.5 text-[10px] text-[#7a7266]">
+                  <span>🌿</span>
+                  <span>프리미엄 부티크 린넨 리본 패키징으로 정성껏 포장되어 출고됩니다.</span>
+                </div>
+              </div>
+            )}
+
             {thankYouSent && (
               <div className="mb-6 p-4 bg-[#f6f4f0] rounded-xl border border-[#eae6df] text-left">
                 <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#a38974] block mb-1">
@@ -237,6 +264,19 @@ export default function RecipientGiftPage({ params }: { params: Promise<{ token:
                 내 선물 배송 상태 조회하기 📦
               </a>
               
+              <button
+                type="button"
+                onClick={() => {
+                  const trackingUrl = `${window.location.origin}/gift/track/${token}`;
+                  navigator.clipboard.writeText(trackingUrl);
+                  showToast("배송 조회 링크가 클립보드에 복사되었습니다! 📋", "success");
+                }}
+                className="w-full text-[11px] font-semibold text-[#5e605d] hover:text-[#1a1a1a] py-1 transition-colors flex items-center justify-center gap-1"
+              >
+                <span>📋</span>
+                <span>배송 조회 링크 복사하기</span>
+              </button>
+
               <button
                 onClick={() => setShowThankYouModal(true)}
                 className="btn-editorial-outline block text-center text-xs py-3.5 uppercase tracking-wider font-bold w-full"
