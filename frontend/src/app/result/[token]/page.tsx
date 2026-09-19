@@ -164,6 +164,7 @@ export default function OrderResultPage({ params }: { params: Promise<{ token: s
     link.download = `sharepresent_settlement_${token}.png`;
     link.href = canvas.toDataURL("image/png");
     link.click();
+    showToast("정산 명세서 영수증 이미지가 성공적으로 저장되었습니다! 🧾", "success");
   };
 
   return (
