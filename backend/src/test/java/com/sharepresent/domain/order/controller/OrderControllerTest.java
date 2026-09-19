@@ -91,6 +91,21 @@ class OrderControllerTest {
     }
 
     @Test
+    @DisplayName("POST /api/v1/orders/accept/{sharingToken} - 필수 배송지 정보 누락 시 400 Bad Request 검증")
+    void acceptAndSettleGift_validationFailure() throws Exception {
+        // given: receiverName, receiverPhone, shippingAddress 가 누락된 잘못된 요청
+        AcceptGiftRequest invalidRequest = AcceptGiftRequest.builder()
+                .selectedProductId(10L)
+                .build();
+
+        // when & then
+        mockMvc.perform(post("/api/v1/orders/accept/sample-token")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(invalidRequest)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
     @DisplayName("GET /api/v1/orders/result/{sharingToken} - 정산 결과 조회 API 성공")
     void getOrderResult_success() throws Exception {
         // given
