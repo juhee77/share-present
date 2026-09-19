@@ -133,10 +133,13 @@ export default function UnwrappingRibbon({
                   </span>
                 </button>
                 <div className="absolute -inset-2 rounded-full border border-dashed border-current opacity-30 animate-spin-slow pointer-events-none"></div>
+                <div className="absolute -inset-4 rounded-full border border-dotted border-current opacity-15 animate-ping pointer-events-none"></div>
               </div>
 
-              <p className="text-xs mt-6 opacity-80 animate-pulse">
-                ✦ 왁스 씰(Wax Seal)을 눌러 봉투를 개봉하세요
+              <p className="text-xs mt-6 opacity-90 animate-pulse font-medium flex items-center justify-center gap-1.5">
+                <span>✦</span>
+                <span>모노그램 왁스 씰(Wax Seal)을 눌러 봉투를 개봉하세요</span>
+                <span>✦</span>
               </p>
             </div>
           ) : (
