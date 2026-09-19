@@ -162,7 +162,7 @@ export default function CustomerSupportPage() {
           </h2>
 
           {submitted ? (
-            <div className="text-center py-6">
+            <div className="text-center py-6 animate-fade-in">
               <div className="w-12 h-12 rounded-full bg-[#3b483a]/10 text-[#3b483a] flex items-center justify-center text-2xl mx-auto mb-3">
                 ✓
               </div>
@@ -170,8 +170,29 @@ export default function CustomerSupportPage() {
                 문의가 정상적으로 접수되었습니다
               </h3>
               <p className="text-xs text-[#5e605d] mb-4">
-                작성해주신 이메일({email})로 빠르게 답변을 드리겠습니다.
+                작성해주신 이메일(<span className="font-bold text-[#1a1a1a]">{email}</span>)로 신속히 답변을 드리겠습니다.
               </p>
+
+              <div className="mb-4 p-3 bg-[#f6f4f0] rounded-xl border border-[#eae6df] text-left text-xs space-y-1">
+                <div className="flex justify-between">
+                  <span className="text-[#7a7266]">문의 유형</span>
+                  <span className="font-bold text-[#1a1a1a]">{inquiryCategory}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-[#7a7266]">접수 번호</span>
+                  <span className="font-mono font-bold text-[#3b483a]">INQ-{Date.now().toString().slice(-6)}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-[#7a7266]">답변 안내</span>
+                  <span className="text-[#3b483a] font-bold">평균 2시간 이내 회신</span>
+                </div>
+              </div>
+
+              <div className="p-2.5 bg-[#3b483a]/5 rounded-xl border border-[#3b483a]/20 mb-4 flex items-center justify-center gap-1.5 text-[11px] text-[#3b483a] font-bold">
+                <span>💬</span>
+                <span>카카오 알림톡으로 답변 완료 알림이 함께 발송됩니다</span>
+              </div>
+
               <button
                 onClick={() => {
                   setSubmitted(false);
