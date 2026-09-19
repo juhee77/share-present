@@ -48,6 +48,7 @@ export default function DeliveryDrawer({
   const [phone, setPhone] = useState("");
   const [baseAddress, setBaseAddress] = useState("");
   const [detailAddress, setDetailAddress] = useState("");
+  const [entranceCode, setEntranceCode] = useState("");
   const [deliveryMemo, setDeliveryMemo] = useState(DELIVERY_MEMOS[0]);
   const [customMemo, setCustomMemo] = useState("");
   const [showAddressSearch, setShowAddressSearch] = useState(false);
@@ -83,14 +84,18 @@ export default function DeliveryDrawer({
       ? `${baseAddress.trim()} ${detailAddress.trim()}`
       : baseAddress.trim();
 
-    const finalMemo =
+    let baseMemo =
       deliveryMemo === "✍️ 직접 입력" ? customMemo.trim() : deliveryMemo;
+
+    if (entranceCode.trim()) {
+      baseMemo = baseMemo ? `${baseMemo} (공동현관: ${entranceCode.trim()})` : `공동현관: ${entranceCode.trim()}`;
+    }
 
     onSubmit({
       name: name.trim(),
       phone: phone.trim(),
       address: fullAddress,
-      deliveryMemo: finalMemo || undefined,
+      deliveryMemo: baseMemo || undefined,
       selectedOption: currentOption || selectedOption || undefined,
     });
   };
@@ -256,7 +261,14 @@ export default function DeliveryDrawer({
               placeholder="상세 주소 (동, 호수, 층수 등)"
               value={detailAddress}
               onChange={(e) => setDetailAddress(e.target.value)}
-              className="input-editorial text-xs"
+              className="input-editorial text-xs mb-2"
+            />
+            <input
+              type="text"
+              placeholder="공동현관 출입번호 (선택: 예: #1234*)"
+              value={entranceCode}
+              onChange={(e) => setEntranceCode(e.target.value)}
+              className="input-editorial text-xs placeholder:text-gray-400"
             />
           </div>
 
