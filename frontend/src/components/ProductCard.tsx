@@ -29,8 +29,18 @@ export default function ProductCard({
 
   return (
     <div
+      tabIndex={0}
+      role="checkbox"
+      aria-checked={isSelected}
+      aria-label={`${product.brand} - ${product.name} 선물 선택`}
       onClick={onSelect}
-      className={`editorial-card cursor-pointer relative mb-5 transition-all duration-300 ${
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          onSelect();
+        }
+      }}
+      className={`editorial-card cursor-pointer relative mb-5 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#3b483a]/40 ${
         isSelected ? "ring-1.5 ring-[#3b483a] border-transparent" : "border-[#eae6df]"
       }`}
     >
