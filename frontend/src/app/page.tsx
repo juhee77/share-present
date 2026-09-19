@@ -636,11 +636,24 @@ export default function CreateGiftPage() {
           )}
         </section>
 
+        {/* Curation Summary Bar */}
+        <div className="p-3.5 bg-white rounded-2xl border border-[#eae6df] shadow-sm mb-3 flex items-center justify-between text-xs">
+          <div className="flex items-center gap-2">
+            <span className="w-2.5 h-2.5 rounded-full bg-[#3b483a] animate-pulse" />
+            <span className="font-bold text-[#1a1a1a]">
+              선택 선물: <span className="text-[#3b483a]">{selectedProductIds.length + (customName ? 1 : 0)}개</span>
+            </span>
+          </div>
+          <div className="text-[11px] text-[#5e605d]">
+            최대 가승인 한도: <strong className="text-[#1a1a1a]">{maxBudget.toLocaleString()}원</strong>
+          </div>
+        </div>
+
         {/* Submit */}
         <button
           onClick={handleCreateLink}
           disabled={isSubmitting}
-          className="btn-editorial py-4.5 text-xs tracking-widest uppercase font-bold shadow-md mt-2"
+          className="btn-editorial py-4.5 text-xs tracking-widest uppercase font-bold shadow-md w-full"
         >
           {isSubmitting ? "Curation Box Generating..." : "선물 상자 결제 및 생성하기 ✦"}
         </button>
