@@ -150,7 +150,7 @@ export interface SupportInquiryRequest {
   content: string;
 }
 
-export async function submitSupportInquiry(payload: SupportInquiryRequest): Promise<{ id: number; message: string }> {
+export async function submitSupportInquiry(payload: SupportInquiryRequest): Promise<{ status?: string; inquiryId?: string; message: string }> {
   const res = await fetch(`${BASE_URL}/support/inquiries`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },

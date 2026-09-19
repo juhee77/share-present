@@ -38,6 +38,7 @@ class SupportInquiryControllerTest {
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status").value("SUCCESS"))
+                .andExpect(jsonPath("$.inquiryId").exists())
                 .andExpect(jsonPath("$.message").value("고객님의 문의가 정상적으로 접수되었습니다. 담당자 확인 후 빠르게 답변 드리겠습니다."));
     }
 

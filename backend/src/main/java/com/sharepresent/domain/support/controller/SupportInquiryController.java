@@ -19,9 +19,10 @@ public class SupportInquiryController {
 
     @PostMapping("/inquiries")
     public ResponseEntity<Map<String, Object>> submitInquiry(@Valid @RequestBody InquiryRequest request) {
-        System.out.println("★ [SupportInquiryController] New 1:1 Customer Support Inquiry Received: " + request.getName());
+        String inquiryId = "INQ-" + (System.currentTimeMillis() % 1000000);
         return ResponseEntity.ok(Map.of(
                 "status", "SUCCESS",
+                "inquiryId", inquiryId,
                 "message", "고객님의 문의가 정상적으로 접수되었습니다. 담당자 확인 후 빠르게 답변 드리겠습니다."
         ));
     }

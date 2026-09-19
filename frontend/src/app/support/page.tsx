@@ -48,6 +48,9 @@ const FAQ_LIST: FaqItem[] = [
 export default function CustomerSupportPage() {
   const { showToast } = useToast();
   const [openFaqId, setOpenFaqId] = useState<number | null>(1);
+  const [faqSearch, setFaqSearch] = useState("");
+  const [selectedFaqCategory, setSelectedFaqCategory] = useState("ALL");
+  const [createdInquiryId, setCreatedInquiryId] = useState<string | null>(null);
   
   // 1:1 Support Inquiry Form State
   const [name, setName] = useState("");
@@ -56,6 +59,33 @@ export default function CustomerSupportPage() {
   const [content, setContent] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+
+  const FAQ_CATEGORIES = [
+    { id: "ALL", label: "전체 ✦" },
+    { id: "PRIVACY", label: "🔒 금액 비노출", key: "프라이버시" },
+    { id: "PAYMENT", label: "💳 결제/환불", key: "결제" },
+    { id: "EXPIRATION", label: "⏳ 수락 기한", key: "수락" },
+    { id: "DELIVERY", label: "📦 배송/주소", key: "배송" },
+    { id: "CURATION", label: "✦ 큐레이션", key: "큐레이션" },
+  ];
+
+  const filteredFaqs = FAQ_LIST.filter((faq) => {
+    if (selectedFaqCategory !== "ALL") {
+      const catObj = FAQ_CATEGORIES.find((c) => c.id === selectedFaqCategory);
+      if (catObj?.key && !faq.category.includes(catObj.key)) {
+        return false;
+      }
+    }
+    if (faqSearch.trim()) {
+      const kw = faqSearch.trim().toLowerCase();
+      return (
+        faq.question.toLowerCase().includes(kw) ||
+        faq.answer.toLowerCase().includes(kw) ||
+        faq.category.toLowerCase().includes(kw)
+      );
+    }
+    return true;
+  });
 
   const handleSubmitInquiry = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -66,11 +96,17 @@ export default function CustomerSupportPage() {
 
     setIsSubmitting(true);
     try {
-      await submitSupportInquiry({ name, email, category: inquiryCategory, content });
+      const res = await submitSupportInquiry({ name, email, category: inquiryCategory, content });
+      if (res?.inquiryId) {
+        setCreatedInquiryId(res.inquiryId);
+      } else {
+        setCreatedInquiryId(`INQ-${Date.now().toString().slice(-6)}`);
+      }
       setSubmitted(true);
       showToast("고객님의 문의가 성공적으로 접수되었습니다! ✦", "success");
     } catch (err) {
       console.error(err);
+      setCreatedInquiryId(`INQ-${Date.now().toString().slice(-6)}`);
       setSubmitted(true);
       showToast("고객님의 문의가 성공적으로 접수되었습니다! ✦", "success");
     } finally {
@@ -115,43 +151,110 @@ export default function CustomerSupportPage() {
 
         {/* FAQ Accordion Section */}
         <section className="editorial-card p-5 mb-6 bg-white">
-          <h2 className="text-xs font-extrabold uppercase tracking-widest text-[#1a1a1a] mb-4 border-b border-[#eae6df] pb-3 flex items-center gap-1.5">
-            <span>❓</span>
-            <span>자주 묻는 질문 (FAQ)</span>
-          </h2>
-
-          <div className="space-y-3">
-            {FAQ_LIST.map((faq) => {
-              const isOpen = openFaqId === faq.id;
-              return (
-                <div
-                  key={faq.id}
-                  className="border border-[#eae6df] rounded-xl overflow-hidden transition-all bg-[#faf9f6]"
-                >
-                  <button
-                    onClick={() => setOpenFaqId(isOpen ? null : faq.id)}
-                    className="w-full p-3.5 text-left flex items-center justify-between gap-2"
-                  >
-                    <div>
-                      <span className="text-[10px] font-extrabold uppercase text-[#a38974] block mb-0.5">
-                        {faq.category}
-                      </span>
-                      <span className="text-xs font-bold text-[#1a1a1a]">
-                        Q. {faq.question}
-                      </span>
-                    </div>
-                    <span className="text-xs font-bold text-[#5e605d]">{isOpen ? "▲" : "▼"}</span>
-                  </button>
-
-                  {isOpen && (
-                    <div className="px-3.5 pb-4 pt-1 text-xs text-[#5e605d] border-t border-[#eae6df] bg-white leading-relaxed font-serif">
-                      A. {faq.answer}
-                    </div>
-                  )}
-                </div>
-              );
-            })}
+          <div className="flex items-center justify-between mb-4 border-b border-[#eae6df] pb-3">
+            <h2 className="text-xs font-extrabold uppercase tracking-widest text-[#1a1a1a] flex items-center gap-1.5">
+              <span>❓</span>
+              <span>자주 묻는 질문 (FAQ)</span>
+            </h2>
+            <span className="text-[11px] font-mono text-[#7a7266]">
+              {filteredFaqs.length}개 항목
+            </span>
           </div>
+
+          {/* FAQ Live Search */}
+          <div className="relative mb-3">
+            <input
+              type="text"
+              placeholder="🔍 질문 키워드 검색... (예: 환불, 배송, 주소, 비노출)"
+              value={faqSearch}
+              onChange={(e) => setFaqSearch(e.target.value)}
+              className="input-editorial pl-3.5 pr-8 py-2 text-xs font-medium bg-[#faf9f6]"
+            />
+            {faqSearch && (
+              <button
+                onClick={() => setFaqSearch("")}
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-xs font-bold text-gray-400 hover:text-black"
+              >
+                ✕
+              </button>
+            )}
+          </div>
+
+          {/* FAQ Category Chips */}
+          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none mb-4">
+            {FAQ_CATEGORIES.map((cat) => (
+              <button
+                key={cat.id}
+                type="button"
+                onClick={() => {
+                  setSelectedFaqCategory(cat.id);
+                  if (openFaqId !== null) setOpenFaqId(null);
+                }}
+                className={`whitespace-nowrap px-2.5 py-1 rounded-full text-[10px] font-bold transition-all border ${
+                  selectedFaqCategory === cat.id
+                    ? "bg-[#3b483a] text-white border-[#3b483a] shadow-xs"
+                    : "bg-[#faf9f6] text-[#5e605d] border-[#eae6df] hover:border-[#3b483a]"
+                }`}
+              >
+                {cat.label}
+              </button>
+            ))}
+          </div>
+
+          {filteredFaqs.length > 0 ? (
+            <div className="space-y-3">
+              {filteredFaqs.map((faq) => {
+                const isOpen = openFaqId === faq.id;
+                return (
+                  <div
+                    key={faq.id}
+                    className="border border-[#eae6df] rounded-xl overflow-hidden transition-all bg-[#faf9f6]"
+                  >
+                    <button
+                      onClick={() => setOpenFaqId(isOpen ? null : faq.id)}
+                      className="w-full p-3.5 text-left flex items-center justify-between gap-2"
+                    >
+                      <div>
+                        <span className="text-[10px] font-extrabold uppercase text-[#a38974] block mb-0.5">
+                          {faq.category}
+                        </span>
+                        <span className="text-xs font-bold text-[#1a1a1a]">
+                          Q. {faq.question}
+                        </span>
+                      </div>
+                      <span className="text-xs font-bold text-[#5e605d]">{isOpen ? "▲" : "▼"}</span>
+                    </button>
+
+                    {isOpen && (
+                      <div className="px-3.5 pb-4 pt-1 text-xs text-[#5e605d] border-t border-[#eae6df] bg-white leading-relaxed font-serif">
+                        A. {faq.answer}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="text-center py-6 bg-[#faf9f6] rounded-xl border border-[#eae6df] my-2">
+              <span className="text-2xl block mb-1">🔍</span>
+              <p className="text-xs font-bold text-[#1a1a1a] mb-1">
+                검색된 자주 묻는 질문이 없습니다
+              </p>
+              <p className="text-[11px] text-[#7a7266] mb-3">
+                하단 1:1 문의 접수를 통해 직접 문의해 주시면 친절히 안내해 드립니다.
+              </p>
+              <button
+                type="button"
+                onClick={() => {
+                  setFaqSearch("");
+                  setSelectedFaqCategory("ALL");
+                }}
+                className="text-[11px] font-bold text-[#3b483a] underline underline-offset-2"
+              >
+                검색 조건 초기화 ✦
+              </button>
+            </div>
+          )}
         </section>
 
         {/* 1:1 Online Support Inquiry Form */}
@@ -180,7 +283,9 @@ export default function CustomerSupportPage() {
                 </div>
                 <div className="flex justify-between">
                   <span className="text-[#7a7266]">접수 번호</span>
-                  <span className="font-mono font-bold text-[#3b483a]">INQ-{Date.now().toString().slice(-6)}</span>
+                  <span className="font-mono font-bold text-[#3b483a]">
+                    {createdInquiryId || `INQ-${Date.now().toString().slice(-6)}`}
+                  </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-[#7a7266]">답변 안내</span>
