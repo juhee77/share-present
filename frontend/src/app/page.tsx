@@ -388,7 +388,7 @@ export default function CreateGiftPage() {
                   onClick={() => applyPreset(preset)}
                   className={`px-3 py-1.5 rounded-full text-[11px] font-bold transition-all whitespace-nowrap border ${
                     isActive
-                      ? "bg-[#3b483a] text-white border-[#3b483a] shadow-sm"
+                      ? "bg-[#3b483a] text-white border-[#3b483a] shadow-sm scale-[1.02]"
                       : "bg-white text-[#5e605d] border-[#eae6df] hover:border-[#3b483a]"
                   }`}
                 >
@@ -397,6 +397,17 @@ export default function CreateGiftPage() {
               );
             })}
           </div>
+
+          {activePreset && (
+            <div className="mt-2.5 inline-flex items-center gap-2 px-3 py-1 bg-[#f4f1eb] rounded-full text-[10px] font-medium text-[#5e605d]">
+              <span className="font-bold text-[#3b483a]">💡 테마 추천 예산:</span>
+              <span>
+                {minBudget.toLocaleString()}원 ~ {maxBudget.toLocaleString()}원
+              </span>
+              <span className="text-[#a38974]">|</span>
+              <span>추천 상품 {selectedProductIds.length}개 기본 선택됨</span>
+            </div>
+          )}
         </div>
 
         {/* Feature: Today's MD Pick Showcase */}
