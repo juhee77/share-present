@@ -48,6 +48,11 @@
 - **정산 명세서 현금영수증 신청 & 실시간 배송 연동 (`result/[token]/page.tsx`)**: 소득공제/지출증빙 현금영수증 신청 모달 및 실시간 배송 타임라인 다이렉트 링크 지원.
 - **카테고리 다이나믹 쿼리 & 백엔드 필터링 (`ProductController.java`, `V6__add_product_category.sql`)**: 카테고리(`FRAGRANCE`, `HAND_BODY`, `TABLEWARE`, `TECH`) 필터링 지원 및 프론트 연동.
 - **수령인 대체 추천 선물 탐색 및 교체 수락 (`AlternativeGiftsDrawer.tsx`, `gift/[token]/page.tsx`)**: 수령인 가격 비노출 보안을 준수하면서 동일 감도의 추천 상품으로 원클릭 교체 수락 기능 지원.
+- **대시보드 수락 리마인더 알림톡 트리거 (`dashboard/page.tsx`)**: `WAITING` 상태 선물에 대해 남은 기한 안내와 함께 1-Click 카카오 알림톡 리마인더 재전송 시뮬레이션 및 토스트 피드백 지원.
+- **수령인 배송 트래커 부티크 패키징 인증 배지 (`gift/track/[token]/page.tsx`)**: 프리미엄 린넨 리본 포장 검수 완료 배지 렌더링.
+- **고객센터 접수 세부 확인 카드 (`support/page.tsx`)**: 접수 번호, 문의 유형 요약, 평균 회신 안내 및 알림톡 알림 배지 연동.
+- **메인 큐레이션 요약 바 (`page.tsx`)**: 선택된 선물 개수 펄스 인디케이터 및 최대 가승인 한도 플로팅 서머리 바 지원.
+- **컨트롤러 계층 Bean Validation 400 Bad Request 방어 테스트 완비 (`OrderControllerTest`, `CurationBoxControllerTest`, `SupportInquiryControllerTest`)**: 유효성 검증 테스트 스위트 100% 그린 유지.
 
 ---
 
