@@ -600,6 +600,30 @@ export default function CreateGiftPage() {
               </button>
             ))}
           </div>
+
+          {/* Popular Brand Quick Tags */}
+          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none mb-3 text-[10px]">
+            <span className="text-[#a38974] font-extrabold uppercase tracking-wider mr-1 whitespace-nowrap">
+              인기 브랜드:
+            </span>
+            {["LE LABO", "AESOP", "DIPTYQUE", "TAMBURINS", "OIMU", "NONFICTION", "CROWCANYON"].map((b) => (
+              <button
+                key={b}
+                type="button"
+                onClick={() => {
+                  setSearchKeyword(searchKeyword === b ? "" : b);
+                  showToast(`'${b}' 브랜드 큐레이션 필터가 적용되었습니다! ✨`, "success");
+                }}
+                className={`px-2 py-0.5 rounded-md whitespace-nowrap font-medium transition-all ${
+                  searchKeyword === b
+                    ? "bg-[#3b483a] text-white font-bold"
+                    : "bg-[#f6f4f0] text-[#5e605d] hover:bg-[#eae6df] hover:text-[#1a1a1a]"
+                }`}
+              >
+                {b}
+              </button>
+            ))}
+          </div>
         </div>
 
         <div className="space-y-4">
