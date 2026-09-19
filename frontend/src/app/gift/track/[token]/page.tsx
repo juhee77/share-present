@@ -120,6 +120,17 @@ export default function RecipientTrackingPage({ params }: { params: Promise<{ to
               옵션: {order.selectedOption}
             </span>
           )}
+
+          {/* Boutique Packaging Guarantee Badge */}
+          <div className="mt-4 pt-3 border-t border-[#eae6df] flex items-center justify-between text-[11px] text-[#5e605d]">
+            <span className="flex items-center gap-1.5 font-bold text-[#3b483a]">
+              <span>✨</span>
+              <span>프리미엄 린넨 리본 & 친환경 에코 박스 포장 완료</span>
+            </span>
+            <span className="text-[10px] font-mono text-[#a38974] bg-[#a38974]/10 px-2 py-0.5 rounded-full font-bold">
+              안심 포장 검수 통과
+            </span>
+          </div>
         </section>
 
         {/* 4-Step Timeline Progress */}
