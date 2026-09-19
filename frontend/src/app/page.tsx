@@ -232,6 +232,7 @@ export default function CreateGiftPage() {
   // Catalog Search & Filter State
   const [searchKeyword, setSearchKeyword] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("ALL");
+  const [showOnlySelected, setShowOnlySelected] = useState(false);
   const [products, setProducts] = useState<ProductDto[]>(LOOKBOOK_PRODUCTS);
 
   // Custom External Product State
@@ -560,9 +561,28 @@ export default function CreateGiftPage() {
             <span className="text-xs font-extrabold uppercase tracking-widest text-[#1a1a1a]">
               Catalog & Live Open Search ({products.length})
             </span>
-            <span className="text-xs font-bold text-[#3b483a] bg-[#3b483a]/5 px-2.5 py-0.5 rounded-md">
-              {selectedProductIds.length}개 제안됨
-            </span>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  setShowOnlySelected(!showOnlySelected);
+                  showToast(
+                    !showOnlySelected
+                      ? `선택된 ${selectedProductIds.length}개 선물만 모아봅니다. 🎁`
+                      : "전체 카탈로그를 표시합니다. ✦",
+                    "info"
+                  );
+                }}
+                className={`text-[11px] font-bold px-2.5 py-1 rounded-md transition-all flex items-center gap-1 ${
+                  showOnlySelected
+                    ? "bg-[#3b483a] text-white shadow-sm"
+                    : "bg-[#3b483a]/10 text-[#3b483a] hover:bg-[#3b483a]/20"
+                }`}
+              >
+                <span>{showOnlySelected ? "✓" : "✦"}</span>
+                <span>선택된 선물만 보기 ({selectedProductIds.length})</span>
+              </button>
+            </div>
           </div>
 
           <div className="relative mb-4">
@@ -627,31 +647,47 @@ export default function CreateGiftPage() {
         </div>
 
         <div className="space-y-4">
-          {products.length === 0 ? (
-            <div className="editorial-card p-8 text-center bg-white my-4">
-              <div className="w-12 h-12 rounded-full bg-[#3b483a]/5 flex items-center justify-center text-2xl mx-auto mb-3">
-                🔍
-              </div>
-              <h3 className="text-sm font-bold text-[#1a1a1a] mb-1">
-                일치하는 상품을 찾지 못했습니다
-              </h3>
-              <p className="text-xs text-[#5e605d] mb-4">
-                검색어 또는 예산 범위를 조절하거나 아래 버튼을 눌러 전체 카탈로그를 확인해보세요.
-              </p>
-              <button
-                type="button"
-                onClick={() => {
-                  setSearchKeyword("");
-                  setSelectedCategory("ALL");
-                  showToast("검색 조건이 초기화되었습니다! ✦", "success");
-                }}
-                className="btn-editorial-outline text-xs py-2 px-4 font-bold"
-              >
-                검색 조건 초기화 ↺
-              </button>
-            </div>
-          ) : (
-            products.map((product) => {
+          {(() => {
+            const displayedProducts = showOnlySelected
+              ? products.filter((p) => selectedProductIds.includes(Number(p.id)))
+              : products;
+
+            if (displayedProducts.length === 0) {
+              return (
+                <div className="editorial-card p-8 text-center bg-white my-4">
+                  <div className="w-12 h-12 rounded-full bg-[#3b483a]/5 flex items-center justify-center text-2xl mx-auto mb-3">
+                    🔍
+                  </div>
+                  <h3 className="text-sm font-bold text-[#1a1a1a] mb-1">
+                    {showOnlySelected
+                      ? "선택된 선물이 아직 없습니다"
+                      : "일치하는 상품을 찾지 못했습니다"}
+                  </h3>
+                  <p className="text-xs text-[#5e605d] mb-4">
+                    {showOnlySelected
+                      ? "카탈로그에서 마음에 드는 상품 카드를 클릭하여 큐레이션에 담아보세요."
+                      : "검색어 또는 예산 범위를 조절하거나 아래 버튼을 눌러 전체 카탈로그를 확인해보세요."}
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (showOnlySelected) {
+                        setShowOnlySelected(false);
+                      } else {
+                        setSearchKeyword("");
+                        setSelectedCategory("ALL");
+                      }
+                      showToast("카탈로그 전체 목록이 표시됩니다! ✦", "success");
+                    }}
+                    className="btn-editorial-outline text-xs py-2 px-4 font-bold"
+                  >
+                    {showOnlySelected ? "전체 카탈로그 둘러보기 ✦" : "검색 조건 초기화 ↺"}
+                  </button>
+                </div>
+              );
+            }
+
+            return displayedProducts.map((product) => {
               const isSelected = selectedProductIds.includes(Number(product.id));
               return (
                 <ProductCard
@@ -661,8 +697,8 @@ export default function CreateGiftPage() {
                   onSelect={() => toggleProductSelection(Number(product.id))}
                 />
               );
-            })
-          )}
+            });
+          })()}
         </div>
 
         {/* 4. External Custom proposal */}
