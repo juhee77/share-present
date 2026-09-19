@@ -43,7 +43,13 @@ ${giftUrl}`;
     try {
       await navigator.clipboard.writeText(text);
       setCopiedType(type);
-      showToast(type === "kakao" ? "카카오톡 초대 문구가 복사되었습니다! 💌" : "인스타 DM 초대 링크가 복사되었습니다! ✨", "success");
+      if (type === "kakao") {
+        showToast("카카오톡 초대 문구가 복사되었습니다! 💌", "success");
+      } else if (type === "insta") {
+        showToast("인스타 DM 초대 링크가 복사되었습니다! ✨", "success");
+      } else {
+        showToast("선물 초대 링크가 클립보드에 복사되었습니다! 🔗", "success");
+      }
       setTimeout(() => setCopiedType(null), 2500);
     } catch {
       showToast("클립보드 복사에 실패했습니다.", "error");
