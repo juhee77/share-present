@@ -15,11 +15,11 @@ export default function Header() {
   return (
     <header className="w-full py-4 px-6 border-b border-[#eae6df] bg-white sticky top-0 z-40 backdrop-blur-md bg-white/95">
       <div className="max-w-[540px] mx-auto flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2.5 group">
-          <div className="w-8 h-8 rounded-lg bg-[#3b483a] group-hover:bg-[#2e392d] transition-colors flex items-center justify-center text-white text-sm font-serif font-bold shadow-sm">
+        <Link href="/" className="flex items-center gap-2.5 group" aria-label="SharePresent 홈으로 이동">
+          <div className="w-8 h-8 rounded-lg bg-[#3b483a] group-hover:bg-[#2e392d] group-hover:rotate-6 transition-all duration-300 flex items-center justify-center text-white text-sm font-serif font-bold shadow-sm">
             S
           </div>
-          <span className="font-serif text-2xl font-bold tracking-tight text-[#1a1a1a]">
+          <span className="font-serif text-2xl font-bold tracking-tight text-[#1a1a1a] group-hover:text-[#3b483a] transition-colors">
             SharePresent
           </span>
         </Link>
