@@ -1,11 +1,18 @@
 package com.sharepresent.domain.order.service;
 
+import com.sharepresent.domain.order.client.AlimtalkGatewayClient;
+import com.sharepresent.domain.order.client.AlimtalkSendRequest;
+import com.sharepresent.domain.order.client.AlimtalkSendResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class KakaoNotificationService {
+
+    private final AlimtalkGatewayClient alimtalkGatewayClient;
 
     /**
      * 수령인이 선물을 수락하고 배송지를 입력했을 때 송신자에게 발송하는 카카오 알림톡
@@ -21,8 +28,15 @@ public class KakaoNotificationService {
                 senderName, receiverName, productName, refundAmount
         );
 
-        log.info("[Kakao Alimtalk Sent to Sender ({})]\n{}", senderPhone, message);
-        return true;
+        AlimtalkSendResponse response = alimtalkGatewayClient.dispatch(AlimtalkSendRequest.builder()
+                .recipientPhone(senderPhone)
+                .templateCode("SP_GIFT_ACCEPTED_V1")
+                .title("선물 수락 완료 및 정산 안내")
+                .message(message)
+                .build());
+
+        log.info("[Kakao Alimtalk Sent to Sender ({}) - MsgId: {}]\n{}", senderPhone, response.getMessageId(), message);
+        return response.isSuccess();
     }
 
     /**
@@ -40,8 +54,17 @@ public class KakaoNotificationService {
                 receiverName, senderName, carrierName, trackingNumber, trackingUrl
         );
 
-        log.info("[Kakao Alimtalk Sent to Recipient ({})]\n{}", receiverPhone, message);
-        return true;
+        AlimtalkSendResponse response = alimtalkGatewayClient.dispatch(AlimtalkSendRequest.builder()
+                .recipientPhone(receiverPhone)
+                .templateCode("SP_SHIPPING_STARTED_V1")
+                .title("선물 배송 출발 안내")
+                .message(message)
+                .buttonName("실시간 배송 조회")
+                .buttonUrl(trackingUrl)
+                .build());
+
+        log.info("[Kakao Alimtalk Sent to Recipient ({}) - MsgId: {}]\n{}", receiverPhone, response.getMessageId(), message);
+        return response.isSuccess();
     }
 
     /**
@@ -58,8 +81,15 @@ public class KakaoNotificationService {
                 senderName, refundAmount
         );
 
-        log.info("[Kakao Alimtalk Sent to Sender ({})]\n{}", senderPhone, message);
-        return true;
+        AlimtalkSendResponse response = alimtalkGatewayClient.dispatch(AlimtalkSendRequest.builder()
+                .recipientPhone(senderPhone)
+                .templateCode("SP_GIFT_EXPIRED_REFUND_V1")
+                .title("선물함 기한 만료 및 자동 전액 환불 안내")
+                .message(message)
+                .build());
+
+        log.info("[Kakao Alimtalk Sent to Sender ({}) - MsgId: {}]\n{}", senderPhone, response.getMessageId(), message);
+        return response.isSuccess();
     }
 
     /**
@@ -75,8 +105,17 @@ public class KakaoNotificationService {
                 receiverName, senderName, daysLeft, giftLink
         );
 
-        log.info("[Kakao Alimtalk Reminder Sent to Recipient ({})]\n{}", receiverPhone, message);
-        return true;
+        AlimtalkSendResponse response = alimtalkGatewayClient.dispatch(AlimtalkSendRequest.builder()
+                .recipientPhone(receiverPhone)
+                .templateCode("SP_GIFT_REMINDER_V1")
+                .title("선물 수락 마감 임박 리마인더")
+                .message(message)
+                .buttonName("선물 수락하러 가기")
+                .buttonUrl(giftLink)
+                .build());
+
+        log.info("[Kakao Alimtalk Reminder Sent to Recipient ({}) - MsgId: {}]\n{}", receiverPhone, response.getMessageId(), message);
+        return response.isSuccess();
     }
 
     /**
@@ -92,7 +131,14 @@ public class KakaoNotificationService {
                 senderName, receiverName, thankYouSnippet
         );
 
-        log.info("[Kakao Alimtalk Thank You Card Sent to Sender ({})]\n{}", senderPhone, message);
-        return true;
+        AlimtalkSendResponse response = alimtalkGatewayClient.dispatch(AlimtalkSendRequest.builder()
+                .recipientPhone(senderPhone)
+                .templateCode("SP_THANK_YOU_CARD_V1")
+                .title("수령인 감사 답장 도착 안내")
+                .message(message)
+                .build());
+
+        log.info("[Kakao Alimtalk Thank You Card Sent to Sender ({}) - MsgId: {}]\n{}", senderPhone, response.getMessageId(), message);
+        return response.isSuccess();
     }
 }

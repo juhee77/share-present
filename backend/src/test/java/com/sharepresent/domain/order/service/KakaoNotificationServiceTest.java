@@ -1,5 +1,6 @@
 package com.sharepresent.domain.order.service;
 
+import com.sharepresent.domain.order.client.MockAlimtalkGatewayClient;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -7,7 +8,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class KakaoNotificationServiceTest {
 
-    private final KakaoNotificationService kakaoNotificationService = new KakaoNotificationService();
+    private final KakaoNotificationService kakaoNotificationService = new KakaoNotificationService(new MockAlimtalkGatewayClient());
 
     @Test
     @DisplayName("선물 수락 알림톡 발송 성공")
