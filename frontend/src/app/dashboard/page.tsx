@@ -5,6 +5,7 @@ import Header from "@/components/Header";
 import Link from "next/link";
 import ShareModal from "@/components/ShareModal";
 import AlimtalkPreviewModal from "@/components/AlimtalkPreviewModal";
+import { useToast } from "@/context/ToastContext";
 
 interface MockSentBox {
   id: number;
@@ -184,6 +185,7 @@ const TRENDING_GIFTS = [
 type DashboardTab = "RECEIVED" | "SENT" | "TRENDS";
 
 export default function SenderDashboardPage() {
+  const { showToast } = useToast();
   const [activeTab, setActiveTab] = useState<DashboardTab>("RECEIVED");
   const [sentBoxes] = useState<MockSentBox[]>(MOCK_SENT_BOXES);
   const [receivedBoxes] = useState<MockReceivedBox[]>(MOCK_RECEIVED_BOXES);
@@ -197,6 +199,10 @@ export default function SenderDashboardPage() {
     refundAmount?: number;
     trackingNumber?: string;
   }>({ isOpen: false });
+
+  const handleSendReminder = (box: MockSentBox) => {
+    showToast(`수령인에게 선물 수락 리마인더 알림톡이 성공적으로 재전송되었습니다! 💌 (남은 기한: D-5)`, "success");
+  };
 
   return (
     <div className="flex flex-col min-h-screen pb-16 bg-[#faf9f6]">
@@ -459,6 +465,14 @@ export default function SenderDashboardPage() {
                         className="flex-1 btn-editorial text-center text-xs py-2.5 font-bold uppercase tracking-wider shadow-sm"
                       >
                         선물 링크 공유하기 💌
+                      </button>
+                      <button
+                        onClick={() => handleSendReminder(box)}
+                        className="px-3 py-2.5 bg-[#3b483a]/10 hover:bg-[#3b483a]/20 border border-[#3b483a]/30 text-[#3b483a] rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1"
+                        title="수령인에게 선물 수락 리마인더 알림톡 발송"
+                      >
+                        <span>🔔</span>
+                        <span>리마인더</span>
                       </button>
                       <button
                         onClick={() =>
