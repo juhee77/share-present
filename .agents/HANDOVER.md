@@ -59,6 +59,8 @@
 ## 3. 주요 파일 및 코드 엔트리 포인트 (Key Code Surfaces)
 
 ### 백엔드 & DB 마이그레이션 (Java 25 / Spring Boot 3.3 / Flyway)
+- `backend/src/main/resources/application.yml`: 로컬 H2 인메모리 개발 환경 설정
+- `backend/src/main/resources/application-prod.yml`: PostgreSQL 프로덕션 배포 환경 설정
 - `backend/src/main/resources/db/migration/V1__initial_schema.sql`: Flyway V1 DDL 테이블 및 B-Tree 인덱스
 - `backend/src/main/resources/db/migration/V2__seed_initial_products.sql`: Flyway V2 초기 럭셔리 상품 시드 데이터
 - `backend/src/main/resources/db/migration/V3__expand_popular_gifts_catalog.sql`: Flyway V3 16종 명품 브랜드 카탈로그 확장 시드 데이터
@@ -119,8 +121,8 @@ npm run dev
 
 ## 5. 다음 개발자를 위한 후속 로드맵 (Roadmap for Next Developer)
 
-1. **카카오 알림톡(Notification Talk) API 연동**:
-   - 수령인 배송지 입력 시 송신자에게 카톡 알림 발송 및 택배 출고 시 수령인에게 운송장 알림톡 자동 발송.
-2. **프로덕션 PostgreSQL DB 환경 구축**:
-   - `application-prod.yml` 환경 설정 및 AWS RDS/Supabase 연결.
+1. **카카오 알림톡(Notification Talk) 실발송 API 키 연동**:
+   - 카카오 비즈메시지 공식 알리고/비즈엠 API 키 발급 및 실운영 발송 연동.
+2. **다국어(i18n) 영문 럭셔리 인비테이션 모드 지원**:
+   - 글로벌 바이어 및 외국인 친구를 위한 영문 룩북 번역 모드 지원.
 
