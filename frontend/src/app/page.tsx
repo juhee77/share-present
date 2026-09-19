@@ -419,11 +419,40 @@ export default function CreateGiftPage() {
               />
             </div>
             <div>
-              <label className="block text-[11px] font-bold text-[#5e605d] uppercase tracking-wider mb-1.5">
-                카드 메시지
-              </label>
+              <div className="flex items-center justify-between mb-1.5">
+                <label className="block text-[11px] font-bold text-[#5e605d] uppercase tracking-wider">
+                  카드 메시지
+                </label>
+                <span className="text-[10px] font-mono text-[#7a7266]">
+                  {messageCard.length}/200자
+                </span>
+              </div>
+
+              {/* Quick Message Chips */}
+              <div className="flex gap-1.5 mb-2 overflow-x-auto pb-1 scrollbar-none">
+                {[
+                  { label: "🎂 생일", text: "생일 축하해! 마음에 드는 선물 하나 골라주면 주소지로 바로 보내줄게 🎁" },
+                  { label: "💌 응원/감사", text: "항상 곁에서 힘이 되어줘서 고마워. 당신의 일상에 작은 힐링이 되길 바라 🌿" },
+                  { label: "🏠 집들이/결혼", text: "새로운 시작을 진심으로 축하해! 공간을 따뜻하게 채워줄 선물이길 바라 ✨" },
+                  { label: "☕ 가벼운 선물", text: "오다 주웠다! 취향에 맞는 아이템으로 골라줘 ✦" },
+                ].map((preset) => (
+                  <button
+                    key={preset.label}
+                    type="button"
+                    onClick={() => {
+                      setMessageCard(preset.text);
+                      showToast(`${preset.label} 메시지가 적용되었습니다! ✍️`, "success");
+                    }}
+                    className="text-[10px] px-2.5 py-1 rounded-full bg-[#f6f4f0] hover:bg-[#eae6df] text-[#1a1a1a] border border-[#eae6df] whitespace-nowrap transition-colors"
+                  >
+                    {preset.label}
+                  </button>
+                ))}
+              </div>
+
               <textarea
                 rows={3}
+                maxLength={200}
                 value={messageCard}
                 onChange={(e) => setMessageCard(e.target.value)}
                 className="input-editorial resize-none font-serif text-sm"
