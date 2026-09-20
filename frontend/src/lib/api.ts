@@ -59,6 +59,7 @@ export interface AcceptGiftRequest {
   recipientCustomBrand?: string;
   recipientCustomName?: string;
   recipientCustomUrl?: string;
+  desiredDeliveryDate?: string;
 }
 
 export interface OrderResponse {
@@ -74,6 +75,7 @@ export interface OrderResponse {
   refundAmount: number;
   status: string;
   externalUrl?: string;
+  desiredDeliveryDate?: string;
 }
 
 export async function createCurationBox(payload: CreateCurationBoxRequest): Promise<CurationBoxResponse> {

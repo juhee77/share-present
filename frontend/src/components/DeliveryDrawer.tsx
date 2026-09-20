@@ -6,7 +6,14 @@ import { useToast } from "@/context/ToastContext";
 interface DeliveryDrawerProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (data: { name: string; phone: string; address: string; deliveryMemo?: string; selectedOption?: string }) => void;
+  onSubmit: (data: {
+    name: string;
+    phone: string;
+    address: string;
+    deliveryMemo?: string;
+    selectedOption?: string;
+    desiredDeliveryDate?: string;
+  }) => void;
   selectedProductName?: string;
   selectedProductBrand?: string;
   selectedOption?: string;
@@ -74,6 +81,12 @@ const DELIVERY_MEMOS = [
   "✍️ 직접 입력",
 ];
 
+const DELIVERY_DATE_OPTIONS = [
+  { id: "FASTEST", label: "🚀 가장 빠른 배송 (1~2일 내)" },
+  { id: "WEEKEND", label: "🛋️ 주말(토요일) 수령" },
+  { id: "WEEKDAY", label: "🏢 평일 낮 시간 수령" },
+];
+
 export default function DeliveryDrawer({
   isOpen,
   onClose,
@@ -96,6 +109,7 @@ export default function DeliveryDrawer({
   const [entranceCode, setEntranceCode] = useState("");
   const [deliveryMemo, setDeliveryMemo] = useState(DELIVERY_MEMOS[0]);
   const [customMemo, setCustomMemo] = useState("");
+  const [desiredDeliveryDate, setDesiredDeliveryDate] = useState("FASTEST");
   const [showAddressSearch, setShowAddressSearch] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -146,6 +160,7 @@ export default function DeliveryDrawer({
       address: fullAddress,
       deliveryMemo: baseMemo || undefined,
       selectedOption: currentOption || selectedOption || undefined,
+      desiredDeliveryDate,
     });
   };
 
@@ -372,6 +387,28 @@ export default function DeliveryDrawer({
             />
           </div>
 
+          {/* Desired Delivery Date Preference */}
+          <div>
+            <label className="block text-xs font-bold text-[#1a1a1a] mb-1.5">
+              배송 희망일 및 일정
+            </label>
+            <div className="flex flex-wrap gap-1.5 mb-2">
+              {DELIVERY_DATE_OPTIONS.map((opt) => (
+                <button
+                  key={opt.id}
+                  type="button"
+                  onClick={() => setDesiredDeliveryDate(opt.id)}
+                  className={`text-[11px] px-2.5 py-1.5 rounded-lg border transition-all ${
+                    desiredDeliveryDate === opt.id
+                      ? "bg-[#3b483a] text-white border-[#3b483a] font-bold shadow-xs"
+                      : "bg-white text-[#5e605d] border-[#eae6df] hover:border-[#3b483a]"
+                  }`}
+                >
+                  {opt.label}
+                </button>
+              ))}
+            </div>
+          </div>
 
           {/* Delivery Memo */}
           <div>

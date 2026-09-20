@@ -30,6 +30,9 @@ public class AcceptGiftRequest {
     private String recipientCustomName;
     private String recipientCustomUrl;
 
+    // Optional delivery date preference
+    private String desiredDeliveryDate;
+
     // Optional thank-you reply card fields
     private String thankYouSticker;
     private String thankYouMessage;

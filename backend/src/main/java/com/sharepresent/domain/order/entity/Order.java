@@ -90,4 +90,7 @@ public class Order {
 
     @Column(name = "thank_you_photo_url")
     private String thankYouPhotoUrl;
+
+    @Column(name = "desired_delivery_date")
+    private String desiredDeliveryDate;
 }

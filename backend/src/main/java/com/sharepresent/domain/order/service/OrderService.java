@@ -140,6 +140,7 @@ public class OrderService {
                 .thankYouSticker(request.getThankYouSticker())
                 .thankYouMessage(request.getThankYouMessage())
                 .thankYouPhotoUrl(request.getThankYouPhotoUrl())
+                .desiredDeliveryDate(request.getDesiredDeliveryDate())
                 .build();
 
         Order savedOrder = orderRepository.save(settledOrder);
@@ -382,6 +383,7 @@ public class OrderService {
                 .thankYouSticker(order.getThankYouSticker())
                 .thankYouMessage(order.getThankYouMessage())
                 .thankYouPhotoUrl(order.getThankYouPhotoUrl())
+                .desiredDeliveryDate(order.getDesiredDeliveryDate())
                 .build();
     }
 }

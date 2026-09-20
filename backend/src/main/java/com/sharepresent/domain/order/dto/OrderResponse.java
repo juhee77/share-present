@@ -25,4 +25,5 @@ public class OrderResponse {
     private String thankYouSticker;
     private String thankYouMessage;
     private String thankYouPhotoUrl;
+    private String desiredDeliveryDate;
 }

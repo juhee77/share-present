@@ -143,6 +143,7 @@ export default function RecipientGiftPage({ params }: { params: Promise<{ token:
     address: string;
     deliveryMemo?: string;
     selectedOption?: string;
+    desiredDeliveryDate?: string;
   }) => {
     setIsSubmitting(true);
     try {
@@ -158,6 +159,7 @@ export default function RecipientGiftPage({ params }: { params: Promise<{ token:
         shippingAddress: addressData.address,
         selectedProductId: typeof selectedProductId === "number" ? selectedProductId : undefined,
         selectedOption: finalOption,
+        desiredDeliveryDate: addressData.desiredDeliveryDate,
         isRecipientAdded: isCustomRecipient,
         recipientCustomBrand: isCustomRecipient ? customBrand || "직접입력" : undefined,
         recipientCustomName: isCustomRecipient ? customName : undefined,

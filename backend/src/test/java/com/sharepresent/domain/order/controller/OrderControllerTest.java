@@ -64,6 +64,7 @@ class OrderControllerTest {
                 .shippingAddress("서울특별시 강남구 테헤란로 152")
                 .selectedProductId(10L)
                 .selectedOption("샌드 화이트")
+                .desiredDeliveryDate("FASTEST")
                 .build();
 
         OrderResponse mockResponse = OrderResponse.builder()
@@ -75,6 +76,7 @@ class OrderControllerTest {
                 .finalAmount(38000)
                 .refundAmount(22000)
                 .shippingStatus("COMPLETED")
+                .desiredDeliveryDate("FASTEST")
                 .build();
 
         given(orderService.acceptAndSettleGift(eq("sample-token"), any(AcceptGiftRequest.class))).willReturn(mockResponse);
@@ -87,6 +89,7 @@ class OrderControllerTest {
                 .andExpect(jsonPath("$.selectedProductName").value("소락사 샌디 도자기 머그"))
                 .andExpect(jsonPath("$.finalAmount").value(38000))
                 .andExpect(jsonPath("$.refundAmount").value(22000))
+                .andExpect(jsonPath("$.desiredDeliveryDate").value("FASTEST"))
                 .andExpect(jsonPath("$.shippingStatus").value("COMPLETED"));
     }
 
