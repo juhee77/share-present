@@ -7,6 +7,7 @@ import UnwrappingRibbon from "@/components/UnwrappingRibbon";
 import DeliveryDrawer from "@/components/DeliveryDrawer";
 import { AlternativeGiftsDrawer } from "@/components/AlternativeGiftsDrawer";
 import ConfettiEffect from "@/components/ConfettiEffect";
+import RollingPaperSection from "@/components/RollingPaperSection";
 import { useToast } from "@/context/ToastContext";
 import { getCurationBox, acceptGift, submitThankYouReply, CurationBoxResponse, ProductDto } from "@/lib/api";
 
@@ -58,6 +59,22 @@ export default function RecipientGiftPage({ params }: { params: Promise<{ token:
           maxBudget: 60000,
           sharingToken: token,
           allowCustomInput: true,
+          rollingPaperMessages: [
+            {
+              id: 1,
+              authorName: "마케팅팀 동기 민우",
+              message: "생일 진심으로 축하해! 원하는 거 골라서 유용하게 잘 쓰길 바라 🎉",
+              avatarEmoji: "🎉",
+              createdAt: "2026-07-24",
+            },
+            {
+              id: 2,
+              authorName: "수진 팀장님",
+              message: "언제나 열정 넘치는 모습 너무 멋져요! 항상 응원합니다 ✨",
+              avatarEmoji: "✨",
+              createdAt: "2026-07-24",
+            },
+          ],
           items: [
             {
               id: 1,
@@ -399,6 +416,13 @@ export default function RecipientGiftPage({ params }: { params: Promise<{ token:
                 </div>
               );
             })()}
+
+            {/* Feature 4: Co-Sender Group Rolling Paper Section */}
+            <RollingPaperSection
+              token={token}
+              senderName={boxData.senderName}
+              messages={boxData.rollingPaperMessages}
+            />
 
             <div className="flex items-center justify-between mb-3 px-1">
               <span className="text-xs font-extrabold uppercase tracking-widest text-[#1a1a1a]">

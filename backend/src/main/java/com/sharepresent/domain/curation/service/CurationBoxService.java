@@ -1,10 +1,13 @@
 package com.sharepresent.domain.curation.service;
 
+import com.sharepresent.domain.curation.dto.AddRollingPaperRequest;
 import com.sharepresent.domain.curation.dto.CreateCurationBoxRequest;
 import com.sharepresent.domain.curation.dto.CurationBoxResponse;
 import com.sharepresent.domain.curation.entity.CurationBox;
 import com.sharepresent.domain.curation.entity.CurationBoxItem;
+import com.sharepresent.domain.curation.entity.RollingPaperMessage;
 import com.sharepresent.domain.curation.repository.CurationBoxRepository;
+import com.sharepresent.domain.curation.repository.RollingPaperMessageRepository;
 import com.sharepresent.domain.product.entity.Product;
 import com.sharepresent.domain.product.repository.ProductRepository;
 import com.sharepresent.domain.user.entity.User;
@@ -26,6 +29,7 @@ public class CurationBoxService {
     private final CurationBoxRepository curationBoxRepository;
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
+    private final RollingPaperMessageRepository rollingPaperMessageRepository;
 
     @Transactional
     public CurationBoxResponse createCurationBox(CreateCurationBoxRequest request) {
@@ -114,6 +118,27 @@ public class CurationBoxService {
         return box.getClaimPin().trim().equals(pin != null ? pin.trim() : "");
     }
 
+    /**
+     * 그룹 공동 선물 롤링페이퍼 축하 메시지 등록
+     */
+    @Transactional
+    public CurationBoxResponse addRollingPaperMessage(String sharingToken, AddRollingPaperRequest request) {
+        CurationBox box = curationBoxRepository.findBySharingToken(sharingToken)
+                .orElseThrow(() -> new IllegalArgumentException("선물 박스를 찾을 수 없습니다. Token: " + sharingToken));
+
+        RollingPaperMessage rpm = RollingPaperMessage.builder()
+                .curationBox(box)
+                .authorName(request.getAuthorName().trim())
+                .message(request.getMessage().trim())
+                .avatarEmoji(request.getAvatarEmoji() != null && !request.getAvatarEmoji().isBlank() ? request.getAvatarEmoji().trim() : "💌")
+                .build();
+
+        rollingPaperMessageRepository.save(rpm);
+        box.getRollingPaperMessages().add(rpm);
+
+        return convertToResponse(box);
+    }
+
     private CurationBoxResponse convertToResponse(CurationBox box) {
         List<CurationBoxResponse.ProductDto> itemDtos = box.getItems().stream()
                 .map(item -> {
@@ -135,6 +160,18 @@ public class CurationBoxService {
                 })
                 .toList();
 
+        List<CurationBoxResponse.RollingPaperMessageDto> rpmDtos = box.getRollingPaperMessages() != null
+                ? box.getRollingPaperMessages().stream()
+                .map(rpm -> CurationBoxResponse.RollingPaperMessageDto.builder()
+                        .id(rpm.getId())
+                        .authorName(rpm.getAuthorName())
+                        .message(rpm.getMessage())
+                        .avatarEmoji(rpm.getAvatarEmoji())
+                        .createdAt(rpm.getCreatedAt() != null ? rpm.getCreatedAt().toString() : null)
+                        .build())
+                .toList()
+                : java.util.Collections.emptyList();
+
         return CurationBoxResponse.builder()
                 .id(box.getId())
                 .senderName(box.getSender() != null ? box.getSender().getNickname() : "주희")
@@ -150,6 +187,7 @@ public class CurationBoxService {
                 .allowCustomInput(box.getAllowCustomInput())
                 .expiredAt(box.getExpiredAt() != null ? box.getExpiredAt().toString() : null)
                 .items(itemDtos)
+                .rollingPaperMessages(rpmDtos)
                 .build();
     }
 }

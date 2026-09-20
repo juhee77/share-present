@@ -54,4 +54,13 @@ public class CurationBoxController {
         com.sharepresent.domain.curation.dto.AiMessageResponse response = aiMessageAssistantService.generateMessage(request);
         return ResponseEntity.ok(response);
     }
+
+    @PostMapping("/{token}/rolling-paper")
+    @Operation(summary = "그룹 공동 선물 롤링페이퍼 메시지 등록", description = "동료, 친구 등 공동 발신자가 해당 선물 상자에 축하 메시지와 아바타 스티커를 롤링페이퍼 형태로 등록합니다.")
+    public ResponseEntity<CurationBoxResponse> addRollingPaperMessage(
+            @PathVariable("token") String token,
+            @Valid @RequestBody com.sharepresent.domain.curation.dto.AddRollingPaperRequest request) {
+        CurationBoxResponse response = curationBoxService.addRollingPaperMessage(token, request);
+        return ResponseEntity.ok(response);
+    }
 }

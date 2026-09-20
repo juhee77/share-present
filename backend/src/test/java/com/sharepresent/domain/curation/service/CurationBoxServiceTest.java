@@ -36,6 +36,9 @@ class CurationBoxServiceTest {
     @Mock
     private ProductRepository productRepository;
 
+    @Mock
+    private com.sharepresent.domain.curation.repository.RollingPaperMessageRepository rollingPaperMessageRepository;
+
     @InjectMocks
     private CurationBoxService curationBoxService;
 
@@ -137,5 +140,39 @@ class CurationBoxServiceTest {
         // then
         assertThat(isValid).isTrue();
         assertThat(isInvalid).isFalse();
+    }
+
+    @Test
+    @DisplayName("공동 선물 롤링페이퍼 축하 메시지 등록 - 메시지 및 아바타 스티커 저장 검증")
+    void addRollingPaperMessage_success() {
+        // given
+        CurationBox box = CurationBox.builder()
+                .id(100L)
+                .sharingToken("rolling-paper-token")
+                .minBudget(30000)
+                .maxBudget(60000)
+                .messageCard("축하해!")
+                .rollingPaperMessages(new java.util.ArrayList<>())
+                .build();
+
+        com.sharepresent.domain.curation.dto.AddRollingPaperRequest request =
+                com.sharepresent.domain.curation.dto.AddRollingPaperRequest.builder()
+                        .authorName("마케팅팀 민우")
+                        .message("생일 진심으로 축하해! 늘 고마워 🎉")
+                        .avatarEmoji("🎉")
+                        .build();
+
+        given(curationBoxRepository.findBySharingToken("rolling-paper-token")).willReturn(Optional.of(box));
+        given(rollingPaperMessageRepository.save(any())).willAnswer(inv -> inv.getArgument(0));
+
+        // when
+        CurationBoxResponse response = curationBoxService.addRollingPaperMessage("rolling-paper-token", request);
+
+        // then
+        assertThat(response).isNotNull();
+        assertThat(response.getRollingPaperMessages()).hasSize(1);
+        assertThat(response.getRollingPaperMessages().get(0).getAuthorName()).isEqualTo("마케팅팀 민우");
+        assertThat(response.getRollingPaperMessages().get(0).getMessage()).isEqualTo("생일 진심으로 축하해! 늘 고마워 🎉");
+        assertThat(response.getRollingPaperMessages().get(0).getAvatarEmoji()).isEqualTo("🎉");
     }
 }

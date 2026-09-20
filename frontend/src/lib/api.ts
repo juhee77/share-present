@@ -53,6 +53,21 @@ export interface CurationBoxResponse {
   sharingToken: string;
   allowCustomInput: boolean;
   items: ProductDto[];
+  rollingPaperMessages?: RollingPaperMessageDto[];
+}
+
+export interface RollingPaperMessageDto {
+  id: number;
+  authorName: string;
+  message: string;
+  avatarEmoji?: string;
+  createdAt?: string;
+}
+
+export interface AddRollingPaperPayload {
+  authorName: string;
+  message: string;
+  avatarEmoji?: string;
 }
 
 export interface AcceptGiftRequest {
@@ -314,6 +329,18 @@ export async function modifyRecipientAddress(sharingToken: string, payload: Modi
   });
   if (!res.ok) {
     throw new Error("배송 주소지 변경에 실패했습니다.");
+  }
+  return res.json();
+}
+
+export async function addRollingPaperMessage(sharingToken: string, payload: AddRollingPaperPayload): Promise<CurationBoxResponse> {
+  const res = await fetch(`${BASE_URL}/curation-boxes/${sharingToken}/rolling-paper`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) {
+    throw new Error("롤링페이퍼 메시지 등록에 실패했습니다.");
   }
   return res.json();
 }

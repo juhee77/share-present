@@ -23,6 +23,7 @@ public class CurationBoxResponse {
     private Boolean allowCustomInput;
     private String expiredAt;
     private List<ProductDto> items;
+    private List<RollingPaperMessageDto> rollingPaperMessages;
 
     @Getter
     @Builder
@@ -41,5 +42,17 @@ public class CurationBoxResponse {
         private String icon;
         private Boolean isSoldOut;
         private Integer stockQuantity;
+    }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class RollingPaperMessageDto {
+        private Long id;
+        private String authorName;
+        private String message;
+        private String avatarEmoji;
+        private String createdAt;
     }
 }

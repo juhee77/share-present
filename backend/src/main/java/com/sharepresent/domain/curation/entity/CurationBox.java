@@ -67,6 +67,10 @@ public class CurationBox {
     private List<CurationBoxItem> items = new ArrayList<>();
 
     @Builder.Default
+    @OneToMany(mappedBy = "curationBox", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<RollingPaperMessage> rollingPaperMessages = new ArrayList<>();
+
+    @Builder.Default
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
