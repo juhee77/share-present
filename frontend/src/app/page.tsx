@@ -164,6 +164,14 @@ const OCCASION_PRESETS = [
     productIds: [1, 2, 7],
   },
   {
+    id: "anniversary",
+    label: "💖 연인/기념일",
+    minBudget: 40000,
+    maxBudget: 90000,
+    message: "우리의 특별한 기념일을 축하해! 함께 만들어갈 행복한 순간처럼 소중한 선물 골라봐 ✨",
+    productIds: [2, 7, 9],
+  },
+  {
     id: "housewarming",
     label: "🏡 집들이",
     minBudget: 40000,
@@ -178,6 +186,14 @@ const OCCASION_PRESETS = [
     maxBudget: 50000,
     message: "새로운 시작을 축하하고 응원해! 언제나 너의 도전을 응원하고 있어 ✦",
     productIds: [3, 7, 11],
+  },
+  {
+    id: "thanks",
+    label: "🙏 감사/은혜",
+    minBudget: 30000,
+    maxBudget: 70000,
+    message: "항상 따뜻하게 이끌어주시고 베풀어주신 마음에 깊이 감사드립니다. 건강과 행복을 기원합니다 🌿",
+    productIds: [1, 5, 8],
   },
   {
     id: "wedding",
