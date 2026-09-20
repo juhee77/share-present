@@ -997,6 +997,7 @@ export default function CreateGiftPage() {
         senderName={senderName}
         messageCard={messageCard}
         cardTheme={cardTheme}
+        sealMonogram={sealMonogram}
       />
 
       {/* AI Message Assistant Modal */}

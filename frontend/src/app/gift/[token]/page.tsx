@@ -6,6 +6,7 @@ import ProductCard from "@/components/ProductCard";
 import UnwrappingRibbon from "@/components/UnwrappingRibbon";
 import DeliveryDrawer from "@/components/DeliveryDrawer";
 import { AlternativeGiftsDrawer } from "@/components/AlternativeGiftsDrawer";
+import ConfettiEffect from "@/components/ConfettiEffect";
 import { useToast } from "@/context/ToastContext";
 import { getCurationBox, acceptGift, submitThankYouReply, CurationBoxResponse, ProductDto } from "@/lib/api";
 
@@ -214,7 +215,8 @@ export default function RecipientGiftPage({ params }: { params: Promise<{ token:
       <main className="p-4 flex-1 max-w-[540px] mx-auto w-full">
         {isCompleted ? (
           /* Recipient Pure Gratitude Completion Screen (Zero Price Mention) */
-          <div className="text-center py-12 editorial-card p-6 my-8 animate-fade-in border border-white">
+          <div className="text-center py-12 editorial-card p-6 my-8 animate-fade-in border border-white relative overflow-hidden">
+            <ConfettiEffect active={isCompleted} durationMs={5000} />
             <div className="w-16 h-16 rounded-full bg-[#3b483a]/5 flex items-center justify-center text-3xl mx-auto mb-4">
               🎁
             </div>

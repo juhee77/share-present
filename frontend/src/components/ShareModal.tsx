@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { useToast } from "@/context/ToastContext";
 import AlimtalkPreviewModal from "./AlimtalkPreviewModal";
+import PrintableGiftCardModal from "./PrintableGiftCardModal";
 
 interface ShareModalProps {
   isOpen: boolean;
@@ -9,7 +10,8 @@ interface ShareModalProps {
   token: string;
   senderName: string;
   messageCard?: string;
-  cardTheme?: "ivory" | "emerald" | "noir" | "rose";
+  cardTheme?: "ivory" | "emerald" | "noir" | "rose" | string;
+  sealMonogram?: string;
 }
 
 export default function ShareModal({
@@ -19,10 +21,12 @@ export default function ShareModal({
   senderName,
   messageCard = "당신을 위해 정성껏 고른 선물입니다.",
   cardTheme = "ivory",
+  sealMonogram = "SP",
 }: ShareModalProps) {
   const { showToast } = useToast();
   const [copiedType, setCopiedType] = useState<string | null>(null);
   const [showAlimtalkModal, setShowAlimtalkModal] = useState(false);
+  const [showPrintableModal, setShowPrintableModal] = useState(false);
 
   if (!isOpen) return null;
 
@@ -74,7 +78,7 @@ ${giftUrl}`;
     }
   };
 
-  const themeStyles = {
+  const themeMap: Record<string, { bg: string; border: string; seal: string; label: string; dark?: boolean }> = {
     ivory: {
       bg: "bg-[#f5f2eb]",
       border: "border-[#d8d0c2]",
@@ -101,7 +105,8 @@ ${giftUrl}`;
       seal: "bg-[#b0787d] text-[#fff6f6]",
       label: "더스티 로즈",
     },
-  }[cardTheme];
+  };
+  const themeStyles = themeMap[cardTheme] || themeMap.ivory;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fadeIn">
@@ -197,6 +202,15 @@ ${giftUrl}`;
             </button>
           </div>
 
+          {/* Printable Luxury Invitation Card & QR Trigger */}
+          <button
+            onClick={() => setShowPrintableModal(true)}
+            className="w-full flex items-center justify-center gap-2 py-2.5 bg-[#f5f2eb] hover:bg-[#eae6df] border border-[#dedad0] rounded-xl text-xs font-bold text-[#1a1a1a] transition-all"
+          >
+            <span>🖨️</span>
+            <span>실물 인쇄용 럭셔리 기프트 카드 / QR 코드 생성</span>
+          </button>
+
           {/* Alimtalk Simulator Trigger */}
           <button
             onClick={() => setShowAlimtalkModal(true)}
@@ -237,6 +251,17 @@ ${giftUrl}`;
         onClose={() => setShowAlimtalkModal(false)}
         senderName={senderName}
         messageCard={messageCard}
+      />
+
+      {/* Printable Luxury Gift Card & QR Modal */}
+      <PrintableGiftCardModal
+        isOpen={showPrintableModal}
+        onClose={() => setShowPrintableModal(false)}
+        token={token}
+        senderName={senderName}
+        messageCard={messageCard}
+        cardTheme={cardTheme}
+        sealMonogram={sealMonogram}
       />
     </div>
   );

@@ -107,6 +107,8 @@
 - `frontend/src/components/ShareModal.tsx`: 카카오톡 / 인스타 DM / Web Share API 공유 모달
 - `frontend/src/components/DeliveryDrawer.tsx`: 도로명 주소 검색 및 배송 메모 드로어
 - `frontend/src/components/UnwrappingRibbon.tsx`: 3D 왁스 씰 개봉 애니메이션 컴포넌트
+- `frontend/src/components/PrintableGiftCardModal.tsx`: 인쇄/PDF 저장 지원 실물 엽서 카드 및 고해상도 QR 코드 생성기
+- `frontend/src/components/ConfettiEffect.tsx`: 골드/에메랄드/로즈 축하 컨페티 파티클 캔버스 효과
 - `frontend/src/lib/api.ts`: 백엔드 REST API 연동 클라이언트 모듈
 
 ---
