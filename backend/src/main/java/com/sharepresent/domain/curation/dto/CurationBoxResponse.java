@@ -14,6 +14,7 @@ public class CurationBoxResponse {
     private String messageCard;
     private String cardTheme;
     private String fontStyle;
+    private String packagingStyle;
     private Integer minBudget;
     private Integer maxBudget;
     private String sharingToken;

@@ -241,10 +241,22 @@ export default function RecipientGiftPage({ params }: { params: Promise<{ token:
                     선택 옵션: <span className="font-semibold text-[#1a1a1a]">{selectedOption}</span>
                   </p>
                 )}
-                <div className="mt-2 pt-2 border-t border-[#eae6df] flex items-center gap-1.5 text-[10px] text-[#7a7266]">
-                  <span>🌿</span>
-                  <span>프리미엄 부티크 린넨 리본 패키징으로 정성껏 포장되어 출고됩니다.</span>
-                </div>
+                {(() => {
+                  const pkg = boxData.packagingStyle || "STANDARD";
+                  const pkgMap: Record<string, { label: string; icon: string }> = {
+                    STANDARD: { label: "시그니처 화이트 박스 & 실링 왁스", icon: "📦" },
+                    BOJAGI: { label: "전통 실크 보자기 & 수공예 노리개", icon: "🪡" },
+                    LUXURY_RIBBON: { label: "로열 리본 하드케이스 & 새틴 리본", icon: "🎀" },
+                    ECO_CRAFT: { label: "친환경 생분해 크래프트 & 천연 허브 리프", icon: "🌿" },
+                  };
+                  const cur = pkgMap[pkg] || pkgMap.STANDARD;
+                  return (
+                    <div className="mt-2 pt-2 border-t border-[#eae6df] flex items-center gap-1.5 text-[10px] text-[#7a7266]">
+                      <span>{cur.icon}</span>
+                      <span>{cur.label} 패키징으로 정성껏 포장되어 출고됩니다.</span>
+                    </div>
+                  );
+                })()}
               </div>
             )}
 
@@ -343,6 +355,36 @@ export default function RecipientGiftPage({ params }: { params: Promise<{ token:
                     "{boxData.messageCard}"
                   </p>
                 </section>
+              );
+            })()}
+
+            {/* Packaging Style Preview Banner */}
+            {(() => {
+              const pkg = boxData.packagingStyle || "STANDARD";
+              const pkgMap: Record<string, { label: string; icon: string; desc: string; badgeClass: string }> = {
+                STANDARD: { label: "시그니처 기프트 박스", icon: "📦", desc: "정갈한 화이트 박스와 왁스 실링 패키징", badgeClass: "bg-[#f5f2eb] text-[#4a4036] border-[#d8d0c2]" },
+                BOJAGI: { label: "전통 실크 보자기 & 수공예 노리개", icon: "🪡", desc: "단아한 옥빛 전통 보자기와 수공예 노리개 포장", badgeClass: "bg-[#eef5f0] text-[#245237] border-[#b9d9c3]" },
+                LUXURY_RIBBON: { label: "로열 리본 하드케이스", icon: "🎀", desc: "다크 포레스트 하드케이스 & 골드 새틴 리본", badgeClass: "bg-[#f2f0ea] text-[#2f3b30] border-[#c2b9a7]" },
+                ECO_CRAFT: { label: "친환경 크래프트 & 천연 허브 리프", icon: "🌿", desc: "100% 생분해 크래프트 & 천연 로즈마리 리프", badgeClass: "bg-[#f4f7f2] text-[#334d31] border-[#c0d6bd]" },
+              };
+              const pkgInfo = pkgMap[pkg] || pkgMap.STANDARD;
+
+              return (
+                <div className="mb-4 px-3.5 py-2.5 rounded-xl border border-[#eae6df] bg-white flex items-center justify-between shadow-xs">
+                  <div className="flex items-center gap-2.5">
+                    <span className="text-xl">{pkgInfo.icon}</span>
+                    <div>
+                      <span className="text-[9px] font-extrabold uppercase tracking-widest text-[#a38974] block">
+                        Complimentary Packaging
+                      </span>
+                      <span className="text-xs font-bold text-[#1a1a1a] block">{pkgInfo.label}</span>
+                      <span className="text-[10px] text-[#7a7266] block">{pkgInfo.desc}</span>
+                    </div>
+                  </div>
+                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${pkgInfo.badgeClass}`}>
+                    포장 포함
+                  </span>
+                </div>
               );
             })()}
 

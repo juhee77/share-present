@@ -154,6 +154,20 @@ export default function RecipientTrackingPage({ params }: { params: Promise<{ to
             </span>
           )}
 
+          {order.desiredDeliveryDate && (
+            <div className="mt-2 flex items-center gap-1.5 text-xs text-[#3b483a] bg-[#3b483a]/5 px-2.5 py-1 rounded-md font-bold w-fit">
+              <span>📅</span>
+              <span>
+                희망 배송일: {
+                  order.desiredDeliveryDate === "FASTEST" ? "가장 빠른 배송 (기본)" :
+                  order.desiredDeliveryDate === "WEEKEND" ? "주말(토요일) 수령 희망" :
+                  order.desiredDeliveryDate === "WEEKDAY" ? "평일 업무시간 내 수령 희망" :
+                  order.desiredDeliveryDate
+                }
+              </span>
+            </div>
+          )}
+
           {/* Boutique Packaging Guarantee Badge */}
           <div className="mt-4 pt-3 border-t border-[#eae6df] flex items-center justify-between text-[11px] text-[#5e605d]">
             <span className="flex items-center gap-1.5 font-bold text-[#3b483a]">

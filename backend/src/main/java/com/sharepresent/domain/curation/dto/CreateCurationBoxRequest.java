@@ -26,6 +26,7 @@ public class CreateCurationBoxRequest {
     private String cardTheme;
 
     private String fontStyle;
+    private String packagingStyle;
 
     private Boolean allowCustomInput;
 

@@ -212,6 +212,7 @@ export default function CreateGiftPage() {
   );
   const [cardTheme, setCardTheme] = useState<"ivory" | "emerald" | "noir" | "rose">("ivory");
   const [fontStyle, setFontStyle] = useState<"serif" | "handwriting" | "sans" | "mono">("serif");
+  const [packagingStyle, setPackagingStyle] = useState<"STANDARD" | "BOJAGI" | "LUXURY_RIBBON" | "ECO_CRAFT">("STANDARD");
   
   // Double-bound budget range states
   const [minBudget, setMinBudget] = useState(30000);
@@ -344,6 +345,7 @@ export default function CreateGiftPage() {
         messageCard,
         cardTheme,
         fontStyle,
+        packagingStyle,
         allowCustomInput,
         productIds: selectedProductIds,
         customProducts: customProductsPayload,
@@ -537,6 +539,43 @@ export default function CreateGiftPage() {
                   >
                     <span>{fontStyle === item.id ? "✓" : "Aa"}</span>
                     <span>{item.label}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Packaging Style Selector */}
+            <div>
+              <label className="block text-[11px] font-bold text-[#5e605d] uppercase tracking-wider mb-1.5">
+                선물 부티크 패키징 (Boutique Packaging)
+              </label>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                {[
+                  { id: "STANDARD" as const, label: "시그니처 박스", icon: "📦", desc: "화이트 박스 & 실링 왁스" },
+                  { id: "BOJAGI" as const, label: "실크 보자기", icon: "🪡", desc: "전통 실크 & 수공예 노리개" },
+                  { id: "LUXURY_RIBBON" as const, label: "로열 리본 박스", icon: "🎀", desc: "포레스트 & 골드 새틴 리본" },
+                  { id: "ECO_CRAFT" as const, label: "친환경 크래프트", icon: "🌿", desc: "생분해 박스 & 허브 리프" },
+                ].map((pkg) => (
+                  <button
+                    key={pkg.id}
+                    type="button"
+                    onClick={() => setPackagingStyle(pkg.id)}
+                    className={`p-2.5 rounded-xl border text-left transition-all flex flex-col justify-between ${
+                      packagingStyle === pkg.id
+                        ? "bg-[#faf8f5] border-[#3b483a] ring-2 ring-[#3b483a]/20 shadow-sm"
+                        : "bg-white border-[#eae6df] hover:border-[#c5bfb4]"
+                    }`}
+                  >
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-base">{pkg.icon}</span>
+                      <span className="text-[10px] font-bold text-[#3b483a]">
+                        {packagingStyle === pkg.id ? "✓" : ""}
+                      </span>
+                    </div>
+                    <div>
+                      <span className="text-xs font-bold text-[#1a1a1a] block">{pkg.label}</span>
+                      <span className="text-[10px] text-[#7a7266] leading-tight block mt-0.5">{pkg.desc}</span>
+                    </div>
                   </button>
                 ))}
               </div>

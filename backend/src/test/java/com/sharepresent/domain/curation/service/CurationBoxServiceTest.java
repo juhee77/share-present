@@ -70,6 +70,7 @@ class CurationBoxServiceTest {
                 .messageCard("생일 축하해!")
                 .cardTheme("emerald")
                 .fontStyle("handwriting")
+                .packagingStyle("BOJAGI")
                 .allowCustomInput(true)
                 .productIds(List.of(10L))
                 .build();
@@ -91,6 +92,7 @@ class CurationBoxServiceTest {
         assertThat(response.getMessageCard()).isEqualTo("생일 축하해!");
         assertThat(response.getCardTheme()).isEqualTo("emerald");
         assertThat(response.getFontStyle()).isEqualTo("handwriting");
+        assertThat(response.getPackagingStyle()).isEqualTo("BOJAGI");
         assertThat(response.getSenderName()).isEqualTo("주희");
         assertThat(response.getSharingToken()).isNotNull().hasSize(16);
     }

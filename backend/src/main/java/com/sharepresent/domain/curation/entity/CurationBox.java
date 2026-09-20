@@ -44,6 +44,10 @@ public class CurationBox {
     private String fontStyle = "serif";
 
     @Builder.Default
+    @Column(name = "packaging_style", nullable = false)
+    private String packagingStyle = "STANDARD";
+
+    @Builder.Default
     @Column(nullable = false)
     private String status = "CREATED";
 

@@ -64,6 +64,8 @@
 - **선물 아이템 품절(Sold-out) 및 재고 관리 (`Product.java`, `CurationBoxResponse.java`, `ProductCard.tsx`)**: `isSoldOut` 및 `stockQuantity` 필드 기반 품절 배지 표시, 흑백 오버레이 처리 및 선택 비활성화 방어 로직 완비.
 - **선물 수락 기한 연장 API 및 대시보드 연동 (`OrderController.java`, `OrderService.java`, `dashboard/page.tsx`)**: 발신자가 대시보드에서 수령인 미수락 선물함의 만료 기한을 원클릭으로 +7일 연장(`extend-expiry`)하는 기능 지원.
 - **카드 메시지 타이포그래피 폰트 스타일 프리셋 (`CurationBox.java`, `page.tsx`, `gift/[token]/page.tsx`)**: `fontStyle` (클래식 세리프, 감성 손글씨, 모던 산스, 빈티지 타자기) 영속화 및 수령인 감성 렌더링 지원.
+- **수령인 희망 배송일(Desired Delivery Date) 선호도 선택 및 영속화 (`Order.java`, `AcceptGiftRequest.java`, `DeliveryDrawer.tsx`, `gift/track/[token]/page.tsx`)**: 수령인이 주소지 입력 시 가장 빠른 배송(`FASTEST`), 주말(토요일) 수령(`WEEKEND`), 평일 업무시간 내 수령(`WEEKDAY`) 옵션을 칩 형태로 선택하고, 주문 영속화 및 배송 추적 페이지에서 희망 배송일 배지로 표시.
+- **선물 부티크 패키징(Boutique Packaging) 커스텀 옵션 (`CurationBox.java`, `CreateCurationBoxRequest.java`, `page.tsx`, `gift/[token]/page.tsx`)**: 발신자가 시그니처 박스(`STANDARD`), 전통 실크 보자기 & 노리개(`BOJAGI`), 로열 리본 하드케이스(`LUXURY_RIBBON`), 친환경 생분해 크래프트(`ECO_CRAFT`) 중 선택할 수 있고, 수령인 선물 인비테이션 및 수락 완료 화면에서 맞춤형 포장 안내 배지가 품격 있게 렌더링됨.
 - **컨트롤러 계층 Bean Validation 400 Bad Request 방어 테스트 완비 (`OrderControllerTest`, `CurationBoxControllerTest`, `SupportInquiryControllerTest`)**: 유효성 검증 테스트 스위트 100% 그린 유지.
 
 ---

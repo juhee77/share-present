@@ -16,6 +16,7 @@ export interface CreateCurationBoxRequest {
   messageCard: string;
   cardTheme?: "ivory" | "emerald" | "noir" | "rose" | string;
   fontStyle?: "serif" | "handwriting" | "sans" | "mono" | string;
+  packagingStyle?: "STANDARD" | "BOJAGI" | "LUXURY_RIBBON" | "ECO_CRAFT" | string;
   allowCustomInput: boolean;
   productIds: number[];
   customProducts?: CustomProductPayload[];
@@ -42,6 +43,7 @@ export interface CurationBoxResponse {
   messageCard: string;
   cardTheme?: "ivory" | "emerald" | "noir" | "rose" | string;
   fontStyle?: "serif" | "handwriting" | "sans" | "mono" | string;
+  packagingStyle?: "STANDARD" | "BOJAGI" | "LUXURY_RIBBON" | "ECO_CRAFT" | string;
   minBudget: number;
   maxBudget: number;
   sharingToken: string;
