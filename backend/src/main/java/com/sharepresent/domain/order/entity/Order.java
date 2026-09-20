@@ -93,4 +93,15 @@ public class Order {
 
     @Column(name = "desired_delivery_date")
     private String desiredDeliveryDate;
+
+    @Builder.Default
+    @Column(name = "eco_friendly_packaging")
+    private Boolean ecoFriendlyPackaging = false;
+
+    @Column(name = "entrance_memo")
+    private String entranceMemo;
+
+    @Builder.Default
+    @Column(name = "pre_delivery_notification")
+    private Boolean preDeliveryNotification = true;
 }

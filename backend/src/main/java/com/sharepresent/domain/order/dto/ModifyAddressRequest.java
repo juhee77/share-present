@@ -22,4 +22,10 @@ public class ModifyAddressRequest {
     private String deliveryMemo;
 
     private String desiredDeliveryDate;
+
+    private Boolean ecoFriendlyPackaging;
+
+    private String entranceMemo;
+
+    private Boolean preDeliveryNotification;
 }

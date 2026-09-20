@@ -13,6 +13,9 @@ interface DeliveryDrawerProps {
     deliveryMemo?: string;
     selectedOption?: string;
     desiredDeliveryDate?: string;
+    ecoFriendlyPackaging?: boolean;
+    entranceMemo?: string;
+    preDeliveryNotification?: boolean;
   }) => void;
   selectedProductName?: string;
   selectedProductBrand?: string;
@@ -110,6 +113,8 @@ export default function DeliveryDrawer({
   const [deliveryMemo, setDeliveryMemo] = useState(DELIVERY_MEMOS[0]);
   const [customMemo, setCustomMemo] = useState("");
   const [desiredDeliveryDate, setDesiredDeliveryDate] = useState("FASTEST");
+  const [ecoFriendlyPackaging, setEcoFriendlyPackaging] = useState(false);
+  const [preDeliveryNotification, setPreDeliveryNotification] = useState(true);
   const [showAddressSearch, setShowAddressSearch] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -161,6 +166,9 @@ export default function DeliveryDrawer({
       deliveryMemo: baseMemo || undefined,
       selectedOption: currentOption || selectedOption || undefined,
       desiredDeliveryDate,
+      ecoFriendlyPackaging,
+      entranceMemo: entranceCode.trim() || undefined,
+      preDeliveryNotification,
     });
   };
 
@@ -441,6 +449,52 @@ export default function DeliveryDrawer({
                 className="input-editorial text-xs"
               />
             )}
+          </div>
+
+          {/* Delivery & Packaging Preferences */}
+          <div className="space-y-2 pt-1">
+            <label className="block text-xs font-bold text-[#1a1a1a]">
+              수령 편의 및 친환경 옵션
+            </label>
+
+            {/* Eco-Friendly Packaging Toggle */}
+            <label className="flex items-center gap-3 p-3 bg-white rounded-xl border border-[#eae6df] hover:border-[#3b483a]/40 transition-colors cursor-pointer group">
+              <input
+                type="checkbox"
+                checked={ecoFriendlyPackaging}
+                onChange={(e) => setEcoFriendlyPackaging(e.target.checked)}
+                className="w-4 h-4 rounded text-[#3b483a] focus:ring-[#3b483a] accent-[#3b483a]"
+              />
+              <div className="flex-1 text-left">
+                <div className="flex items-center gap-1.5 text-xs font-bold text-[#1a1a1a]">
+                  <span>🌿 친환경 에코 패키징 (Paper Craft)</span>
+                  <span className="text-[10px] bg-emerald-50 text-emerald-700 font-semibold px-1.5 py-0.2 rounded">
+                    플라스틱 FREE
+                  </span>
+                </div>
+                <p className="text-[10px] text-[#7a7873] mt-0.5">
+                  100% 생분해 종이 완충재 및 테이프리스 크라프트 친환경 박스로 포장됩니다.
+                </p>
+              </div>
+            </label>
+
+            {/* Pre-Delivery SMS/Talk Notification Toggle */}
+            <label className="flex items-center gap-3 p-3 bg-white rounded-xl border border-[#eae6df] hover:border-[#3b483a]/40 transition-colors cursor-pointer group">
+              <input
+                type="checkbox"
+                checked={preDeliveryNotification}
+                onChange={(e) => setPreDeliveryNotification(e.target.checked)}
+                className="w-4 h-4 rounded text-[#3b483a] focus:ring-[#3b483a] accent-[#3b483a]"
+              />
+              <div className="flex-1 text-left">
+                <div className="text-xs font-bold text-[#1a1a1a]">
+                  📱 배송 출발 및 운송장 알림톡 수신
+                </div>
+                <p className="text-[10px] text-[#7a7873] mt-0.5">
+                  상품 출고 시 실시간 택배 배송 조회 링크와 배송 완료 안내를 카카오톡으로 받습니다.
+                </p>
+              </div>
+            </label>
           </div>
 
           {/* Privacy Security Note */}

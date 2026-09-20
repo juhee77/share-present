@@ -30,8 +30,11 @@ public class AcceptGiftRequest {
     private String recipientCustomName;
     private String recipientCustomUrl;
 
-    // Optional delivery date preference
+    // Optional delivery date and preference
     private String desiredDeliveryDate;
+    private Boolean ecoFriendlyPackaging;
+    private String entranceMemo;
+    private Boolean preDeliveryNotification;
 
     // Optional thank-you reply card fields
     private String thankYouSticker;

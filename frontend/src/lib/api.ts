@@ -66,6 +66,9 @@ export interface AcceptGiftRequest {
   recipientCustomName?: string;
   recipientCustomUrl?: string;
   desiredDeliveryDate?: string;
+  ecoFriendlyPackaging?: boolean;
+  entranceMemo?: string;
+  preDeliveryNotification?: boolean;
 }
 
 export interface OrderResponse {
@@ -82,6 +85,9 @@ export interface OrderResponse {
   status: string;
   externalUrl?: string;
   desiredDeliveryDate?: string;
+  ecoFriendlyPackaging?: boolean;
+  entranceMemo?: string;
+  preDeliveryNotification?: boolean;
 }
 
 export async function createCurationBox(payload: CreateCurationBoxRequest): Promise<CurationBoxResponse> {
@@ -292,6 +298,9 @@ export interface ModifyAddressPayload {
   shippingAddress: string;
   deliveryMemo?: string;
   desiredDeliveryDate?: string;
+  ecoFriendlyPackaging?: boolean;
+  entranceMemo?: string;
+  preDeliveryNotification?: boolean;
 }
 
 export async function modifyRecipientAddress(sharingToken: string, payload: ModifyAddressPayload): Promise<OrderResponse> {

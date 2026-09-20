@@ -141,6 +141,9 @@ public class OrderService {
                 .thankYouMessage(request.getThankYouMessage())
                 .thankYouPhotoUrl(request.getThankYouPhotoUrl())
                 .desiredDeliveryDate(request.getDesiredDeliveryDate())
+                .ecoFriendlyPackaging(request.getEcoFriendlyPackaging() != null ? request.getEcoFriendlyPackaging() : false)
+                .entranceMemo(request.getEntranceMemo())
+                .preDeliveryNotification(request.getPreDeliveryNotification() != null ? request.getPreDeliveryNotification() : true)
                 .build();
 
         Order savedOrder = orderRepository.save(settledOrder);
@@ -405,6 +408,9 @@ public class OrderService {
                 .recipientPhone(request.getReceiverPhone() != null ? request.getReceiverPhone() : order.getRecipientPhone())
                 .shippingAddress(request.getShippingAddress() != null ? request.getShippingAddress() : order.getShippingAddress())
                 .desiredDeliveryDate(request.getDesiredDeliveryDate() != null ? request.getDesiredDeliveryDate() : order.getDesiredDeliveryDate())
+                .ecoFriendlyPackaging(request.getEcoFriendlyPackaging() != null ? request.getEcoFriendlyPackaging() : order.getEcoFriendlyPackaging())
+                .entranceMemo(request.getEntranceMemo() != null ? request.getEntranceMemo() : order.getEntranceMemo())
+                .preDeliveryNotification(request.getPreDeliveryNotification() != null ? request.getPreDeliveryNotification() : order.getPreDeliveryNotification())
                 .build();
 
         Order savedOrder = orderRepository.save(modifiedOrder);
@@ -444,6 +450,9 @@ public class OrderService {
                 .thankYouMessage(order.getThankYouMessage())
                 .thankYouPhotoUrl(order.getThankYouPhotoUrl())
                 .desiredDeliveryDate(order.getDesiredDeliveryDate())
+                .ecoFriendlyPackaging(order.getEcoFriendlyPackaging())
+                .entranceMemo(order.getEntranceMemo())
+                .preDeliveryNotification(order.getPreDeliveryNotification())
                 .build();
     }
 }

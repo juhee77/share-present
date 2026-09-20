@@ -187,4 +187,40 @@ class OrderServiceTest {
         assertThat(response).isNotNull();
         assertThat(response.getDesiredDeliveryDate()).isEqualTo("WEEKEND");
     }
+
+    @Test
+    @DisplayName("선물 수락 시 친환경 에코 패키징 및 공동현관 출입 메모, 알림톡 수신 설정 저장 검증")
+    void acceptAndSettleGift_withDeliveryPreferences_savesSuccessfully() {
+        // given
+        AcceptGiftRequest request = AcceptGiftRequest.builder()
+                .receiverName("김수령")
+                .receiverPhone("010-9876-5432")
+                .shippingAddress("서울특별시 강남구 테헤란로 152 101동 202호")
+                .selectedProductId(10L)
+                .selectedOption("샌드 화이트")
+                .isRecipientAdded(false)
+                .ecoFriendlyPackaging(true)
+                .entranceMemo("#1234* 문 앞 보관")
+                .preDeliveryNotification(true)
+                .desiredDeliveryDate("FASTEST")
+                .build();
+
+        given(curationBoxRepository.findBySharingToken("test-token-123456")).willReturn(Optional.of(testBox));
+        given(orderRepository.findByCurationBoxId(100L)).willReturn(Optional.of(testPrePaidOrder));
+        given(userRepository.findByEmail(any())).willReturn(Optional.empty());
+        given(userRepository.save(any(User.class))).willAnswer(inv -> inv.getArgument(0));
+        given(productRepository.findById(10L)).willReturn(Optional.of(testProduct));
+        given(orderRepository.save(any(Order.class))).willAnswer(inv -> inv.getArgument(0));
+        given(curationBoxRepository.save(any(CurationBox.class))).willAnswer(inv -> inv.getArgument(0));
+
+        // when
+        OrderResponse response = orderService.acceptAndSettleGift("test-token-123456", request);
+
+        // then
+        assertThat(response).isNotNull();
+        assertThat(response.getEcoFriendlyPackaging()).isTrue();
+        assertThat(response.getEntranceMemo()).isEqualTo("#1234* 문 앞 보관");
+        assertThat(response.getPreDeliveryNotification()).isTrue();
+        assertThat(response.getDesiredDeliveryDate()).isEqualTo("FASTEST");
+    }
 }

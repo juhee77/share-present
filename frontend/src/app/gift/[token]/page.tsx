@@ -145,6 +145,9 @@ export default function RecipientGiftPage({ params }: { params: Promise<{ token:
     deliveryMemo?: string;
     selectedOption?: string;
     desiredDeliveryDate?: string;
+    ecoFriendlyPackaging?: boolean;
+    entranceMemo?: string;
+    preDeliveryNotification?: boolean;
   }) => {
     setIsSubmitting(true);
     try {
@@ -161,6 +164,9 @@ export default function RecipientGiftPage({ params }: { params: Promise<{ token:
         selectedProductId: typeof selectedProductId === "number" ? selectedProductId : undefined,
         selectedOption: finalOption,
         desiredDeliveryDate: addressData.desiredDeliveryDate,
+        ecoFriendlyPackaging: addressData.ecoFriendlyPackaging,
+        entranceMemo: addressData.entranceMemo,
+        preDeliveryNotification: addressData.preDeliveryNotification,
         isRecipientAdded: isCustomRecipient,
         recipientCustomBrand: isCustomRecipient ? customBrand || "직접입력" : undefined,
         recipientCustomName: isCustomRecipient ? customName : undefined,

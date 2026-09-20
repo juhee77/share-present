@@ -26,4 +26,7 @@ public class OrderResponse {
     private String thankYouMessage;
     private String thankYouPhotoUrl;
     private String desiredDeliveryDate;
+    private Boolean ecoFriendlyPackaging;
+    private String entranceMemo;
+    private Boolean preDeliveryNotification;
 }
