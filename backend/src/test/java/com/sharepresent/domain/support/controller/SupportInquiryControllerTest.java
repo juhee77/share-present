@@ -95,5 +95,16 @@ class SupportInquiryControllerTest {
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isBadRequest());
     }
+
+    @Test
+    @DisplayName("GET /api/v1/support/inquiries/{inquiryId} - 1:1 고객 문의 처리 현황 조회 성공")
+    void getInquiryStatus_success() throws Exception {
+        // given & when & then
+        mockMvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get("/api/v1/support/inquiries/INQ-984210"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.inquiryId").value("INQ-984210"))
+                .andExpect(jsonPath("$.status").value("IN_PROGRESS"))
+                .andExpect(jsonPath("$.statusLabel").value("전문 상담원 검토 중"));
+    }
 }
 

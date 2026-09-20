@@ -194,7 +194,18 @@ export interface SupportInquiryRequest {
   content: string;
 }
 
-export async function submitSupportInquiry(payload: SupportInquiryRequest): Promise<{ status?: string; inquiryId?: string; message: string }> {
+export interface SupportInquiryResponse {
+  status: string;
+  inquiryId: string;
+  message: string;
+  statusLabel?: string;
+  category?: string;
+  registeredAt?: string;
+  estimatedReplyTime?: string;
+  adminNote?: string;
+}
+
+export async function submitSupportInquiry(payload: SupportInquiryRequest): Promise<SupportInquiryResponse> {
   const res = await fetch(`${BASE_URL}/support/inquiries`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -202,6 +213,14 @@ export async function submitSupportInquiry(payload: SupportInquiryRequest): Prom
   });
   if (!res.ok) {
     throw new Error("문의 접수에 실패했습니다.");
+  }
+  return res.json();
+}
+
+export async function getInquiryStatus(inquiryId: string): Promise<SupportInquiryResponse> {
+  const res = await fetch(`${BASE_URL}/support/inquiries/${inquiryId}`);
+  if (!res.ok) {
+    throw new Error("문의 내역을 조회할 수 없습니다.");
   }
   return res.json();
 }

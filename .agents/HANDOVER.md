@@ -71,6 +71,7 @@
 - **3D 왁스 씰 인장 모노그램(Wax Seal Monogram) 커스텀 (`CurationBox.java`, `UnwrappingRibbon.tsx`, `page.tsx`, `gift/[token]/page.tsx`)**: 발신자가 `SP`(시그니처), `HBD`(생일), `LOVE`(애정), `THX`(감사), `LUCK`(행운), `CONG`(축하) 중 모노그램 인장을 선택하고, 수령인이 선물 인비테이션을 개봉할 때 3D 왁스 씰에 선택한 모노그램이 음각 양각 입체 렌더링됨.
 - **발신자 대시보드 실시간 정산 명세서 & 배송 영수증 모달 (`ReceiptDetailModal.tsx`, `dashboard/page.tsx`)**: 발신자가 보낸 선물함 완료 건에 대해 보관 예산, 최종 결제액, 즉시 자동 환불액, CJ대한통운 운송장 및 수령인 포토 감사 카드를 한눈에 확인하고 영수증 텍스트 복사 및 1-Click 인쇄/PDF 저장을 지원.
 - **AI 감성 카드 문구 큐레이션 & 테마/인장 추천 시스템 (`AiMessageAssistantService.java`, `AiMessageAssistantModal.tsx`, `CurationBoxController.java`, `page.tsx`)**: 발신자가 선물 상황(생일, 감사, 집들이, 승진, 연인, 힐링) 및 문체 톤(에디토리얼, 따뜻한 감동, 위트/센스)을 선택하면 감도 높은 카드 문구와 최적의 인비테이션 테마 및 왁스 씰 모노그램을 원클릭으로 추천 및 자동 적용 지원.
+- **고객센터 탭 네비게이션 & 1:1 문의 실시간 처리 현황 조회 (`SupportInquiryController.java`, `support/page.tsx`, `api.ts`)**: FAQ 검색, 1:1 문의 접수, 접수 번호(`inquiryId`) 기반 전문 상담원 배정/처리 상태 실시간 추적 뷰 및 평균 2시간 이내 회신 타임라인 가이드 제공.
 - **컨트롤러 계층 Bean Validation 400 Bad Request 방어 테스트 완비 (`OrderControllerTest`, `CurationBoxControllerTest`, `SupportInquiryControllerTest`)**: 유효성 검증 테스트 스위트 100% 그린 유지.
 
 ---

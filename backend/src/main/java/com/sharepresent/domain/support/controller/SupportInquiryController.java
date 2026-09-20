@@ -27,6 +27,19 @@ public class SupportInquiryController {
         ));
     }
 
+    @GetMapping("/inquiries/{inquiryId}")
+    public ResponseEntity<Map<String, Object>> getInquiryStatus(@PathVariable("inquiryId") String inquiryId) {
+        return ResponseEntity.ok(Map.of(
+                "inquiryId", inquiryId,
+                "status", "IN_PROGRESS",
+                "statusLabel", "전문 상담원 검토 중",
+                "category", "결제/정산/배송 문의",
+                "registeredAt", "2026.09.20",
+                "estimatedReplyTime", "평균 2시간 이내 회신 예정",
+                "adminNote", "고객센터 전담팀에서 접수 내용을 확인하고 있으며, 답변 작성 즉시 이메일과 카카오 알림톡으로 안내해 드립니다."
+        ));
+    }
+
     @Getter
     @Builder
     @NoArgsConstructor

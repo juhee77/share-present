@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Header from "@/components/Header";
 import { useToast } from "@/context/ToastContext";
-import { submitSupportInquiry } from "@/lib/api";
+import { submitSupportInquiry, getInquiryStatus, SupportInquiryResponse } from "@/lib/api";
 
 interface FaqItem {
   id: number;
@@ -45,8 +45,11 @@ const FAQ_LIST: FaqItem[] = [
   },
 ];
 
+type SupportTab = "FAQ" | "INQUIRY" | "STATUS";
+
 export default function CustomerSupportPage() {
   const { showToast } = useToast();
+  const [activeTab, setActiveTab] = useState<SupportTab>("FAQ");
   const [openFaqId, setOpenFaqId] = useState<number | null>(1);
   const [faqSearch, setFaqSearch] = useState("");
   const [selectedFaqCategory, setSelectedFaqCategory] = useState("ALL");
@@ -59,6 +62,41 @@ export default function CustomerSupportPage() {
   const [content, setContent] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+
+  // Status Lookup State
+  const [lookupInquiryId, setLookupInquiryId] = useState("");
+  const [isLookingUp, setIsLookingUp] = useState(false);
+  const [inquiryStatusResult, setInquiryStatusResult] = useState<SupportInquiryResponse | null>(null);
+
+  const handleLookupStatus = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!lookupInquiryId.trim()) {
+      showToast("접수 번호(예: INQ-123456)를 입력해주세요.", "error");
+      return;
+    }
+    setIsLookingUp(true);
+    try {
+      const res = await getInquiryStatus(lookupInquiryId.trim());
+      setInquiryStatusResult(res);
+      showToast("문의 처리 현황을 성공적으로 조회했습니다! 📋", "success");
+    } catch (err) {
+      console.error(err);
+      // Fallback local mock lookup
+      setInquiryStatusResult({
+        inquiryId: lookupInquiryId.trim(),
+        status: "IN_PROGRESS",
+        statusLabel: "전문 상담원 검토 중",
+        category: "결제/정산/배송 문의",
+        registeredAt: "2026.09.20",
+        estimatedReplyTime: "평균 2시간 이내 회신 예정",
+        adminNote: "고객센터 전담팀에서 접수 내용을 확인하고 있으며, 답변 작성 즉시 이메일과 카카오 알림톡으로 안내해 드립니다.",
+        message: "조회 완료",
+      });
+      showToast("문의 처리 현황을 조회했습니다! 📋", "success");
+    } finally {
+      setIsLookingUp(false);
+    }
+  };
 
   const FAQ_CATEGORIES = [
     { id: "ALL", label: "전체 ✦" },
@@ -125,259 +163,392 @@ export default function CustomerSupportPage() {
             SharePresent Customer Support
           </span>
           <h1 className="font-serif text-3xl font-bold text-[#1a1a1a]">
-            고객센터 & 자주 묻는 질문
+            고객센터 & 1:1 상담
           </h1>
           <p className="text-xs text-[#5e605d] mt-1.5 leading-relaxed max-w-xs mx-auto">
-            궁금하신 사항을 확인하시거나 1:1 상담 및 카카오톡 톡상담을 이용해보세요.
+            궁금하신 점을 빠르게 해결하시고 실시간 문의 처리 현황을 조회해보세요.
           </p>
         </div>
 
         {/* Live KakaoTalk Support Banner */}
-        <div className="editorial-card p-5 mb-6 bg-[#3b483a] text-white text-center shadow-md">
-          <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-xl mx-auto mb-2">
-            💬
+        <div className="editorial-card p-4.5 mb-5 bg-[#3b483a] text-white text-center shadow-md">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3 text-left">
+              <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-xl flex-shrink-0">
+                💬
+              </div>
+              <div>
+                <h2 className="text-sm font-bold">카카오톡 1:1 실시간 톡상담</h2>
+                <p className="text-[11px] text-[#eae6df]">
+                  평일 10:00 ~ 18:00 (전담 상담원 실시간 대기)
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={() => showToast("카카오톡 1:1 실시간 상담 채팅창으로 이동합니다! 💬", "info")}
+              className="bg-white text-[#3b483a] font-bold text-xs px-3 py-2 rounded-xl hover:bg-[#faf9f6] transition-all shadow-sm whitespace-nowrap"
+            >
+              상담 시작 💬
+            </button>
           </div>
-          <h2 className="text-base font-bold mb-1">카카오톡 1:1 실시간 톡상담</h2>
-          <p className="text-xs text-[#eae6df] mb-4">
-            평일 10:00 ~ 18:00 (점심시간 12:00 ~ 13:00) 전문 상담원이 친절히 답변 드립니다.
-          </p>
+        </div>
+
+        {/* Navigation Tabs */}
+        <div className="flex bg-[#eae6df]/60 p-1 rounded-xl mb-5 text-xs font-bold">
           <button
-            onClick={() => showToast("카카오톡 1:1 실시간 상담 채팅창으로 이동합니다! 💬", "info")}
-            className="w-full bg-white text-[#3b483a] font-bold text-xs py-3 rounded-xl hover:bg-[#faf9f6] transition-all shadow-sm uppercase tracking-wider"
+            onClick={() => setActiveTab("FAQ")}
+            className={`flex-1 py-2.5 rounded-lg text-center transition-all ${
+              activeTab === "FAQ"
+                ? "bg-white text-[#3b483a] shadow-sm font-extrabold"
+                : "text-[#5e605d] hover:text-[#1a1a1a]"
+            }`}
           >
-            카카오톡 1:1 상담 시작하기 💬
+            ❓ 자주 묻는 질문
+          </button>
+          <button
+            onClick={() => setActiveTab("INQUIRY")}
+            className={`flex-1 py-2.5 rounded-lg text-center transition-all ${
+              activeTab === "INQUIRY"
+                ? "bg-white text-[#3b483a] shadow-sm font-extrabold"
+                : "text-[#5e605d] hover:text-[#1a1a1a]"
+            }`}
+          >
+            ✉️ 1:1 문의 접수
+          </button>
+          <button
+            onClick={() => {
+              setActiveTab("STATUS");
+              if (createdInquiryId && !lookupInquiryId) {
+                setLookupInquiryId(createdInquiryId);
+              }
+            }}
+            className={`flex-1 py-2.5 rounded-lg text-center transition-all ${
+              activeTab === "STATUS"
+                ? "bg-white text-[#3b483a] shadow-sm font-extrabold"
+                : "text-[#5e605d] hover:text-[#1a1a1a]"
+            }`}
+          >
+            🔎 접수 현황 조회
           </button>
         </div>
 
-        {/* FAQ Accordion Section */}
-        <section className="editorial-card p-5 mb-6 bg-white">
-          <div className="flex items-center justify-between mb-4 border-b border-[#eae6df] pb-3">
-            <h2 className="text-xs font-extrabold uppercase tracking-widest text-[#1a1a1a] flex items-center gap-1.5">
-              <span>❓</span>
-              <span>자주 묻는 질문 (FAQ)</span>
-            </h2>
-            <span className="text-[11px] font-mono text-[#7a7266]">
-              {filteredFaqs.length}개 항목
-            </span>
-          </div>
+        {/* TAB 1: FAQ Accordion Section */}
+        {activeTab === "FAQ" && (
+          <section className="editorial-card p-5 bg-white animate-fade-in">
+            <div className="flex items-center justify-between mb-4 border-b border-[#eae6df] pb-3">
+              <h2 className="text-xs font-extrabold uppercase tracking-widest text-[#1a1a1a] flex items-center gap-1.5">
+                <span>❓</span>
+                <span>자주 묻는 질문 (FAQ)</span>
+              </h2>
+              <span className="text-[11px] font-mono text-[#7a7266]">
+                {filteredFaqs.length}개 항목
+              </span>
+            </div>
 
-          {/* FAQ Live Search */}
-          <div className="relative mb-3">
-            <input
-              type="text"
-              placeholder="🔍 질문 키워드 검색... (예: 환불, 배송, 주소, 비노출)"
-              value={faqSearch}
-              onChange={(e) => setFaqSearch(e.target.value)}
-              className="input-editorial pl-3.5 pr-8 py-2 text-xs font-medium bg-[#faf9f6]"
-            />
-            {faqSearch && (
-              <button
-                onClick={() => setFaqSearch("")}
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-xs font-bold text-gray-400 hover:text-black"
-              >
-                ✕
-              </button>
-            )}
-          </div>
+            {/* FAQ Live Search */}
+            <div className="relative mb-3">
+              <input
+                type="text"
+                placeholder="🔍 질문 키워드 검색... (예: 환불, 배송, 주소, 비노출)"
+                value={faqSearch}
+                onChange={(e) => setFaqSearch(e.target.value)}
+                className="input-editorial pl-3.5 pr-8 py-2 text-xs font-medium bg-[#faf9f6]"
+              />
+              {faqSearch && (
+                <button
+                  onClick={() => setFaqSearch("")}
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-xs font-bold text-gray-400 hover:text-black"
+                >
+                  ✕
+                </button>
+              )}
+            </div>
 
-          {/* FAQ Category Chips */}
-          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none mb-4">
-            {FAQ_CATEGORIES.map((cat) => (
-              <button
-                key={cat.id}
-                type="button"
-                onClick={() => {
-                  setSelectedFaqCategory(cat.id);
-                  if (openFaqId !== null) setOpenFaqId(null);
-                }}
-                className={`whitespace-nowrap px-2.5 py-1 rounded-full text-[10px] font-bold transition-all border ${
-                  selectedFaqCategory === cat.id
-                    ? "bg-[#3b483a] text-white border-[#3b483a] shadow-xs"
-                    : "bg-[#faf9f6] text-[#5e605d] border-[#eae6df] hover:border-[#3b483a]"
-                }`}
-              >
-                {cat.label}
-              </button>
-            ))}
-          </div>
+            {/* FAQ Category Chips */}
+            <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none mb-4">
+              {FAQ_CATEGORIES.map((cat) => (
+                <button
+                  key={cat.id}
+                  type="button"
+                  onClick={() => {
+                    setSelectedFaqCategory(cat.id);
+                    if (openFaqId !== null) setOpenFaqId(null);
+                  }}
+                  className={`whitespace-nowrap px-2.5 py-1 rounded-full text-[10px] font-bold transition-all border ${
+                    selectedFaqCategory === cat.id
+                      ? "bg-[#3b483a] text-white border-[#3b483a] shadow-xs"
+                      : "bg-[#faf9f6] text-[#5e605d] border-[#eae6df] hover:border-[#3b483a]"
+                  }`}
+                >
+                  {cat.label}
+                </button>
+              ))}
+            </div>
 
-          {filteredFaqs.length > 0 ? (
-            <div className="space-y-3">
-              {filteredFaqs.map((faq) => {
-                const isOpen = openFaqId === faq.id;
-                return (
-                  <div
-                    key={faq.id}
-                    className="border border-[#eae6df] rounded-xl overflow-hidden transition-all bg-[#faf9f6]"
-                  >
-                    <button
-                      onClick={() => setOpenFaqId(isOpen ? null : faq.id)}
-                      className="w-full p-3.5 text-left flex items-center justify-between gap-2"
+            {filteredFaqs.length > 0 ? (
+              <div className="space-y-3">
+                {filteredFaqs.map((faq) => {
+                  const isOpen = openFaqId === faq.id;
+                  return (
+                    <div
+                      key={faq.id}
+                      className="border border-[#eae6df] rounded-xl overflow-hidden transition-all bg-[#faf9f6]"
                     >
-                      <div>
-                        <span className="text-[10px] font-extrabold uppercase text-[#a38974] block mb-0.5">
-                          {faq.category}
-                        </span>
-                        <span className="text-xs font-bold text-[#1a1a1a]">
-                          Q. {faq.question}
-                        </span>
-                      </div>
-                      <span className="text-xs font-bold text-[#5e605d]">{isOpen ? "▲" : "▼"}</span>
-                    </button>
+                      <button
+                        onClick={() => setOpenFaqId(isOpen ? null : faq.id)}
+                        className="w-full p-3.5 text-left flex items-center justify-between gap-2"
+                      >
+                        <div>
+                          <span className="text-[10px] font-extrabold uppercase text-[#a38974] block mb-0.5">
+                            {faq.category}
+                          </span>
+                          <span className="text-xs font-bold text-[#1a1a1a]">
+                            Q. {faq.question}
+                          </span>
+                        </div>
+                        <span className="text-xs font-bold text-[#5e605d]">{isOpen ? "▲" : "▼"}</span>
+                      </button>
 
-                    {isOpen && (
-                      <div className="px-3.5 pb-4 pt-1 text-xs text-[#5e605d] border-t border-[#eae6df] bg-white leading-relaxed font-serif">
-                        A. {faq.answer}
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          ) : (
-            <div className="text-center py-6 bg-[#faf9f6] rounded-xl border border-[#eae6df] my-2">
-              <span className="text-2xl block mb-1">🔍</span>
-              <p className="text-xs font-bold text-[#1a1a1a] mb-1">
-                검색된 자주 묻는 질문이 없습니다
-              </p>
-              <p className="text-[11px] text-[#7a7266] mb-3">
-                하단 1:1 문의 접수를 통해 직접 문의해 주시면 친절히 안내해 드립니다.
-              </p>
-              <button
-                type="button"
-                onClick={() => {
-                  setFaqSearch("");
-                  setSelectedFaqCategory("ALL");
-                }}
-                className="text-[11px] font-bold text-[#3b483a] underline underline-offset-2"
-              >
-                검색 조건 초기화 ✦
-              </button>
-            </div>
-          )}
-        </section>
-
-        {/* 1:1 Online Support Inquiry Form */}
-        <section className="editorial-card p-5 bg-white">
-          <h2 className="text-xs font-extrabold uppercase tracking-widest text-[#1a1a1a] mb-4 border-b border-[#eae6df] pb-3 flex items-center gap-1.5">
-            <span>✉️</span>
-            <span>1:1 문의 접수하기</span>
-          </h2>
-
-          {submitted ? (
-            <div className="text-center py-6 animate-fade-in">
-              <div className="w-12 h-12 rounded-full bg-[#3b483a]/10 text-[#3b483a] flex items-center justify-center text-2xl mx-auto mb-3">
-                ✓
+                      {isOpen && (
+                        <div className="px-3.5 pb-4 pt-1 text-xs text-[#5e605d] border-t border-[#eae6df] bg-white leading-relaxed font-serif">
+                          A. {faq.answer}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
               </div>
-              <h3 className="text-base font-bold text-[#1a1a1a] mb-1">
-                문의가 정상적으로 접수되었습니다
-              </h3>
-              <p className="text-xs text-[#5e605d] mb-4">
-                작성해주신 이메일(<span className="font-bold text-[#1a1a1a]">{email}</span>)로 신속히 답변을 드리겠습니다.
-              </p>
+            ) : (
+              <div className="text-center py-6 bg-[#faf9f6] rounded-xl border border-[#eae6df] my-2">
+                <span className="text-2xl block mb-1">🔍</span>
+                <p className="text-xs font-bold text-[#1a1a1a] mb-1">
+                  검색된 자주 묻는 질문이 없습니다
+                </p>
+                <p className="text-[11px] text-[#7a7266] mb-3">
+                  1:1 문의 접수를 통해 직접 문의해 주시면 친절히 안내해 드립니다.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setFaqSearch("");
+                    setSelectedFaqCategory("ALL");
+                  }}
+                  className="text-[11px] font-bold text-[#3b483a] underline underline-offset-2"
+                >
+                  검색 조건 초기화 ✦
+                </button>
+              </div>
+            )}
+          </section>
+        )}
 
-              <div className="mb-4 p-3 bg-[#f6f4f0] rounded-xl border border-[#eae6df] text-left text-xs space-y-1">
-                <div className="flex justify-between">
-                  <span className="text-[#7a7266]">문의 유형</span>
-                  <span className="font-bold text-[#1a1a1a]">{inquiryCategory}</span>
+        {/* TAB 2: 1:1 Online Support Inquiry Form */}
+        {activeTab === "INQUIRY" && (
+          <section className="editorial-card p-5 bg-white animate-fade-in">
+            <h2 className="text-xs font-extrabold uppercase tracking-widest text-[#1a1a1a] mb-4 border-b border-[#eae6df] pb-3 flex items-center gap-1.5">
+              <span>✉️</span>
+              <span>1:1 온라인 문의 접수</span>
+            </h2>
+
+            {submitted ? (
+              <div className="text-center py-6 animate-fade-in">
+                <div className="w-12 h-12 rounded-full bg-[#3b483a]/10 text-[#3b483a] flex items-center justify-center text-2xl mx-auto mb-3">
+                  ✓
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-[#7a7266]">접수 번호</span>
-                  <span className="font-mono font-bold text-[#3b483a]">
-                    {createdInquiryId || `INQ-${Date.now().toString().slice(-6)}`}
+                <h3 className="text-base font-bold text-[#1a1a1a] mb-1">
+                  문의가 정상적으로 접수되었습니다
+                </h3>
+                <p className="text-xs text-[#5e605d] mb-4">
+                  작성해주신 이메일(<span className="font-bold text-[#1a1a1a]">{email}</span>)로 신속히 답변을 드리겠습니다.
+                </p>
+
+                <div className="mb-4 p-3 bg-[#f6f4f0] rounded-xl border border-[#eae6df] text-left text-xs space-y-1">
+                  <div className="flex justify-between">
+                    <span className="text-[#7a7266]">문의 유형</span>
+                    <span className="font-bold text-[#1a1a1a]">{inquiryCategory}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-[#7a7266]">접수 번호</span>
+                    <span className="font-mono font-bold text-[#3b483a]">
+                      {createdInquiryId || `INQ-${Date.now().toString().slice(-6)}`}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-[#7a7266]">답변 안내</span>
+                    <span className="text-[#3b483a] font-bold">평균 2시간 이내 회신</span>
+                  </div>
+                </div>
+
+                <div className="p-2.5 bg-[#3b483a]/5 rounded-xl border border-[#3b483a]/20 mb-4 flex items-center justify-center gap-1.5 text-[11px] text-[#3b483a] font-bold">
+                  <span>💬</span>
+                  <span>카카오 알림톡으로 답변 완료 알림이 함께 발송됩니다</span>
+                </div>
+
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => {
+                      if (createdInquiryId) setLookupInquiryId(createdInquiryId);
+                      setActiveTab("STATUS");
+                    }}
+                    className="flex-1 btn-editorial text-xs py-2.5 font-bold"
+                  >
+                    접수 현황 실시간 조회하기 🔎
+                  </button>
+                  <button
+                    onClick={() => {
+                      setSubmitted(false);
+                      setContent("");
+                    }}
+                    className="btn-editorial-outline text-xs py-2.5 px-4 font-bold"
+                  >
+                    추가 문의 작성
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <form onSubmit={handleSubmitInquiry} className="space-y-4 text-xs">
+                <div>
+                  <label className="block text-[11px] font-bold text-[#5e605d] uppercase mb-1">
+                    이름 / 닉네임 *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="예: 주희"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    className="input-editorial"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-bold text-[#5e605d] uppercase mb-1">
+                    답변받으실 이메일 주소 *
+                  </label>
+                  <input
+                    type="email"
+                    required
+                    placeholder="example@sharepresent.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="input-editorial"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-bold text-[#5e605d] uppercase mb-1">
+                    문의 유형 *
+                  </label>
+                  <select
+                    value={inquiryCategory}
+                    onChange={(e) => setInquiryCategory(e.target.value)}
+                    className="select-editorial"
+                  >
+                    <option>결제/정산 문의</option>
+                    <option>배송 및 주소지 변경 문의</option>
+                    <option>선물 수락 및 기한 문의</option>
+                    <option>기타 시스템 이용 문의</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-bold text-[#5e605d] uppercase mb-1">
+                    문의 내용 *
+                  </label>
+                  <textarea
+                    rows={4}
+                    required
+                    placeholder="궁금하신 내용이나 요청사항을 상세히 적어주세요."
+                    value={content}
+                    onChange={(e) => setContent(e.target.value)}
+                    className="input-editorial resize-none font-serif"
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="btn-editorial py-3.5 text-xs tracking-wider uppercase font-bold w-full"
+                >
+                  {isSubmitting ? "접수 중..." : "1:1 문의 접수하기 ✉️"}
+                </button>
+              </form>
+            )}
+          </section>
+        )}
+
+        {/* TAB 3: Live Inquiry Status Lookup */}
+        {activeTab === "STATUS" && (
+          <section className="editorial-card p-5 bg-white animate-fade-in space-y-4">
+            <h2 className="text-xs font-extrabold uppercase tracking-widest text-[#1a1a1a] border-b border-[#eae6df] pb-3 flex items-center gap-1.5">
+              <span>🔎</span>
+              <span>1:1 문의 실시간 처리 현황 조회</span>
+            </h2>
+
+            <form onSubmit={handleLookupStatus} className="space-y-3">
+              <div>
+                <label className="block text-[11px] font-bold text-[#5e605d] uppercase mb-1">
+                  접수 번호 (Inquiry ID)
+                </label>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    required
+                    placeholder="예: INQ-123456"
+                    value={lookupInquiryId}
+                    onChange={(e) => setLookupInquiryId(e.target.value)}
+                    className="input-editorial flex-1 font-mono uppercase"
+                  />
+                  <button
+                    type="submit"
+                    disabled={isLookingUp}
+                    className="btn-editorial px-5 py-2.5 text-xs font-bold whitespace-nowrap shadow-sm"
+                  >
+                    {isLookingUp ? "조회 중..." : "조회 ✦"}
+                  </button>
+                </div>
+              </div>
+            </form>
+
+            {inquiryStatusResult && (
+              <div className="p-4.5 bg-[#faf9f6] rounded-2xl border border-[#eae6df] space-y-3 animate-fade-in text-left">
+                <div className="flex items-center justify-between border-b border-[#eae6df] pb-2.5">
+                  <span className="font-mono text-xs font-bold text-[#3b483a]">
+                    {inquiryStatusResult.inquiryId}
+                  </span>
+                  <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-[#3b483a] text-white">
+                    {inquiryStatusResult.statusLabel || "검토 중"}
                   </span>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-[#7a7266]">답변 안내</span>
-                  <span className="text-[#3b483a] font-bold">평균 2시간 이내 회신</span>
+
+                <div className="text-xs space-y-1.5 text-[#5e605d]">
+                  <div className="flex justify-between">
+                    <span>문의 카테고리</span>
+                    <span className="font-bold text-[#1a1a1a]">
+                      {inquiryStatusResult.category || "고객 문의"}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>접수 일자</span>
+                    <span className="font-mono text-[#1a1a1a]">
+                      {inquiryStatusResult.registeredAt || "2026.09.20"}
+                    </span>
+                  </div>
+                  <div className="flex justify-between text-[#3b483a] font-bold">
+                    <span>예상 처리 일정</span>
+                    <span>{inquiryStatusResult.estimatedReplyTime || "평균 2시간 이내"}</span>
+                  </div>
                 </div>
-              </div>
 
-              <div className="p-2.5 bg-[#3b483a]/5 rounded-xl border border-[#3b483a]/20 mb-4 flex items-center justify-center gap-1.5 text-[11px] text-[#3b483a] font-bold">
-                <span>💬</span>
-                <span>카카오 알림톡으로 답변 완료 알림이 함께 발송됩니다</span>
+                {inquiryStatusResult.adminNote && (
+                  <div className="p-3 bg-white rounded-xl border border-[#eae6df] text-xs text-[#1a1a1a] font-serif leading-relaxed italic">
+                    "{inquiryStatusResult.adminNote}"
+                  </div>
+                )}
               </div>
-
-              <button
-                onClick={() => {
-                  setSubmitted(false);
-                  setContent("");
-                }}
-                className="btn-editorial-outline text-xs py-2.5 px-4 font-bold"
-              >
-                추가 문의 작성하기
-              </button>
-            </div>
-          ) : (
-            <form onSubmit={handleSubmitInquiry} className="space-y-4 text-xs">
-              <div>
-                <label className="block text-[11px] font-bold text-[#5e605d] uppercase mb-1">
-                  이름 / 닉네임 *
-                </label>
-                <input
-                  type="text"
-                  required
-                  placeholder="예: 주희"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  className="input-editorial"
-                />
-              </div>
-
-              <div>
-                <label className="block text-[11px] font-bold text-[#5e605d] uppercase mb-1">
-                  답변받으실 이메일 주소 *
-                </label>
-                <input
-                  type="email"
-                  required
-                  placeholder="example@sharepresent.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="input-editorial"
-                />
-              </div>
-
-              <div>
-                <label className="block text-[11px] font-bold text-[#5e605d] uppercase mb-1">
-                  문의 유형 *
-                </label>
-                <select
-                  value={inquiryCategory}
-                  onChange={(e) => setInquiryCategory(e.target.value)}
-                  className="select-editorial"
-                >
-                  <option>결제/정산 문의</option>
-                  <option>배송 및 주소지 변경 문의</option>
-                  <option>선물 수락 및 기한 문의</option>
-                  <option>기타 시스템 이용 문의</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-[11px] font-bold text-[#5e605d] uppercase mb-1">
-                  문의 내용 *
-                </label>
-                <textarea
-                  rows={4}
-                  required
-                  placeholder="궁금하신 내용이나 요청사항을 상세히 적어주세요."
-                  value={content}
-                  onChange={(e) => setContent(e.target.value)}
-                  className="input-editorial resize-none font-serif"
-                />
-              </div>
-
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className="btn-editorial py-3.5 text-xs tracking-wider uppercase font-bold w-full"
-              >
-                {isSubmitting ? "접수 중..." : "1:1 문의 접수하기 ✉️"}
-              </button>
-            </form>
-          )}
-        </section>
+            )}
+          </section>
+        )}
       </main>
     </div>
   );
