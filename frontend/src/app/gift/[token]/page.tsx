@@ -8,6 +8,7 @@ import DeliveryDrawer from "@/components/DeliveryDrawer";
 import { AlternativeGiftsDrawer } from "@/components/AlternativeGiftsDrawer";
 import ConfettiEffect from "@/components/ConfettiEffect";
 import RollingPaperSection from "@/components/RollingPaperSection";
+import TasteSurveyModal from "@/components/TasteSurveyModal";
 import { useToast } from "@/context/ToastContext";
 import { getCurationBox, acceptGift, submitThankYouReply, CurationBoxResponse, ProductDto } from "@/lib/api";
 
@@ -42,6 +43,10 @@ export default function RecipientGiftPage({ params }: { params: Promise<{ token:
   const [thankYouMsg, setThankYouMsg] = useState("예쁜 선물 골라줘서 너무 고마워! 예쁘게 잘 쓸게 🎁");
   const [thankYouPhoto, setThankYouPhoto] = useState<string>("https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=500&auto=format&fit=crop&q=80");
   const [thankYouSent, setThankYouSent] = useState(false);
+
+  // Feature 5: AI Taste Survey State
+  const [showTasteModal, setShowTasteModal] = useState(false);
+  const [tasteMatchResult, setTasteMatchResult] = useState<{ productId: number | string; summary: string } | null>(null);
 
   useEffect(() => {
     async function loadBox() {
@@ -424,6 +429,28 @@ export default function RecipientGiftPage({ params }: { params: Promise<{ token:
               messages={boxData.rollingPaperMessages}
             />
 
+            {/* AI Taste Matching Quick Banner */}
+            <div className="mb-4 p-3.5 rounded-2xl bg-gradient-to-r from-[#3b483a]/10 via-[#a38974]/15 to-[#3b483a]/10 border border-[#3b483a]/20 flex items-center justify-between shadow-xs">
+              <div className="flex items-center gap-2">
+                <span className="text-lg">✨</span>
+                <div>
+                  <span className="text-[9px] font-extrabold uppercase tracking-widest text-[#3b483a] block">
+                    AI Curated Matcher
+                  </span>
+                  <span className="text-xs font-bold text-[#1a1a1a] block">
+                    {tasteMatchResult ? `🎯 ${tasteMatchResult.summary}` : "어떤 선물이 어울릴지 고민되시나요?"}
+                  </span>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowTasteModal(true)}
+                className="text-[10px] font-bold text-white bg-[#3b483a] hover:bg-[#2d382c] px-3 py-1.5 rounded-xl shadow-xs transition-colors flex-shrink-0"
+              >
+                {tasteMatchResult ? "다시 분석 ↻" : "30초 취향 분석 ✦"}
+              </button>
+            </div>
+
             <div className="flex items-center justify-between mb-3 px-1">
               <span className="text-xs font-extrabold uppercase tracking-widest text-[#1a1a1a]">
                 Curated Gift Options ({boxData.items.length})
@@ -435,17 +462,30 @@ export default function RecipientGiftPage({ params }: { params: Promise<{ token:
 
             {/* Product Options Feed (Prices 100% hidden) */}
             <div className="space-y-4">
-              {boxData.items.map((product) => (
-                <ProductCard
-                  key={product.id}
-                  product={product}
-                  isSelected={selectedProductId === product.id}
-                  onSelect={() => handleProductSelect(product)}
-                  selectedOption={selectedOption}
-                  onOptionChange={(opt) => setSelectedOption(opt)}
-                  hidePrice={true} // Prices completely hidden for recipient!
-                />
-              ))}
+              {(tasteMatchResult
+                ? [...boxData.items].sort((a, b) => (a.id === tasteMatchResult.productId ? -1 : b.id === tasteMatchResult.productId ? 1 : 0))
+                : boxData.items
+              ).map((product) => {
+                const isBestMatch = tasteMatchResult?.productId === product.id;
+                return (
+                  <div key={product.id} className="relative">
+                    {isBestMatch && (
+                      <div className="mb-1.5 flex items-center gap-1 text-[10px] font-bold text-[#3b483a] bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-lg">
+                        <span>✦</span>
+                        <span>취향 저격 베스트 매칭 (98% 일치)</span>
+                      </div>
+                    )}
+                    <ProductCard
+                      product={product}
+                      isSelected={selectedProductId === product.id}
+                      onSelect={() => handleProductSelect(product)}
+                      selectedOption={selectedOption}
+                      onOptionChange={(opt) => setSelectedOption(opt)}
+                      hidePrice={true} // Prices completely hidden for recipient!
+                    />
+                  </div>
+                );
+              })}
             </div>
 
             {/* Alternative Gifts Button (Gift Swap Exploration) */}
@@ -652,6 +692,17 @@ export default function RecipientGiftPage({ params }: { params: Promise<{ token:
           </div>
         </div>
       )}
+
+      {/* Feature 5: AI Taste Survey Modal */}
+      <TasteSurveyModal
+        isOpen={showTasteModal}
+        onClose={() => setShowTasteModal(false)}
+        products={boxData.items}
+        onComplete={(id, summary) => {
+          setTasteMatchResult({ productId: id, summary });
+          setSelectedProductId(id);
+        }}
+      />
     </div>
   );
 }
