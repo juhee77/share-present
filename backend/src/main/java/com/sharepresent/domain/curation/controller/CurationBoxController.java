@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 public class CurationBoxController {
 
     private final CurationBoxService curationBoxService;
+    private final com.sharepresent.domain.curation.service.AiMessageAssistantService aiMessageAssistantService;
 
     @PostMapping
     @Operation(summary = "선물 상자 생성", description = "보내는 사람이 메시지와 추천 상품들을 골라 선물 상자를 생성합니다.")
@@ -44,5 +45,13 @@ public class CurationBoxController {
                 "valid", isValid,
                 "message", isValid ? "PIN 번호가 일치합니다." : "PIN 번호가 일치하지 않습니다."
         ));
+    }
+
+    @PostMapping("/ai-message")
+    @Operation(summary = "AI 감성 카드 문구 추천", description = "상황, 어조, 수령인/송신자 이름에 맞춘 에디토리얼 선물 카드 문구와 테마/모노그램 인장을 추천합니다.")
+    public ResponseEntity<com.sharepresent.domain.curation.dto.AiMessageResponse> generateAiMessage(
+            @Valid @RequestBody com.sharepresent.domain.curation.dto.GenerateAiMessageRequest request) {
+        com.sharepresent.domain.curation.dto.AiMessageResponse response = aiMessageAssistantService.generateMessage(request);
+        return ResponseEntity.ok(response);
     }
 }

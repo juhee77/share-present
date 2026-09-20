@@ -33,6 +33,9 @@ class CurationBoxControllerTest {
     @MockBean
     private CurationBoxService curationBoxService;
 
+    @MockBean
+    private com.sharepresent.domain.curation.service.AiMessageAssistantService aiMessageAssistantService;
+
     @Test
     @DisplayName("POST /api/v1/curation-boxes - 선물 상자 생성 API 성공")
     void createCurationBox_success() throws Exception {
@@ -125,5 +128,40 @@ class CurationBoxControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.valid").value(true))
                 .andExpect(jsonPath("$.message").value("PIN 번호가 일치합니다."));
+    }
+
+    @Test
+    @DisplayName("POST /api/v1/curation-boxes/ai-message - AI 감성 카드 문구 추천 성공")
+    void generateAiMessage_success() throws Exception {
+        // given
+        com.sharepresent.domain.curation.dto.GenerateAiMessageRequest request =
+                com.sharepresent.domain.curation.dto.GenerateAiMessageRequest.builder()
+                        .situation("BIRTHDAY")
+                        .tone("WARM")
+                        .receiverName("민우")
+                        .build();
+
+        com.sharepresent.domain.curation.dto.AiMessageResponse mockResponse =
+                com.sharepresent.domain.curation.dto.AiMessageResponse.builder()
+                        .situation("BIRTHDAY")
+                        .tone("WARM")
+                        .generatedMessage("민우님, 생일을 진심으로 축하해요! 🎂")
+                        .recommendedTheme("rose")
+                        .recommendedMonogram("HBD")
+                        .alternativeSnippets(List.of("생일 축하해!", "Happy Birthday!"))
+                        .build();
+
+        given(aiMessageAssistantService.generateMessage(any(com.sharepresent.domain.curation.dto.GenerateAiMessageRequest.class)))
+                .willReturn(mockResponse);
+
+        // when & then
+        mockMvc.perform(post("/api/v1/curation-boxes/ai-message")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.situation").value("BIRTHDAY"))
+                .andExpect(jsonPath("$.generatedMessage").value("민우님, 생일을 진심으로 축하해요! 🎂"))
+                .andExpect(jsonPath("$.recommendedTheme").value("rose"))
+                .andExpect(jsonPath("$.recommendedMonogram").value("HBD"));
     }
 }

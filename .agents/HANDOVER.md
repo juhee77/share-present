@@ -70,6 +70,7 @@
 - **수령인 전용 감사 카드 및 언박싱 포토 등록 API (`ThankYouReplyRequest.java`, `OrderController.java`, `OrderService.java`, `gift/[token]/page.tsx`, `dashboard/page.tsx`)**: 수령인이 선물 수락 완료 후 언제든 감사 스티커, 감동 답장 메시지, 언박싱 인증샷 포토를 등록/수정할 수 있는 전용 `POST /api/v1/orders/thank-you/{sharingToken}` API 구축 및 발신자 카카오 알림톡 실시간 연동.
 - **3D 왁스 씰 인장 모노그램(Wax Seal Monogram) 커스텀 (`CurationBox.java`, `UnwrappingRibbon.tsx`, `page.tsx`, `gift/[token]/page.tsx`)**: 발신자가 `SP`(시그니처), `HBD`(생일), `LOVE`(애정), `THX`(감사), `LUCK`(행운), `CONG`(축하) 중 모노그램 인장을 선택하고, 수령인이 선물 인비테이션을 개봉할 때 3D 왁스 씰에 선택한 모노그램이 음각 양각 입체 렌더링됨.
 - **발신자 대시보드 실시간 정산 명세서 & 배송 영수증 모달 (`ReceiptDetailModal.tsx`, `dashboard/page.tsx`)**: 발신자가 보낸 선물함 완료 건에 대해 보관 예산, 최종 결제액, 즉시 자동 환불액, CJ대한통운 운송장 및 수령인 포토 감사 카드를 한눈에 확인하고 영수증 텍스트 복사 및 1-Click 인쇄/PDF 저장을 지원.
+- **AI 감성 카드 문구 큐레이션 & 테마/인장 추천 시스템 (`AiMessageAssistantService.java`, `AiMessageAssistantModal.tsx`, `CurationBoxController.java`, `page.tsx`)**: 발신자가 선물 상황(생일, 감사, 집들이, 승진, 연인, 힐링) 및 문체 톤(에디토리얼, 따뜻한 감동, 위트/센스)을 선택하면 감도 높은 카드 문구와 최적의 인비테이션 테마 및 왁스 씰 모노그램을 원클릭으로 추천 및 자동 적용 지원.
 - **컨트롤러 계층 Bean Validation 400 Bad Request 방어 테스트 완비 (`OrderControllerTest`, `CurationBoxControllerTest`, `SupportInquiryControllerTest`)**: 유효성 검증 테스트 스위트 100% 그린 유지.
 
 ---

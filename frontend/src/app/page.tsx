@@ -6,6 +6,7 @@ import ProductCard from "@/components/ProductCard";
 import MdPickSection from "@/components/MdPickSection";
 import ShareModal from "@/components/ShareModal";
 import CheckoutModal from "@/components/CheckoutModal";
+import AiMessageAssistantModal from "@/components/AiMessageAssistantModal";
 import { useToast } from "@/context/ToastContext";
 import { createCurationBox, fetchProducts, searchOpenProducts, ProductDto } from "@/lib/api";
 
@@ -216,6 +217,7 @@ export default function CreateGiftPage() {
   const [sealMonogram, setSealMonogram] = useState<"SP" | "HBD" | "LOVE" | "THX" | "LUCK" | "CONG">("SP");
   const [enablePinSecurity, setEnablePinSecurity] = useState(false);
   const [claimPin, setClaimPin] = useState("");
+  const [isAiModalOpen, setIsAiModalOpen] = useState(false);
   
   // Double-bound budget range states
   const [minBudget, setMinBudget] = useState(30000);
@@ -450,9 +452,19 @@ export default function CreateGiftPage() {
             </div>
             <div>
               <div className="flex items-center justify-between mb-1.5">
-                <label className="block text-[11px] font-bold text-[#5e605d] uppercase tracking-wider">
-                  카드 메시지
-                </label>
+                <div className="flex items-center gap-2">
+                  <label className="block text-[11px] font-bold text-[#5e605d] uppercase tracking-wider">
+                    카드 메시지
+                  </label>
+                  <button
+                    type="button"
+                    onClick={() => setIsAiModalOpen(true)}
+                    className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#3b483a] text-white hover:bg-[#2d382c] transition-all flex items-center gap-1 shadow-2xs cursor-pointer"
+                  >
+                    <span>✨</span>
+                    <span>AI 감성 문구 추천</span>
+                  </button>
+                </div>
                 <span className="text-[10px] font-mono text-[#7a7266]">
                   {messageCard.length}/200자
                 </span>
@@ -985,6 +997,23 @@ export default function CreateGiftPage() {
         senderName={senderName}
         messageCard={messageCard}
         cardTheme={cardTheme}
+      />
+
+      {/* AI Message Assistant Modal */}
+      <AiMessageAssistantModal
+        isOpen={isAiModalOpen}
+        onClose={() => setIsAiModalOpen(false)}
+        initialSituation={activePreset === "birthday" ? "BIRTHDAY" : activePreset === "housewarming" ? "HOUSEWARMING" : "THANK_YOU"}
+        initialReceiverName=""
+        onApply={(msg, theme, monogram) => {
+          setMessageCard(msg);
+          if (theme && ["ivory", "emerald", "noir", "rose"].includes(theme)) {
+            setCardTheme(theme as any);
+          }
+          if (monogram && ["SP", "HBD", "LOVE", "THX", "LUCK", "CONG"].includes(monogram)) {
+            setSealMonogram(monogram as any);
+          }
+        }}
       />
     </div>
   );

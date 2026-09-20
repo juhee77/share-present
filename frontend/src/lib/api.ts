@@ -236,3 +236,34 @@ export async function submitThankYouReply(sharingToken: string, payload: ThankYo
   return res.json();
 }
 
+export interface GenerateAiMessageRequest {
+  situation: string;
+  tone?: string;
+  receiverName?: string;
+  senderName?: string;
+  relationship?: string;
+  customKeyword?: string;
+}
+
+export interface AiMessageResponse {
+  situation: string;
+  tone: string;
+  generatedMessage: string;
+  alternativeSnippets: string[];
+  recommendedTheme: string;
+  recommendedMonogram: string;
+  stylingTip: string;
+}
+
+export async function generateAiMessage(payload: GenerateAiMessageRequest): Promise<AiMessageResponse> {
+  const res = await fetch(`${BASE_URL}/curation-boxes/ai-message`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) {
+    throw new Error("AI 메시지 생성에 실패했습니다.");
+  }
+  return res.json();
+}
+
