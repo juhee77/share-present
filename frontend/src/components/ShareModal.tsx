@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useToast } from "@/context/ToastContext";
+import { soundFx } from "@/lib/sound";
 import AlimtalkPreviewModal from "./AlimtalkPreviewModal";
 import PrintableGiftCardModal from "./PrintableGiftCardModal";
 
@@ -33,10 +34,8 @@ export default function ShareModal({
   const giftUrl = typeof window !== "undefined" ? `${window.location.origin}/gift/${token}` : `https://sharepresent.app/gift/${token}`;
 
   const kakaoMessage = `💌 [SharePresent] ${senderName}님이 당신을 위한 프라이빗 선물 룩북을 보냈습니다.
+받는 분의 취향에 꼭 맞는 선물을 직접 고르실 수 있도록 정성껏 준비했어요.
 
-"${messageCard.length > 50 ? messageCard.slice(0, 50) + "..." : messageCard}"
-
-아래 링크를 열어 마음에 드는 선물을 직접 선택해 주세요. (수령인 부담 비용 0원)
 ▶ ${giftUrl}`;
 
   const instagramMessage = `✨ ${senderName}님이 선물 상자를 보냈어요! 🎁
@@ -46,6 +45,7 @@ ${giftUrl}`;
   const handleCopy = async (text: string, type: string) => {
     try {
       await navigator.clipboard.writeText(text);
+      soundFx.playSuccessTick();
       setCopiedType(type);
       if (type === "kakao") {
         showToast("카카오톡 초대 문구가 복사되었습니다! 💌", "success");

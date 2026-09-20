@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { soundFx } from "@/lib/sound";
 
 interface ConfettiEffectProps {
   active?: boolean;
@@ -12,6 +13,7 @@ export default function ConfettiEffect({ active = true, durationMs = 4000 }: Con
 
   useEffect(() => {
     if (!active) return;
+    soundFx.playCelebrationPop();
 
     const canvas = canvasRef.current;
     if (!canvas) return;

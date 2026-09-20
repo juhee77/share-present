@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { verifyClaimPin } from "@/lib/api";
+import { soundFx } from "@/lib/sound";
 
 interface UnwrappingRibbonProps {
   senderName: string;
@@ -29,6 +30,7 @@ export default function UnwrappingRibbon({
   const [pinError, setPinError] = useState("");
   const [isVerifying, setIsVerifying] = useState(false);
   const [isShaking, setIsShaking] = useState(false);
+  const [soundActive, setSoundActive] = useState(soundFx.isEnabled());
 
   const themeStyles = {
     ivory: {
@@ -90,6 +92,7 @@ export default function UnwrappingRibbon({
       setShowPinModal(true);
       return;
     }
+    soundFx.playWaxSealBreak();
     setSealBroken(true);
   };
 
@@ -106,6 +109,7 @@ export default function UnwrappingRibbon({
       if (sharingToken) {
         const res = await verifyClaimPin(sharingToken, pinInput);
         if (res.valid) {
+          soundFx.playWaxSealBreak();
           setShowPinModal(false);
           setSealBroken(true);
         } else {
@@ -115,11 +119,13 @@ export default function UnwrappingRibbon({
         }
       } else {
         // Local fallback
+        soundFx.playWaxSealBreak();
         setShowPinModal(false);
         setSealBroken(true);
       }
     } catch {
       // Fallback for demo
+      soundFx.playWaxSealBreak();
       setShowPinModal(false);
       setSealBroken(true);
     } finally {
@@ -128,6 +134,7 @@ export default function UnwrappingRibbon({
   };
 
   const handleEnterLookbook = () => {
+    soundFx.playLuxuryChime();
     setIsOpening(true);
     setTimeout(() => {
       onOpen();
@@ -152,7 +159,16 @@ export default function UnwrappingRibbon({
             <span className="text-[10px] font-mono tracking-widest uppercase opacity-70">
               PRIVATE INVITATION
             </span>
-            <div className="flex items-center gap-1.5">
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => setSoundActive(soundFx.toggleSound())}
+                className="text-[11px] px-2 py-0.5 rounded-full bg-black/5 hover:bg-black/10 transition-colors opacity-70 hover:opacity-100 flex items-center gap-1"
+                title={soundActive ? "효과음 켜짐" : "효과음 음소거됨"}
+              >
+                <span>{soundActive ? "🔔" : "🔕"}</span>
+                <span className="text-[9px]">{soundActive ? "ON" : "OFF"}</span>
+              </button>
               {hasPinSecurity && (
                 <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-800 border border-amber-500/30">
                   🔒 PIN 보안
