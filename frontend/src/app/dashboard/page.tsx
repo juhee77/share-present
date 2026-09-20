@@ -5,6 +5,7 @@ import Header from "@/components/Header";
 import Link from "next/link";
 import ShareModal from "@/components/ShareModal";
 import AlimtalkPreviewModal from "@/components/AlimtalkPreviewModal";
+import ReceiptDetailModal, { ReceiptDetailBox } from "@/components/ReceiptDetailModal";
 import { useToast } from "@/context/ToastContext";
 import { cancelGiftBox, resendGiftNotification, extendGiftExpiry } from "@/lib/api";
 
@@ -191,6 +192,7 @@ export default function SenderDashboardPage() {
   const [sentBoxes, setSentBoxes] = useState<MockSentBox[]>(MOCK_SENT_BOXES);
   const [receivedBoxes] = useState<MockReceivedBox[]>(MOCK_RECEIVED_BOXES);
   const [shareModalBox, setShareModalBox] = useState<MockSentBox | null>(null);
+  const [selectedReceiptBox, setSelectedReceiptBox] = useState<ReceiptDetailBox | null>(null);
   const [alimtalkPreview, setAlimtalkPreview] = useState<{
     isOpen: boolean;
     senderName?: string;
@@ -486,12 +488,13 @@ export default function SenderDashboardPage() {
                 <div className="flex gap-2">
                   {box.status === "COMPLETED" ? (
                     <>
-                      <Link
-                        href={`/result/${box.token}`}
+                      <button
+                        type="button"
+                        onClick={() => setSelectedReceiptBox(box as ReceiptDetailBox)}
                         className="flex-1 btn-editorial-outline text-center text-xs py-2.5 font-bold uppercase tracking-wider block"
                       >
-                        정산 및 배송 내역 상세 ↗
-                      </Link>
+                        정산 및 배송 영수증 ↗
+                      </button>
                       <button
                         onClick={() =>
                           setAlimtalkPreview({
@@ -655,6 +658,13 @@ export default function SenderDashboardPage() {
           productName={alimtalkPreview.productName}
           refundAmount={alimtalkPreview.refundAmount}
           trackingNumber={alimtalkPreview.trackingNumber}
+        />
+
+        {/* Settlement Receipt & Live Carrier Detail Modal */}
+        <ReceiptDetailModal
+          isOpen={!!selectedReceiptBox}
+          box={selectedReceiptBox}
+          onClose={() => setSelectedReceiptBox(null)}
         />
       </main>
     </div>
