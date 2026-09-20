@@ -230,9 +230,16 @@ export default function UnwrappingRibbon({
             </div>
           ) : (
             /* PHASE 2: Unsealed Letter Slide Out */
-            <div className="flex flex-col items-center py-2 animate-fade-in">
+            <div className="flex flex-col items-center py-2 animate-fade-in relative">
+              {/* Gold Sparkle Burst Indicator */}
+              <div className="absolute -top-3 w-full flex justify-center pointer-events-none">
+                <span className="text-xs text-amber-500 font-serif animate-bounce tracking-widest">
+                  ✨ SPECIAL GIFT INVITATION ✨
+                </span>
+              </div>
+
               <div
-                className={`w-12 h-12 rounded-full flex items-center justify-center font-serif text-sm font-bold mb-4 shadow-md ${
+                className={`w-12 h-12 rounded-full flex items-center justify-center font-serif text-sm font-bold mb-4 shadow-md ring-4 ring-amber-400/30 ${
                   themeStyles.sealBg
                 } ${themeStyles.sealText}`}
               >
@@ -243,20 +250,21 @@ export default function UnwrappingRibbon({
                 A Letter For You
               </span>
 
-              <h3 className="font-serif text-xl font-bold mb-3">
+              <h3 className="font-serif text-xl font-bold mb-3 px-2">
                 &ldquo;{messageCard}&rdquo;
               </h3>
 
               <p className="text-xs mb-6 opacity-75 leading-relaxed max-w-xs">
-                {senderName}님이 당신의 취향을 존중하여 큐레이션한 선물 리스트입니다. 마음에 드는 상품을 선택해주세요.
+                {senderName}님이 당신을 위해 정성껏 큐레이션한 선물 목록입니다.<br />
+                마음에 쏙 드는 선물을 골라주시면 안전하게 배송해 드립니다.
               </p>
 
               <button
                 onClick={handleEnterLookbook}
-                className="w-full py-4 bg-[#3b483a] text-white rounded-xl text-xs font-bold uppercase tracking-widest hover:bg-[#2c362b] active:scale-[0.98] transition-all shadow-lg flex items-center justify-center gap-2"
+                className="w-full py-4 bg-[#1a1a1a] text-[#fcfbf9] rounded-xl text-xs font-extrabold uppercase tracking-widest shadow-xl hover:bg-black transition-all transform active:scale-98 flex items-center justify-center gap-2 group"
               >
-                <span>선물 룩북 확인하기</span>
-                <span>✦</span>
+                <span>선물 상자 열어보기</span>
+                <span className="group-hover:translate-x-1 transition-transform">→</span>
               </button>
             </div>
           )}

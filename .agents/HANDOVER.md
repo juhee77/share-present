@@ -106,7 +106,7 @@
 - `frontend/src/components/CheckoutModal.tsx`: 에스크로 가승인 결제 샌드박스 모달
 - `frontend/src/components/ShareModal.tsx`: 카카오톡 / 인스타 DM / Web Share API 공유 모달
 - `frontend/src/components/DeliveryDrawer.tsx`: 도로명 주소 검색 및 배송 메모 드로어
-- `frontend/src/components/UnwrappingRibbon.tsx`: 3D 왁스 씰 개봉 애니메이션 컴포넌트
+- `frontend/src/components/UnwrappingRibbon.tsx`: 수령인 3D 왁스 씰/리본 인터랙티브 언박싱 컴포넌트 (모노그램 왁스 인장 파괴 햅틱 사운드, 골드 스파클 이펙트, PIN 번호 잠금 해제)
 - `frontend/src/components/PrintableGiftCardModal.tsx`: 인쇄/PDF 저장 지원 실물 엽서 카드 및 고해상도 QR 코드 생성기
 - `frontend/src/components/ConfettiEffect.tsx`: 골드/에메랄드/로즈 축하 컨페티 파티클 캔버스 효과
 - `frontend/src/components/ThankYouPhotoModal.tsx`: 수령인 실시간 언박싱 인증 포토 뷰어 & 답장 리액션 모달
