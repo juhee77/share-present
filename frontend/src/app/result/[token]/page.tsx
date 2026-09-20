@@ -5,6 +5,7 @@ import Header from "@/components/Header";
 import Link from "next/link";
 import ThankYouPhotoModal from "@/components/ThankYouPhotoModal";
 import GroupSplitModal from "@/components/GroupSplitModal";
+import CalendarReminderModal from "@/components/CalendarReminderModal";
 import { getOrderResult, OrderResponse } from "@/lib/api";
 import { useToast } from "@/context/ToastContext";
 
@@ -18,6 +19,7 @@ export default function OrderResultPage({ params }: { params: Promise<{ token: s
   const [showReceiptModal, setShowReceiptModal] = useState(false);
   const [showPhotoModal, setShowPhotoModal] = useState(false);
   const [showSplitModal, setShowSplitModal] = useState(false);
+  const [showCalendarModal, setShowCalendarModal] = useState(false);
   const [receiptPhone, setReceiptPhone] = useState("");
 
   useEffect(() => {
@@ -312,6 +314,13 @@ export default function OrderResultPage({ params }: { params: Promise<{ token: s
           </button>
 
           <button
+            onClick={() => setShowCalendarModal(true)}
+            className="btn-editorial-outline py-3.5 text-xs font-bold uppercase tracking-wider w-full"
+          >
+            선물 만료 및 일정 캘린더 등록 📅
+          </button>
+
+          <button
             onClick={handleDownloadReceiptImage}
             className="btn-editorial-outline py-3.5 text-xs font-bold uppercase tracking-widest text-center block w-full"
           >
@@ -418,6 +427,15 @@ export default function OrderResultPage({ params }: { params: Promise<{ token: s
           totalAmount={order.finalAmount}
           productName={order.selectedProductName}
           brandName={order.selectedProductBrand}
+        />
+
+        {/* Calendar Schedule Reminder Modal */}
+        <CalendarReminderModal
+          isOpen={showCalendarModal}
+          onClose={() => setShowCalendarModal(false)}
+          giftToken={token}
+          productBrand={order.selectedProductBrand}
+          productName={order.selectedProductName}
         />
       </main>
     </div>
