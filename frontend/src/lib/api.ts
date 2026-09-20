@@ -216,3 +216,21 @@ export async function verifyClaimPin(sharingToken: string, pin: string): Promise
   return res.json();
 }
 
+export interface ThankYouReplyPayload {
+  thankYouSticker?: string;
+  thankYouMessage: string;
+  thankYouPhotoUrl?: string;
+}
+
+export async function submitThankYouReply(sharingToken: string, payload: ThankYouReplyPayload): Promise<OrderResponse> {
+  const res = await fetch(`${BASE_URL}/orders/thank-you/${sharingToken}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) {
+    throw new Error("감사 카드 등록에 실패했습니다.");
+  }
+  return res.json();
+}
+

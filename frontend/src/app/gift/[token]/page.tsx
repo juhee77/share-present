@@ -7,7 +7,7 @@ import UnwrappingRibbon from "@/components/UnwrappingRibbon";
 import DeliveryDrawer from "@/components/DeliveryDrawer";
 import { AlternativeGiftsDrawer } from "@/components/AlternativeGiftsDrawer";
 import { useToast } from "@/context/ToastContext";
-import { getCurationBox, acceptGift, CurationBoxResponse, ProductDto } from "@/lib/api";
+import { getCurationBox, acceptGift, submitThankYouReply, CurationBoxResponse, ProductDto } from "@/lib/api";
 
 export default function RecipientGiftPage({ params }: { params: Promise<{ token: string }> }) {
   const { showToast } = useToast();
@@ -597,7 +597,17 @@ export default function RecipientGiftPage({ params }: { params: Promise<{ token:
             </div>
 
             <button
-              onClick={() => {
+              type="button"
+              onClick={async () => {
+                try {
+                  await submitThankYouReply(token, {
+                    thankYouSticker,
+                    thankYouMessage: thankYouMsg,
+                    thankYouPhotoUrl: thankYouPhoto,
+                  });
+                } catch (e) {
+                  console.error(e);
+                }
                 setThankYouSent(true);
                 setShowThankYouModal(false);
                 showToast(`${boxData.senderName}님에게 감사 카드와 답장이 전달되었습니다! 💌`, "success");

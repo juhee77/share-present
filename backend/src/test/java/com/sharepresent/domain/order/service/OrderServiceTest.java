@@ -138,4 +138,29 @@ class OrderServiceTest {
         // then
         assertThat(count).isEqualTo(1);
     }
+
+    @Test
+    @DisplayName("수령인 감사 카드 및 포토 등록 - Order 엔티티 갱신 및 응답 DTO 반영 검증")
+    void submitThankYouReply_updatesOrderWithStickerAndPhoto() {
+        // given
+        com.sharepresent.domain.order.dto.ThankYouReplyRequest request =
+                com.sharepresent.domain.order.dto.ThankYouReplyRequest.builder()
+                        .thankYouSticker("💖 취향저격 고마워!")
+                        .thankYouMessage("선물 너무 잘 쓸게!")
+                        .thankYouPhotoUrl("https://example.com/unboxing.jpg")
+                        .build();
+
+        given(curationBoxRepository.findBySharingToken("test-token-123456")).willReturn(Optional.of(testBox));
+        given(orderRepository.findByCurationBoxId(100L)).willReturn(Optional.of(testPrePaidOrder));
+        given(orderRepository.save(any(Order.class))).willAnswer(inv -> inv.getArgument(0));
+
+        // when
+        OrderResponse response = orderService.submitThankYouReply("test-token-123456", request);
+
+        // then
+        assertThat(response).isNotNull();
+        assertThat(response.getThankYouSticker()).isEqualTo("💖 취향저격 고마워!");
+        assertThat(response.getThankYouMessage()).isEqualTo("선물 너무 잘 쓸게!");
+        assertThat(response.getThankYouPhotoUrl()).isEqualTo("https://example.com/unboxing.jpg");
+    }
 }

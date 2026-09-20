@@ -190,4 +190,36 @@ class OrderControllerTest {
                 .andExpect(jsonPath("$.orderId").value(1))
                 .andExpect(jsonPath("$.expiredAt").value("2026-10-01T10:00:00"));
     }
+
+    @Test
+    @DisplayName("POST /api/v1/orders/thank-you/{sharingToken} - 감사 카드 및 포토 등록 성공")
+    void submitThankYouReply_success() throws Exception {
+        // given
+        com.sharepresent.domain.order.dto.ThankYouReplyRequest request =
+                com.sharepresent.domain.order.dto.ThankYouReplyRequest.builder()
+                        .thankYouSticker("💖 취향저격 고마워!")
+                        .thankYouMessage("선물 너무 맘에 들어!")
+                        .thankYouPhotoUrl("https://example.com/photo.jpg")
+                        .build();
+
+        OrderResponse mockResponse = OrderResponse.builder()
+                .orderId(1L)
+                .thankYouSticker("💖 취향저격 고마워!")
+                .thankYouMessage("선물 너무 맘에 들어!")
+                .thankYouPhotoUrl("https://example.com/photo.jpg")
+                .shippingStatus("COMPLETED")
+                .build();
+
+        given(orderService.submitThankYouReply(org.mockito.ArgumentMatchers.eq("sample-token"), any(com.sharepresent.domain.order.dto.ThankYouReplyRequest.class)))
+                .willReturn(mockResponse);
+
+        // when & then
+        mockMvc.perform(post("/api/v1/orders/thank-you/sample-token")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.thankYouSticker").value("💖 취향저격 고마워!"))
+                .andExpect(jsonPath("$.thankYouMessage").value("선물 너무 맘에 들어!"))
+                .andExpect(jsonPath("$.thankYouPhotoUrl").value("https://example.com/photo.jpg"));
+    }
 }

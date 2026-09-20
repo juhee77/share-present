@@ -67,6 +67,7 @@
 - **수령인 희망 배송일(Desired Delivery Date) 선호도 선택 및 영속화 (`Order.java`, `AcceptGiftRequest.java`, `DeliveryDrawer.tsx`, `gift/track/[token]/page.tsx`)**: 수령인이 주소지 입력 시 가장 빠른 배송(`FASTEST`), 주말(토요일) 수령(`WEEKEND`), 평일 업무시간 내 수령(`WEEKDAY`) 옵션을 칩 형태로 선택하고, 주문 영속화 및 배송 추적 페이지에서 희망 배송일 배지로 표시.
 - **선물 부티크 패키징(Boutique Packaging) 커스텀 옵션 (`CurationBox.java`, `CreateCurationBoxRequest.java`, `page.tsx`, `gift/[token]/page.tsx`)**: 발신자가 시그니처 박스(`STANDARD`), 전통 실크 보자기 & 노리개(`BOJAGI`), 로열 리본 하드케이스(`LUXURY_RIBBON`), 친환경 생분해 크래프트(`ECO_CRAFT`) 중 선택할 수 있고, 수령인 선물 인비테이션 및 수락 완료 화면에서 맞춤형 포장 안내 배지가 품격 있게 렌더링됨.
 - **선물 개봉 4자리 안심 PIN 보안 코드 (`CurationBox.java`, `VerifyPinRequest.java`, `CurationBoxController.java`, `UnwrappingRibbon.tsx`, `page.tsx`)**: 발신자가 수령인 생일이나 기념일 4자리 비밀번호를 설정할 수 있으며, 수령인이 3D 왁스 씰 개봉 시 4자리 PIN 번호 검증 모달을 통해 안전하게 인증 후 룩북을 열람할 수 있도록 지원.
+- **수령인 전용 감사 카드 및 언박싱 포토 등록 API (`ThankYouReplyRequest.java`, `OrderController.java`, `OrderService.java`, `gift/[token]/page.tsx`, `dashboard/page.tsx`)**: 수령인이 선물 수락 완료 후 언제든 감사 스티커, 감동 답장 메시지, 언박싱 인증샷 포토를 등록/수정할 수 있는 전용 `POST /api/v1/orders/thank-you/{sharingToken}` API 구축 및 발신자 카카오 알림톡 실시간 연동.
 - **컨트롤러 계층 Bean Validation 400 Bad Request 방어 테스트 완비 (`OrderControllerTest`, `CurationBoxControllerTest`, `SupportInquiryControllerTest`)**: 유효성 검증 테스트 스위트 100% 그린 유지.
 
 ---

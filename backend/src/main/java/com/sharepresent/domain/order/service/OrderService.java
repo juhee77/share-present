@@ -351,6 +351,40 @@ public class OrderService {
         return convertToResponse(order);
     }
 
+    /**
+     * 수령인이 발신자에게 감사 카드 및 언박싱 포토를 등록/수정
+     */
+    @Transactional
+    public OrderResponse submitThankYouReply(String sharingToken, com.sharepresent.domain.order.dto.ThankYouReplyRequest request) {
+        CurationBox box = curationBoxRepository.findBySharingToken(sharingToken)
+                .orElseThrow(() -> new IllegalArgumentException("선물 박스를 찾을 수 없습니다. Token: " + sharingToken));
+
+        Order order = orderRepository.findByCurationBoxId(box.getId())
+                .orElseThrow(() -> new IllegalArgumentException("주문 정보를 찾을 수 없습니다."));
+
+        Order updatedOrder = order.toBuilder()
+                .thankYouSticker(request.getThankYouSticker() != null ? request.getThankYouSticker() : "💖 취향저격 고마워!")
+                .thankYouMessage(request.getThankYouMessage())
+                .thankYouPhotoUrl(request.getThankYouPhotoUrl())
+                .build();
+
+        Order savedOrder = orderRepository.save(updatedOrder);
+
+        if (kakaoNotificationService != null && order.getSender() != null) {
+            try {
+                String receiver = order.getRecipientName() != null ? order.getRecipientName() : "수령인";
+                kakaoNotificationService.sendThankYouCardNotification(
+                        order.getSender().getPhoneNumber(),
+                        order.getSender().getNickname(),
+                        receiver,
+                        request.getThankYouMessage()
+                );
+            } catch (Exception ignored) {}
+        }
+
+        return convertToResponse(savedOrder);
+    }
+
     private void triggerActualPaymentCancel(String paymentKey, int cancelAmount) {
         // PG사 REST cancel API 호출 모킹 (실제 개발 스프린트 2단계에서 구현 예정)
         System.out.printf("[Toss Payments API] Settle complete. Succeeded in partial refund. Key: %s, Refunded: %d KRW\n", paymentKey, cancelAmount);

@@ -64,4 +64,13 @@ public class OrderController {
         OrderResponse response = orderService.extendGiftExpiry(sharingToken);
         return ResponseEntity.ok(response);
     }
+
+    @PostMapping("/thank-you/{sharingToken}")
+    @Operation(summary = "수령인 감사 카드 및 포토 등록", description = "수령인이 선물 수락 후 발신자에게 전달할 감사 메시지, 스티커 및 언박싱 포토를 등록합니다.")
+    public ResponseEntity<OrderResponse> submitThankYouReply(
+            @PathVariable("sharingToken") String sharingToken,
+            @Valid @RequestBody com.sharepresent.domain.order.dto.ThankYouReplyRequest request) {
+        OrderResponse response = orderService.submitThankYouReply(sharingToken, request);
+        return ResponseEntity.ok(response);
+    }
 }
