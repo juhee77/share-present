@@ -2,14 +2,16 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function Header() {
   const pathname = usePathname();
+  const { language, toggleLanguage, t } = useLanguage();
 
   const navLinks = [
-    { href: "/", label: "선물 생성" },
-    { href: "/dashboard", label: "내 선물 보관함" },
-    { href: "/support", label: "고객센터" },
+    { href: "/", label: t("nav.create") },
+    { href: "/dashboard", label: t("nav.dashboard") },
+    { href: "/support", label: t("nav.support") },
   ];
 
   return (
@@ -24,26 +26,39 @@ export default function Header() {
           </span>
         </Link>
 
-        <nav className="flex items-center gap-1.5 text-xs font-bold" aria-label="Main Navigation">
-          {navLinks.map((link) => {
-            const isActive = pathname === link.href;
-            return (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={`px-3 py-1.5 rounded-full transition-all ${
-                  isActive
-                    ? "bg-[#3b483a] text-white shadow-sm font-extrabold"
-                    : "text-[#5e605d] hover:text-[#1a1a1a] hover:bg-[#f6f4f0]"
-                }`}
-                aria-current={isActive ? "page" : undefined}
-              >
-                {link.label}
-              </Link>
-            );
-          })}
-        </nav>
+        <div className="flex items-center gap-2">
+          <nav className="flex items-center gap-1 text-xs font-bold" aria-label="Main Navigation">
+            {navLinks.map((link) => {
+              const isActive = pathname === link.href;
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={`px-2.5 py-1.5 rounded-full transition-all ${
+                    isActive
+                      ? "bg-[#3b483a] text-white shadow-sm font-extrabold"
+                      : "text-[#5e605d] hover:text-[#1a1a1a] hover:bg-[#f6f4f0]"
+                  }`}
+                  aria-current={isActive ? "page" : undefined}
+                >
+                  {link.label}
+                </Link>
+              );
+            })}
+          </nav>
+
+          <button
+            onClick={toggleLanguage}
+            type="button"
+            className="text-[11px] font-bold px-2 py-1 rounded border border-[#d6cfc7] text-[#5e605d] hover:text-[#1a1a1a] hover:border-[#3b483a] transition-all bg-[#fbfaf8]"
+            aria-label={`현재 언어: ${language === "ko" ? "한국어" : "English"}. 클릭하여 언어 변경.`}
+            title="언어 전환 / Switch Language"
+          >
+            {language === "ko" ? "EN" : "KR"}
+          </button>
+        </div>
       </div>
     </header>
   );
 }
+

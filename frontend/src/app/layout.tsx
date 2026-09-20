@@ -34,6 +34,7 @@ export const metadata: Metadata = {
 };
 
 import { ToastProvider } from "@/context/ToastContext";
+import { LanguageProvider } from "@/context/LanguageContext";
 
 export default function RootLayout({
   children,
@@ -43,9 +44,11 @@ export default function RootLayout({
   return (
     <html lang="ko" className={`${playfair.variable} ${notoSans.variable}`}>
       <body>
-        <ToastProvider>
-          <div className="app-container">{children}</div>
-        </ToastProvider>
+        <LanguageProvider>
+          <ToastProvider>
+            <div className="app-container">{children}</div>
+          </ToastProvider>
+        </LanguageProvider>
       </body>
     </html>
   );
