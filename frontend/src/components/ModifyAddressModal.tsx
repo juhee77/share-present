@@ -12,11 +12,15 @@ interface ModifyAddressModalProps {
   initialPhone?: string;
   initialName?: string;
   initialDesiredDeliveryDate?: string;
+  initialEntranceMemo?: string;
+  initialEcoFriendly?: boolean;
   onSuccess: (updated: {
     address: string;
     phone?: string;
     name?: string;
     desiredDeliveryDate?: string;
+    entranceMemo?: string;
+    ecoFriendlyPackaging?: boolean;
   }) => void;
 }
 
@@ -42,6 +46,8 @@ export default function ModifyAddressModal({
   initialPhone = "",
   initialName = "",
   initialDesiredDeliveryDate = "FASTEST",
+  initialEntranceMemo = "",
+  initialEcoFriendly = false,
   onSuccess,
 }: ModifyAddressModalProps) {
   const { showToast } = useToast();
@@ -49,6 +55,8 @@ export default function ModifyAddressModal({
   const [phone, setPhone] = useState(initialPhone);
   const [address, setAddress] = useState(initialAddress);
   const [desiredDeliveryDate, setDesiredDeliveryDate] = useState(initialDesiredDeliveryDate);
+  const [entranceMemo, setEntranceMemo] = useState(initialEntranceMemo);
+  const [ecoFriendly, setEcoFriendly] = useState(initialEcoFriendly);
   const [showAddressSearch, setShowAddressSearch] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -79,13 +87,17 @@ export default function ModifyAddressModal({
         receiverPhone: phone.trim() || undefined,
         shippingAddress: address.trim(),
         desiredDeliveryDate,
+        entranceMemo: entranceMemo.trim() || undefined,
+        ecoFriendlyPackaging: ecoFriendly,
       });
-      showToast("배송 정보 및 희망 배송일이 성공적으로 변경되었습니다! 🚚", "success");
+      showToast("배송 정보 및 환경 설정이 성공적으로 변경되었습니다! 🚚", "success");
       onSuccess({
         address: address.trim(),
         name: name.trim() || undefined,
         phone: phone.trim() || undefined,
         desiredDeliveryDate,
+        entranceMemo: entranceMemo.trim() || undefined,
+        ecoFriendlyPackaging: ecoFriendly,
       });
       onClose();
     } catch (err) {
@@ -96,6 +108,8 @@ export default function ModifyAddressModal({
         name: name.trim() || undefined,
         phone: phone.trim() || undefined,
         desiredDeliveryDate,
+        entranceMemo: entranceMemo.trim() || undefined,
+        ecoFriendlyPackaging: ecoFriendly,
       });
       onClose();
     } finally {
@@ -113,7 +127,7 @@ export default function ModifyAddressModal({
               SHIPPING DESTINATION UPDATE
             </span>
             <h2 className="font-serif text-lg font-bold text-[#1a1a1a]">
-              배송 주소지 및 일정 변경
+              배송 주소지 및 출입 정보 변경
             </h2>
           </div>
           <button
@@ -198,6 +212,34 @@ export default function ModifyAddressModal({
             />
           </div>
 
+          {/* Entrance Memo */}
+          <div>
+            <label className="block text-[11px] font-bold text-[#5e605d] uppercase mb-1">
+              공동현관 출입번호 및 배송 팁 (선택)
+            </label>
+            <input
+              type="text"
+              placeholder="예: #1234* 문 앞 보관 부탁드립니다"
+              value={entranceMemo}
+              onChange={(e) => setEntranceMemo(e.target.value)}
+              className="input-editorial"
+            />
+          </div>
+
+          {/* Eco Friendly Packaging Checkbox */}
+          <div className="flex items-center gap-2 p-3 bg-[#f6f4f0] rounded-xl border border-[#eae6df]">
+            <input
+              type="checkbox"
+              id="ecoPackaging"
+              checked={ecoFriendly}
+              onChange={(e) => setEcoFriendly(e.target.checked)}
+              className="rounded text-[#3b483a] focus:ring-[#3b483a] accent-[#3b483a]"
+            />
+            <label htmlFor="ecoPackaging" className="text-[11px] text-[#2e392d] font-bold cursor-pointer">
+              🌱 친환경 100% 생분해 에코 종이 포장 적용 희망
+            </label>
+          </div>
+
           {/* Desired Delivery Date Preference */}
           <div>
             <label className="block text-[11px] font-bold text-[#5e605d] uppercase mb-1.5">
@@ -239,7 +281,7 @@ export default function ModifyAddressModal({
               disabled={isSubmitting}
               className="flex-1 btn-editorial py-3 font-bold shadow-sm"
             >
-              {isSubmitting ? "변경 중..." : "주소지 변경 저장 ✦"}
+              {isSubmitting ? "변경 중..." : "배송 정보 저장 ✦"}
             </button>
           </div>
         </form>

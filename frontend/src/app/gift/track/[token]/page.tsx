@@ -335,10 +335,19 @@ export default function RecipientTrackingPage({ params }: { params: Promise<{ to
           onClose={() => setIsModifyAddressOpen(false)}
           token={token}
           initialDesiredDeliveryDate={order.desiredDeliveryDate || "FASTEST"}
+          initialEntranceMemo={order.entranceMemo || ""}
+          initialEcoFriendly={order.ecoFriendlyPackaging || false}
           onSuccess={(updated) => {
-            if (updated.desiredDeliveryDate) {
-              setOrder((prev) => (prev ? { ...prev, desiredDeliveryDate: updated.desiredDeliveryDate } : prev));
-            }
+            setOrder((prev) =>
+              prev
+                ? {
+                    ...prev,
+                    desiredDeliveryDate: updated.desiredDeliveryDate ?? prev.desiredDeliveryDate,
+                    entranceMemo: updated.entranceMemo ?? prev.entranceMemo,
+                    ecoFriendlyPackaging: updated.ecoFriendlyPackaging ?? prev.ecoFriendlyPackaging,
+                  }
+                : prev
+            );
           }}
         />
       </main>
