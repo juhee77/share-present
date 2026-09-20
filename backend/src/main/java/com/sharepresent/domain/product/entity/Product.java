@@ -53,6 +53,14 @@ public class Product {
     @Column(name = "is_custom", nullable = false)
     private Boolean isCustom = false;
 
+    @Builder.Default
+    @Column(name = "is_sold_out", nullable = false)
+    private Boolean isSoldOut = false;
+
+    @Builder.Default
+    @Column(name = "stock_quantity", nullable = false)
+    private Integer stockQuantity = 999;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id")
     private User owner;

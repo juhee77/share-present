@@ -35,5 +35,7 @@ public class CurationBoxResponse {
         private List<String> options;
         private Boolean isCustom;
         private String icon;
+        private Boolean isSoldOut;
+        private Integer stockQuantity;
     }
 }

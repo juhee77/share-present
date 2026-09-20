@@ -27,21 +27,33 @@ export default function ProductCard({
       product.brand + " " + product.name
     )}`;
 
+  const isSoldOut = !!product.isSoldOut;
+
+  const handleCardClick = () => {
+    if (isSoldOut) return;
+    onSelect();
+  };
+
   return (
     <div
-      tabIndex={0}
+      tabIndex={isSoldOut ? -1 : 0}
       role="checkbox"
       aria-checked={isSelected}
-      aria-label={`${product.brand} - ${product.name} 선물 선택`}
-      onClick={onSelect}
+      aria-disabled={isSoldOut}
+      aria-label={`${product.brand} - ${product.name} 선물 선택 ${isSoldOut ? "(품절)" : ""}`}
+      onClick={handleCardClick}
       onKeyDown={(e) => {
         if (e.key === "Enter" || e.key === " ") {
           e.preventDefault();
-          onSelect();
+          handleCardClick();
         }
       }}
-      className={`editorial-card cursor-pointer relative mb-5 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#3b483a]/40 ${
-        isSelected ? "ring-1.5 ring-[#3b483a] border-transparent" : "border-[#eae6df]"
+      className={`editorial-card relative mb-5 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#3b483a]/40 ${
+        isSoldOut
+          ? "opacity-60 cursor-not-allowed bg-[#f7f5f0] border-gray-300"
+          : isSelected
+          ? "cursor-pointer ring-1.5 ring-[#3b483a] border-transparent"
+          : "cursor-pointer border-[#eae6df]"
       }`}
     >
       {/* Product Image Aspect Frame */}
@@ -51,14 +63,18 @@ export default function ProductCard({
             src={product.imageUrl}
             alt={product.name}
             fill
-            className="object-cover transition-transform duration-700 hover:scale-103"
+            className={`object-cover transition-transform duration-700 ${isSoldOut ? "grayscale" : "hover:scale-103"}`}
             sizes="(max-width: 600px) 100vw, 600px"
           />
-          {product.isCustom && (
+          {isSoldOut ? (
+            <span className="absolute top-4 left-4 bg-[#7a7266] text-white text-[9px] uppercase tracking-widest font-extrabold px-2.5 py-1 rounded-md shadow-sm">
+              품절 / SOLD OUT
+            </span>
+          ) : product.isCustom ? (
             <span className="absolute top-4 left-4 bg-[#3b483a] text-white text-[9px] uppercase tracking-widest font-extrabold px-2.5 py-1 rounded-md shadow-sm">
               Custom proposal
             </span>
-          )}
+          ) : null}
         </div>
       )}
 

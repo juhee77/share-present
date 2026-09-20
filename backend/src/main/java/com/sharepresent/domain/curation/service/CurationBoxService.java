@@ -115,6 +115,8 @@ public class CurationBoxService {
                             .options(prod.getOptions())
                             .isCustom(prod.getIsCustom())
                             .icon(prod.getIcon())
+                            .isSoldOut(prod.getIsSoldOut() != null ? prod.getIsSoldOut() : false)
+                            .stockQuantity(prod.getStockQuantity() != null ? prod.getStockQuantity() : 999)
                             .build();
                 })
                 .toList();

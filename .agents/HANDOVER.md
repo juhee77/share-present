@@ -61,6 +61,7 @@
 - **5자리 우편번호(Zonecode) 및 도로명/지번 스마트 주소 자동완성 시뮬레이터 (`DeliveryDrawer.tsx`)**: 카카오 우편번호 서비스 스타일의 5자리 우편번호 및 도로명/지번/건물명 실시간 검색 및 자동 입력 지원.
 - **선물 카드 테마(`cardTheme`) 영속화 및 수령인 맞춤형 럭셔리 카드 렌더링 (`CurationBox.java`, `gift/[token]/page.tsx`)**: Ivory, Emerald, Noir, Rose 테마별 고유 배경/액센트/엠블럼 스타일 수령인 화면 동적 렌더링.
 - **선물 알림톡/문자 재발송 (`OrderController.java`, `OrderService.java`, `dashboard/page.tsx`)**: 발신자 대시보드에서 알림톡 미수신 수령인에게 원클릭 재발송 요청 API 및 실시간 토스트 피드백 지원.
+- **선물 아이템 품절(Sold-out) 및 재고 관리 (`Product.java`, `CurationBoxResponse.java`, `ProductCard.tsx`)**: `isSoldOut` 및 `stockQuantity` 필드 기반 품절 배지 표시, 흑백 오버레이 처리 및 선택 비활성화 방어 로직 완비.
 - **컨트롤러 계층 Bean Validation 400 Bad Request 방어 테스트 완비 (`OrderControllerTest`, `CurationBoxControllerTest`, `SupportInquiryControllerTest`)**: 유효성 검증 테스트 스위트 100% 그린 유지.
 
 ---

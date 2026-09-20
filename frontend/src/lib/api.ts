@@ -31,6 +31,8 @@ export interface ProductDto {
   options?: string[];
   isCustom?: boolean;
   icon?: string;
+  isSoldOut?: boolean;
+  stockQuantity?: number;
 }
 
 export interface CurationBoxResponse {
