@@ -109,6 +109,7 @@
 - `frontend/src/components/UnwrappingRibbon.tsx`: 3D 왁스 씰 개봉 애니메이션 컴포넌트
 - `frontend/src/components/PrintableGiftCardModal.tsx`: 인쇄/PDF 저장 지원 실물 엽서 카드 및 고해상도 QR 코드 생성기
 - `frontend/src/components/ConfettiEffect.tsx`: 골드/에메랄드/로즈 축하 컨페티 파티클 캔버스 효과
+- `frontend/src/components/ThankYouPhotoModal.tsx`: 수령인 실시간 언박싱 인증 포토 뷰어 & 답장 리액션 모달
 - `frontend/src/lib/api.ts`: 백엔드 REST API 연동 클라이언트 모듈
 
 ---

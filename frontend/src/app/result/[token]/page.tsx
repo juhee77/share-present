@@ -3,6 +3,7 @@
 import { use, useEffect, useState } from "react";
 import Header from "@/components/Header";
 import Link from "next/link";
+import ThankYouPhotoModal from "@/components/ThankYouPhotoModal";
 import { getOrderResult, OrderResponse } from "@/lib/api";
 import { useToast } from "@/context/ToastContext";
 
@@ -14,6 +15,7 @@ export default function OrderResultPage({ params }: { params: Promise<{ token: s
   const [order, setOrder] = useState<OrderResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [showReceiptModal, setShowReceiptModal] = useState(false);
+  const [showPhotoModal, setShowPhotoModal] = useState(false);
   const [receiptPhone, setReceiptPhone] = useState("");
 
   useEffect(() => {
@@ -34,6 +36,9 @@ export default function OrderResultPage({ params }: { params: Promise<{ token: s
           finalAmount: 38000,
           refundAmount: 22000,
           status: "COMPLETED",
+          thankYouSticker: "💖 취향저격 고마워!",
+          thankYouMessage: "예쁜 선물 골라줘서 너무 고마워! 오피스 머그로 너무 예쁘게 잘 쓸게 ☕",
+          thankYouPhotoUrl: "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=600&auto=format&fit=crop&q=80",
         });
       } finally {
         setLoading(false);
@@ -237,6 +242,57 @@ export default function OrderResultPage({ params }: { params: Promise<{ token: s
           </div>
         </section>
 
+        {/* Feature 4: Recipient Thank-You Reply Polaroid Card */}
+        {order.thankYouMessage && (
+          <section className="editorial-card p-5 mb-6 bg-gradient-to-br from-white to-[#faf7f2] border border-[#dedad0] shadow-sm">
+            <div className="flex items-center justify-between mb-3 border-b border-[#eae6df] pb-3">
+              <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#a38974] flex items-center gap-1.5">
+                <span>💌</span>
+                <span>수령인이 보낸 감사 편지 & 포토</span>
+              </span>
+              <span className="text-xs font-bold text-[#3b483a] bg-[#3b483a]/10 px-2.5 py-0.5 rounded-full">
+                {order.thankYouSticker || "💖 취향저격 고마워!"}
+              </span>
+            </div>
+
+            {order.thankYouPhotoUrl && (
+              <div
+                onClick={() => setShowPhotoModal(true)}
+                className="aspect-[16/10] relative rounded-2xl overflow-hidden bg-neutral-100 mb-3.5 border border-[#eae6df] cursor-pointer group shadow-inner"
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={order.thankYouPhotoUrl}
+                  alt="Thank you unboxing photo"
+                  className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
+                />
+                <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                  <span className="bg-white/90 text-[#1a1a1a] text-xs font-bold px-3 py-1.5 rounded-full shadow-md">
+                    🔍 사진 크게 보기
+                  </span>
+                </div>
+                <div className="absolute bottom-2.5 right-2.5 bg-black/60 text-white text-[10px] font-medium px-2 py-0.5 rounded-md backdrop-blur-xs">
+                  📸 실시간 언박싱 포토
+                </div>
+              </div>
+            )}
+
+            <div className="bg-[#faf9f6] p-3.5 rounded-xl border border-[#eae6df] mb-3">
+              <p className="text-xs text-[#2b2b2b] font-serif italic leading-relaxed">
+                &ldquo;{order.thankYouMessage}&rdquo;
+              </p>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setShowPhotoModal(true)}
+              className="w-full text-center py-2.5 text-xs font-bold text-[#3b483a] bg-[#3b483a]/5 hover:bg-[#3b483a]/10 rounded-xl transition-colors"
+            >
+              감사 포토 & 축하 카드 전체화면으로 열기 ✦
+            </button>
+          </section>
+        )}
+
         {/* Action Buttons */}
         <div className="space-y-3">
           <Link
@@ -335,6 +391,16 @@ export default function OrderResultPage({ params }: { params: Promise<{ token: s
             </div>
           </div>
         )}
+
+        {/* Thank You Photo Modal */}
+        <ThankYouPhotoModal
+          isOpen={showPhotoModal}
+          onClose={() => setShowPhotoModal(false)}
+          productName={order.selectedProductName}
+          sticker={order.thankYouSticker}
+          message={order.thankYouMessage}
+          photoUrl={order.thankYouPhotoUrl}
+        />
       </main>
     </div>
   );

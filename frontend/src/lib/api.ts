@@ -88,6 +88,9 @@ export interface OrderResponse {
   ecoFriendlyPackaging?: boolean;
   entranceMemo?: string;
   preDeliveryNotification?: boolean;
+  thankYouSticker?: string;
+  thankYouMessage?: string;
+  thankYouPhotoUrl?: string;
 }
 
 export async function createCurationBox(payload: CreateCurationBoxRequest): Promise<CurationBoxResponse> {

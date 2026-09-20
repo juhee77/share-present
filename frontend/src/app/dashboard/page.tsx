@@ -6,6 +6,7 @@ import Link from "next/link";
 import ShareModal from "@/components/ShareModal";
 import AlimtalkPreviewModal from "@/components/AlimtalkPreviewModal";
 import ReceiptDetailModal, { ReceiptDetailBox } from "@/components/ReceiptDetailModal";
+import ThankYouPhotoModal from "@/components/ThankYouPhotoModal";
 import { useToast } from "@/context/ToastContext";
 import { cancelGiftBox, resendGiftNotification, extendGiftExpiry } from "@/lib/api";
 
@@ -193,6 +194,7 @@ export default function SenderDashboardPage() {
   const [receivedBoxes] = useState<MockReceivedBox[]>(MOCK_RECEIVED_BOXES);
   const [shareModalBox, setShareModalBox] = useState<MockSentBox | null>(null);
   const [selectedReceiptBox, setSelectedReceiptBox] = useState<ReceiptDetailBox | null>(null);
+  const [selectedThankYouBox, setSelectedThankYouBox] = useState<MockSentBox | null>(null);
   const [alimtalkPreview, setAlimtalkPreview] = useState<{
     isOpen: boolean;
     senderName?: string;
@@ -456,7 +458,10 @@ export default function SenderDashboardPage() {
                 </div>
 
                 {box.thankYouMessage && (
-                  <div className="mb-4 p-4 bg-white rounded-2xl border border-[#dedad0] shadow-md relative overflow-hidden">
+                  <div
+                    onClick={() => setSelectedThankYouBox(box)}
+                    className="mb-4 p-4 bg-white rounded-2xl border border-[#dedad0] shadow-md relative overflow-hidden cursor-pointer hover:border-[#3b483a]/40 hover:shadow-lg transition-all group"
+                  >
                     <div className="flex items-center justify-between mb-2.5">
                       <span className="text-[9px] font-extrabold uppercase tracking-widest text-[#a38974] block">
                         💌 Recipient's Polaroid Thank-You Card
@@ -468,11 +473,17 @@ export default function SenderDashboardPage() {
 
                     {box.thankYouPhotoUrl && (
                       <div className="aspect-[16/10] relative rounded-xl overflow-hidden bg-gray-100 mb-3 border border-[#eae6df]">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
                           src={box.thankYouPhotoUrl}
                           alt="Thank you photo"
-                          className="object-cover w-full h-full"
+                          className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
                         />
+                        <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                          <span className="bg-white/95 text-[#1a1a1a] text-[11px] font-bold px-3 py-1 rounded-full shadow-md">
+                            🔍 언박싱 사진 크게 보기
+                          </span>
+                        </div>
                         <div className="absolute bottom-2 right-2 bg-black/60 text-white text-[9px] font-medium px-2 py-0.5 rounded-md backdrop-blur-xs">
                           📸 수령인 인증샷
                         </div>
@@ -482,6 +493,10 @@ export default function SenderDashboardPage() {
                     <p className="text-xs text-[#1a1a1a] font-serif leading-relaxed italic bg-[#faf9f6] p-3 rounded-xl border border-[#eae6df]">
                       "{box.thankYouMessage}"
                     </p>
+
+                    <div className="mt-2.5 text-center text-[10px] font-bold text-[#3b483a] group-hover:underline">
+                      감사 카드 & 언박싱 포토 전체화면으로 열기 ↗
+                    </div>
                   </div>
                 )}
 
@@ -666,6 +681,20 @@ export default function SenderDashboardPage() {
           box={selectedReceiptBox}
           onClose={() => setSelectedReceiptBox(null)}
         />
+
+        {/* Thank You Unboxing Photo & Memory Modal */}
+        {selectedThankYouBox && (
+          <ThankYouPhotoModal
+            isOpen={!!selectedThankYouBox}
+            onClose={() => setSelectedThankYouBox(null)}
+            recipientName="김수령"
+            productName={selectedThankYouBox.selectedProductName}
+            sticker={selectedThankYouBox.thankYouSticker}
+            message={selectedThankYouBox.thankYouMessage}
+            photoUrl={selectedThankYouBox.thankYouPhotoUrl}
+            date={selectedThankYouBox.createdAt}
+          />
+        )}
       </main>
     </div>
   );
