@@ -14,12 +14,56 @@ interface DeliveryDrawerProps {
   isSubmitting?: boolean;
 }
 
-const SAMPLE_ADDRESSES = [
-  "서울특별시 강남구 테헤란로 152 (강남파이낸스센터)",
-  "서울특별시 용산구 한남대로 91 (한남더힐)",
-  "서울특별시 성동구 성수일로 89 (성수 메타밸리)",
-  "경기도 성남시 분당구 판교역로 166 (카카오판교아지트)",
-  "부산광역시 해운대구 마린시티2로 33 (두산위브더제니스)",
+interface PostalAddress {
+  zonecode: string;
+  roadAddress: string;
+  jibunAddress: string;
+  buildingName: string;
+}
+
+const SAMPLE_POSTAL_DATA: PostalAddress[] = [
+  {
+    zonecode: "06236",
+    roadAddress: "서울특별시 강남구 테헤란로 152",
+    jibunAddress: "서울특별시 강남구 역삼동 737",
+    buildingName: "강남파이낸스센터",
+  },
+  {
+    zonecode: "04419",
+    roadAddress: "서울특별시 용산구 한남대로 91",
+    jibunAddress: "서울특별시 용산구 한남동 829",
+    buildingName: "한남더힐",
+  },
+  {
+    zonecode: "04782",
+    roadAddress: "서울특별시 성동구 성수일로 89",
+    jibunAddress: "서울특별시 성동구 성수동1가 656-335",
+    buildingName: "성수 메타밸리",
+  },
+  {
+    zonecode: "13529",
+    roadAddress: "경기도 성남시 분당구 판교역로 166",
+    jibunAddress: "경기도 성남시 분당구 백현동 532",
+    buildingName: "카카오판교아지트",
+  },
+  {
+    zonecode: "48119",
+    roadAddress: "부산광역시 해운대구 마린시티2로 33",
+    jibunAddress: "부산광역시 해운대구 우동 1407",
+    buildingName: "두산위브더제니스",
+  },
+  {
+    zonecode: "03045",
+    roadAddress: "서울특별시 종로구 삼청로 30",
+    jibunAddress: "서울특별시 종로구 소격동 165-10",
+    buildingName: "국립현대미술관 서울",
+  },
+  {
+    zonecode: "07241",
+    roadAddress: "서울특별시 영등포구 여의대로 108",
+    jibunAddress: "서울특별시 영등포구 여의도동 22",
+    buildingName: "더현대 서울",
+  },
 ];
 
 const DELIVERY_MEMOS = [
@@ -46,6 +90,7 @@ export default function DeliveryDrawer({
   );
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
+  const [zonecode, setZonecode] = useState("");
   const [baseAddress, setBaseAddress] = useState("");
   const [detailAddress, setDetailAddress] = useState("");
   const [entranceCode, setEntranceCode] = useState("");
@@ -68,9 +113,11 @@ export default function DeliveryDrawer({
     setPhone(formatted);
   };
 
-  const handleSelectSampleAddress = (addr: string) => {
-    setBaseAddress(addr);
+  const handleSelectPostalAddress = (item: PostalAddress) => {
+    setZonecode(item.zonecode);
+    setBaseAddress(`${item.roadAddress} (${item.buildingName})`);
     setShowAddressSearch(false);
+    showToast("우편번호와 기본 주소가 입력되었습니다. 상세 주소를 입력해주세요.", "info");
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -80,7 +127,9 @@ export default function DeliveryDrawer({
       return;
     }
 
-    const fullAddress = detailAddress.trim()
+    const fullAddress = zonecode.trim()
+      ? `[${zonecode.trim()}] ${baseAddress.trim()}${detailAddress.trim() ? " " + detailAddress.trim() : ""}`
+      : detailAddress.trim()
       ? `${baseAddress.trim()} ${detailAddress.trim()}`
       : baseAddress.trim();
 
@@ -101,8 +150,15 @@ export default function DeliveryDrawer({
   };
 
   const filteredAddresses = searchQuery.trim()
-    ? SAMPLE_ADDRESSES.filter((a) => a.includes(searchQuery.trim()))
-    : SAMPLE_ADDRESSES;
+    ? SAMPLE_POSTAL_DATA.filter(
+        (a) =>
+          a.roadAddress.includes(searchQuery.trim()) ||
+          a.jibunAddress.includes(searchQuery.trim()) ||
+          a.buildingName.includes(searchQuery.trim()) ||
+          a.zonecode.includes(searchQuery.trim())
+      )
+    : SAMPLE_POSTAL_DATA;
+
 
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 backdrop-blur-sm animate-fade-in">
@@ -208,7 +264,7 @@ export default function DeliveryDrawer({
             />
           </div>
 
-          {/* Street Address & Search */}
+          {/* Street Address & Postal Code Search */}
           <div>
             <div className="flex items-center justify-between mb-1">
               <label className="text-xs font-bold text-[#1a1a1a]">
@@ -217,45 +273,89 @@ export default function DeliveryDrawer({
               <button
                 type="button"
                 onClick={() => setShowAddressSearch(!showAddressSearch)}
-                className="text-[11px] font-bold text-[#3b483a] underline hover:opacity-80"
+                className="text-[11px] font-bold text-[#3b483a] bg-[#f2efe9] hover:bg-[#eae5dc] px-2 py-1 rounded transition-colors"
               >
-                {showAddressSearch ? "검색창 닫기 ▲" : "🔍 주소 검색 / 추천"}
+                {showAddressSearch ? "검색창 닫기 ▲" : "🔍 우편번호 / 주소 검색"}
               </button>
             </div>
 
             {/* Address Search Autocomplete Box */}
             {showAddressSearch && (
-              <div className="p-3 bg-white rounded-xl border border-[#3b483a]/30 mb-2.5 animate-fade-in shadow-inner">
-                <input
-                  type="text"
-                  placeholder="도로명 또는 동(예: 테헤란로, 한남대로, 성수일로)"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="input-editorial text-xs mb-2 py-2"
-                />
-                <div className="space-y-1 max-h-32 overflow-y-auto text-xs">
-                  {filteredAddresses.map((addr, i) => (
+              <div className="p-3.5 bg-white rounded-xl border border-[#3b483a]/30 mb-2.5 animate-fade-in shadow-md">
+                <div className="flex items-center gap-1.5 mb-2">
+                  <input
+                    type="text"
+                    placeholder="도로명, 건물명, 지번 검색 (예: 테헤란로, 한남더힐, 판교역로)"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="input-editorial text-xs py-2 flex-1"
+                    autoFocus
+                  />
+                  {searchQuery && (
                     <button
-                      key={i}
                       type="button"
-                      onClick={() => handleSelectSampleAddress(addr)}
-                      className="w-full text-left p-2 rounded-lg hover:bg-[#f6f4f0] text-[#333] truncate transition-colors text-[11px] block"
+                      onClick={() => setSearchQuery("")}
+                      className="text-xs text-[#8c887b] hover:text-black px-2 py-1"
                     >
-                      📍 {addr}
+                      ✕
                     </button>
-                  ))}
+                  )}
+                </div>
+
+                <div className="space-y-1.5 max-h-44 overflow-y-auto text-xs pr-1 scrollbar-thin">
+                  {filteredAddresses.length > 0 ? (
+                    filteredAddresses.map((item, i) => (
+                      <button
+                        key={i}
+                        type="button"
+                        onClick={() => handleSelectPostalAddress(item)}
+                        className="w-full text-left p-2.5 rounded-lg hover:bg-[#f6f4f0] text-[#333] transition-colors border border-transparent hover:border-[#eae6df] block group"
+                      >
+                        <div className="flex items-center justify-between">
+                          <span className="font-mono text-[10px] font-bold text-[#3b483a] bg-[#3b483a]/10 px-1.5 py-0.5 rounded">
+                            {item.zonecode}
+                          </span>
+                          <span className="text-[10px] text-[#a38974] font-medium group-hover:text-[#3b483a]">
+                            {item.buildingName}
+                          </span>
+                        </div>
+                        <div className="text-[11px] font-semibold text-[#1a1a1a] mt-1">
+                          {item.roadAddress}
+                        </div>
+                        <div className="text-[10px] text-[#7a7266] mt-0.5 truncate">
+                          [지번] {item.jibunAddress}
+                        </div>
+                      </button>
+                    ))
+                  ) : (
+                    <div className="py-4 text-center text-xs text-[#8c887b]">
+                      검색 결과가 없습니다. 도로명 또는 건물명을 확인해주세요.
+                    </div>
+                  )}
                 </div>
               </div>
             )}
 
-            <input
-              type="text"
-              placeholder="도로명 주소 (예: 서울특별시 강남구 테헤란로 152)"
-              value={baseAddress}
-              onChange={(e) => setBaseAddress(e.target.value)}
-              className="input-editorial text-xs mb-2"
-              required
-            />
+            {/* Postal Code & Base Address Row */}
+            <div className="flex gap-2 mb-2">
+              <input
+                type="text"
+                placeholder="우편번호"
+                value={zonecode}
+                onChange={(e) => setZonecode(e.target.value)}
+                className="input-editorial text-xs w-24 font-mono font-bold"
+                readOnly={!!zonecode}
+              />
+              <input
+                type="text"
+                placeholder="기본 도로명 주소 (예: 서울특별시 강남구 테헤란로 152)"
+                value={baseAddress}
+                onChange={(e) => setBaseAddress(e.target.value)}
+                className="input-editorial text-xs flex-1"
+                required
+              />
+            </div>
+
             <input
               type="text"
               placeholder="상세 주소 (동, 호수, 층수 등)"
@@ -271,6 +371,7 @@ export default function DeliveryDrawer({
               className="input-editorial text-xs placeholder:text-gray-400"
             />
           </div>
+
 
           {/* Delivery Memo */}
           <div>
