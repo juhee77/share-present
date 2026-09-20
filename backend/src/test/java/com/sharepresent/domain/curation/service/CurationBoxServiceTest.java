@@ -68,6 +68,7 @@ class CurationBoxServiceTest {
                 .minBudget(30000)
                 .maxBudget(60000)
                 .messageCard("생일 축하해!")
+                .cardTheme("emerald")
                 .allowCustomInput(true)
                 .productIds(List.of(10L))
                 .build();
@@ -87,6 +88,7 @@ class CurationBoxServiceTest {
         assertThat(response.getMinBudget()).isEqualTo(30000);
         assertThat(response.getMaxBudget()).isEqualTo(60000);
         assertThat(response.getMessageCard()).isEqualTo("생일 축하해!");
+        assertThat(response.getCardTheme()).isEqualTo("emerald");
         assertThat(response.getSenderName()).isEqualTo("주희");
         assertThat(response.getSharingToken()).isNotNull().hasSize(16);
     }

@@ -36,6 +36,10 @@ public class CurationBox {
     private String sharingToken;
 
     @Builder.Default
+    @Column(name = "card_theme", nullable = false)
+    private String cardTheme = "ivory";
+
+    @Builder.Default
     @Column(nullable = false)
     private String status = "CREATED";
 

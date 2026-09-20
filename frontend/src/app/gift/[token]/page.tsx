@@ -288,15 +288,51 @@ export default function RecipientGiftPage({ params }: { params: Promise<{ token:
         ) : (
           /* Gift Curation Selection Feed (Zero Price Exposure) */
           <>
-            {/* Sender Personal Card */}
-            <section className="editorial-card p-5 mb-5 relative overflow-hidden bg-white">
-              <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#a38974] block mb-1">
-                Personal Message from {boxData.senderName}
-              </span>
-              <p className="text-lg font-serif font-bold text-[#1a1a1a] mt-2 leading-relaxed border-t border-[#eae6df] pt-3">
-                "{boxData.messageCard}"
-              </p>
-            </section>
+            {/* Sender Personal Card with dynamic cardTheme styling */}
+            {(() => {
+              const theme = boxData.cardTheme || "ivory";
+              let cardBg = "bg-white border-[#eae6df]";
+              let tagColor = "text-[#a38974]";
+              let textColor = "text-[#1a1a1a]";
+              let borderColor = "border-[#eae6df]";
+              let iconEmoji = "💌";
+
+              if (theme === "emerald") {
+                cardBg = "bg-[#f2f7f3] border-[#2e5339]/30";
+                tagColor = "text-[#2e5339]";
+                textColor = "text-[#1a3322]";
+                borderColor = "border-[#2e5339]/20";
+                iconEmoji = "🌿";
+              } else if (theme === "noir") {
+                cardBg = "bg-[#1f2120] border-[#383a39] text-white shadow-xl";
+                tagColor = "text-[#c5a880]";
+                textColor = "text-[#f5f5f5]";
+                borderColor = "border-[#383a39]";
+                iconEmoji = "✦";
+              } else if (theme === "rose") {
+                cardBg = "bg-[#fff6f7] border-[#f8ccd6]";
+                tagColor = "text-[#b04a6b]";
+                textColor = "text-[#4a1828]";
+                borderColor = "border-[#f8ccd6]";
+                iconEmoji = "🌸";
+              }
+
+              return (
+                <section className={`editorial-card p-6 mb-5 relative overflow-hidden transition-all duration-500 shadow-sm ${cardBg}`}>
+                  <div className="flex items-center justify-between mb-2">
+                    <span className={`text-[10px] font-extrabold uppercase tracking-widest block ${tagColor}`}>
+                      {iconEmoji} Personal Message from {boxData.senderName}
+                    </span>
+                    <span className="text-[10px] font-mono uppercase tracking-wider opacity-60">
+                      {theme} edition
+                    </span>
+                  </div>
+                  <p className={`text-lg font-serif font-bold ${textColor} mt-2 leading-relaxed border-t ${borderColor} pt-3.5`}>
+                    "{boxData.messageCard}"
+                  </p>
+                </section>
+              );
+            })()}
 
             <div className="flex items-center justify-between mb-3 px-1">
               <span className="text-xs font-extrabold uppercase tracking-widest text-[#1a1a1a]">

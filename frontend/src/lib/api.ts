@@ -14,6 +14,7 @@ export interface CreateCurationBoxRequest {
   minBudget: number;
   maxBudget: number;
   messageCard: string;
+  cardTheme?: "ivory" | "emerald" | "noir" | "rose" | string;
   allowCustomInput: boolean;
   productIds: number[];
   customProducts?: CustomProductPayload[];
@@ -36,6 +37,7 @@ export interface CurationBoxResponse {
   id: number;
   senderName: string;
   messageCard: string;
+  cardTheme?: "ivory" | "emerald" | "noir" | "rose" | string;
   minBudget: number;
   maxBudget: number;
   sharingToken: string;

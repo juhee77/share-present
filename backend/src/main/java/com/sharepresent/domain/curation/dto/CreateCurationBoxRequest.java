@@ -23,6 +23,8 @@ public class CreateCurationBoxRequest {
 
     private String messageCard;
 
+    private String cardTheme;
+
     private Boolean allowCustomInput;
 
     private List<Long> productIds;

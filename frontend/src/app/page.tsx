@@ -341,6 +341,7 @@ export default function CreateGiftPage() {
         minBudget,
         maxBudget,
         messageCard,
+        cardTheme,
         allowCustomInput,
         productIds: selectedProductIds,
         customProducts: customProductsPayload,
