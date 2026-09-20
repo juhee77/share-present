@@ -113,6 +113,7 @@
 - `frontend/src/components/RollingPaperSection.tsx`: 공동 발신자 롤링페이퍼 축하 카드 갤러리 컴포넌트
 - `frontend/src/components/RollingPaperModal.tsx`: 공동 발신자 롤링페이퍼 축하 메시지 작성 모달
 - `frontend/src/components/TasteSurveyModal.tsx`: 수령인 30초 취향 분석 퀴즈 & 맞춤 선물 1위 하이라이트 모달
+- `frontend/src/components/GroupSplitModal.tsx`: 1/N 공동 발신자 예산 분할 정산 시뮬레이터 및 카카오톡 메시지 복사 모달
 - `frontend/src/lib/sound.ts`: Web Audio API 기반 무의존 럭셔리 인터랙션 음향(왁스씰 브레이크, 차임벨, 샴페인 팝) 신시사이저
 - `frontend/src/lib/api.ts`: 백엔드 REST API 연동 클라이언트 모듈
 

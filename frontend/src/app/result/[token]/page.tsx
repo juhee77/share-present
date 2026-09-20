@@ -4,6 +4,7 @@ import { use, useEffect, useState } from "react";
 import Header from "@/components/Header";
 import Link from "next/link";
 import ThankYouPhotoModal from "@/components/ThankYouPhotoModal";
+import GroupSplitModal from "@/components/GroupSplitModal";
 import { getOrderResult, OrderResponse } from "@/lib/api";
 import { useToast } from "@/context/ToastContext";
 
@@ -16,6 +17,7 @@ export default function OrderResultPage({ params }: { params: Promise<{ token: s
   const [loading, setLoading] = useState(true);
   const [showReceiptModal, setShowReceiptModal] = useState(false);
   const [showPhotoModal, setShowPhotoModal] = useState(false);
+  const [showSplitModal, setShowSplitModal] = useState(false);
   const [receiptPhone, setReceiptPhone] = useState("");
 
   useEffect(() => {
@@ -303,6 +305,13 @@ export default function OrderResultPage({ params }: { params: Promise<{ token: s
           </Link>
 
           <button
+            onClick={() => setShowSplitModal(true)}
+            className="btn-editorial-outline py-3.5 text-xs font-bold uppercase tracking-wider w-full"
+          >
+            공동 선물 1/N 분할 정산 계산기 👥
+          </button>
+
+          <button
             onClick={handleDownloadReceiptImage}
             className="btn-editorial-outline py-3.5 text-xs font-bold uppercase tracking-widest text-center block w-full"
           >
@@ -400,6 +409,15 @@ export default function OrderResultPage({ params }: { params: Promise<{ token: s
           sticker={order.thankYouSticker}
           message={order.thankYouMessage}
           photoUrl={order.thankYouPhotoUrl}
+        />
+
+        {/* Group Split Co-Funding Modal */}
+        <GroupSplitModal
+          isOpen={showSplitModal}
+          onClose={() => setShowSplitModal(false)}
+          totalAmount={order.finalAmount}
+          productName={order.selectedProductName}
+          brandName={order.selectedProductBrand}
         />
       </main>
     </div>
