@@ -279,6 +279,43 @@ public class OrderService {
         return convertToResponse(savedOrder);
     }
 
+    /**
+     * 발신자가 대시보드에서 알림톡 미수신 수령인에게 알림톡/문자 재발송 요청
+     */
+    @Transactional
+    public OrderResponse resendGiftNotification(String sharingToken) {
+        CurationBox box = curationBoxRepository.findBySharingToken(sharingToken)
+                .orElseThrow(() -> new IllegalArgumentException("선물 박스를 찾을 수 없습니다. Token: " + sharingToken));
+
+        Order order = orderRepository.findByCurationBoxId(box.getId())
+                .orElseGet(() -> {
+                    // 미결제 상태인 경우 기본 응답 객체 생성
+                    return Order.builder()
+                            .curationBox(box)
+                            .sender(box.getSender())
+                            .totalAmount(box.getMaxBudget())
+                            .shippingStatus("WAITING")
+                            .build();
+                });
+
+        String recipientPhone = order.getRecipientPhone();
+        String recipientName = order.getRecipientName();
+        if (recipientPhone == null || recipientPhone.isBlank()) {
+            recipientPhone = order.getSender() != null ? order.getSender().getPhoneNumber() : "010-0000-0000";
+            recipientName = "소중한 분";
+        }
+
+        String giftUrl = "https://sharepresent.app/gift/" + sharingToken;
+        kakaoNotificationService.sendGiftCreatedNotification(
+                recipientPhone,
+                order.getSender() != null ? order.getSender().getNickname() : "주희",
+                recipientName,
+                giftUrl
+        );
+
+        return convertToResponse(order);
+    }
+
     private void triggerActualPaymentCancel(String paymentKey, int cancelAmount) {
         // PG사 REST cancel API 호출 모킹 (실제 개발 스프린트 2단계에서 구현 예정)
         System.out.printf("[Toss Payments API] Settle complete. Succeeded in partial refund. Key: %s, Refunded: %d KRW\n", paymentKey, cancelAmount);

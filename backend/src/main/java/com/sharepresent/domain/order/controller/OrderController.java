@@ -50,4 +50,11 @@ public class OrderController {
         OrderResponse response = orderService.cancelAndRefundGiftBox(sharingToken);
         return ResponseEntity.ok(response);
     }
+
+    @PostMapping("/resend-notification/{sharingToken}")
+    @Operation(summary = "선물 알림톡/문자 재발송", description = "발신자가 대시보드에서 수령인에게 선물 도착 안내 알림톡을 다시 발송합니다.")
+    public ResponseEntity<OrderResponse> resendGiftNotification(@PathVariable("sharingToken") String sharingToken) {
+        OrderResponse response = orderService.resendGiftNotification(sharingToken);
+        return ResponseEntity.ok(response);
+    }
 }

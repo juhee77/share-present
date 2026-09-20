@@ -141,4 +141,31 @@ public class KakaoNotificationService {
         log.info("[Kakao Alimtalk Thank You Card Sent to Sender ({}) - MsgId: {}]\n{}", senderPhone, response.getMessageId(), message);
         return response.isSuccess();
     }
+
+    /**
+     * 선물 상자 최초 발송 또는 재발송 시 수령인에게 발송하는 선물 도착 알림톡
+     */
+    public boolean sendGiftCreatedNotification(String receiverPhone, String senderName, String receiverName, String giftLink) {
+        String message = String.format(
+                "[SharePresent 알림톡] 🎁\n\n" +
+                "안녕하세요, %s님!\n" +
+                "%s님이 소중한 마음을 담아 고른 선물 상자를 보내셨습니다.\n\n" +
+                "• 선물 링크: %s\n\n" +
+                "원하시는 취향의 옵션과 배송지를 입력해 주시면 예쁘게 포장하여 전해드립니다 ✦",
+                receiverName, senderName, giftLink
+        );
+
+        AlimtalkSendResponse response = alimtalkGatewayClient.dispatch(AlimtalkSendRequest.builder()
+                .recipientPhone(receiverPhone)
+                .templateCode("SP_GIFT_INVITATION_V1")
+                .title("선물 상자 도착 안내")
+                .message(message)
+                .buttonName("선물 확인하기")
+                .buttonUrl(giftLink)
+                .build());
+
+        log.info("[Kakao Alimtalk Invitation Sent to Recipient ({}) - MsgId: {}]\n{}", receiverPhone, response.getMessageId(), message);
+        return response.isSuccess();
+    }
 }
+

@@ -148,4 +148,23 @@ class OrderControllerTest {
                 .andExpect(jsonPath("$.refundAmount").value(60000))
                 .andExpect(jsonPath("$.shippingStatus").value("CANCELLED_REFUNDED"));
     }
+
+    @Test
+    @DisplayName("POST /api/v1/orders/resend-notification/{sharingToken} - 선물 알림톡 재발송 성공")
+    void resendGiftNotification_success() throws Exception {
+        // given
+        OrderResponse mockResponse = OrderResponse.builder()
+                .orderId(1L)
+                .lockedAmount(60000)
+                .shippingStatus("WAITING")
+                .build();
+
+        given(orderService.resendGiftNotification("sample-token")).willReturn(mockResponse);
+
+        // when & then
+        mockMvc.perform(post("/api/v1/orders/resend-notification/sample-token"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.orderId").value(1))
+                .andExpect(jsonPath("$.shippingStatus").value("WAITING"));
+    }
 }

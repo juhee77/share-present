@@ -6,7 +6,7 @@ import Link from "next/link";
 import ShareModal from "@/components/ShareModal";
 import AlimtalkPreviewModal from "@/components/AlimtalkPreviewModal";
 import { useToast } from "@/context/ToastContext";
-import { cancelGiftBox } from "@/lib/api";
+import { cancelGiftBox, resendGiftNotification } from "@/lib/api";
 
 interface MockSentBox {
   id: number;
@@ -203,6 +203,15 @@ export default function SenderDashboardPage() {
 
   const handleSendReminder = (box: MockSentBox) => {
     showToast(`수령인에게 선물 수락 리마인더 알림톡이 성공적으로 재전송되었습니다! 💌 (남은 기한: D-5)`, "success");
+  };
+
+  const handleResendNotification = async (box: MockSentBox) => {
+    try {
+      await resendGiftNotification(box.token);
+    } catch (err) {
+      console.error(err);
+    }
+    showToast(`수령인에게 선물 도착 안내 알림톡이 다시 전송되었습니다! 💌`, "success");
   };
 
   const handleCancelGift = async (box: MockSentBox) => {
@@ -527,11 +536,19 @@ export default function SenderDashboardPage() {
                 </div>
 
                 {box.status === "WAITING" && (
-                  <div className="mt-2.5 text-right">
+                  <div className="mt-2.5 flex items-center justify-between text-[11px]">
+                    <button
+                      type="button"
+                      onClick={() => handleResendNotification(box)}
+                      className="text-[#3b483a] hover:underline font-semibold flex items-center gap-1 transition-colors"
+                    >
+                      <span>🔄</span>
+                      <span>알림톡 재전송</span>
+                    </button>
                     <button
                       type="button"
                       onClick={() => handleCancelGift(box)}
-                      className="text-[10px] text-gray-400 hover:text-red-600 font-medium underline underline-offset-2 transition-colors"
+                      className="text-gray-400 hover:text-red-600 font-medium underline underline-offset-2 transition-colors text-[10px]"
                     >
                       선물 취소 및 전액 환불
                     </button>

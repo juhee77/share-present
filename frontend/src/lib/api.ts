@@ -132,6 +132,16 @@ export async function cancelGiftBox(token: string): Promise<OrderResponse> {
   return res.json();
 }
 
+export async function resendGiftNotification(sharingToken: string): Promise<OrderResponse> {
+  const res = await fetch(`${BASE_URL}/orders/resend-notification/${sharingToken}`, {
+    method: "POST",
+  });
+  if (!res.ok) {
+    throw new Error("알림톡 재발송에 실패했습니다.");
+  }
+  return res.json();
+}
+
 export async function fetchProducts(keyword?: string, minBudget?: number, maxBudget?: number, category?: string, sort?: string): Promise<ProductDto[]> {
   const params = new URLSearchParams();
   if (keyword) params.append("keyword", keyword);

@@ -57,6 +57,10 @@
 - **카카오 알림톡 알림 엔진 확장 (`KakaoNotificationService.java`, `KakaoNotificationServiceTest.java`)**: 선물 수락 D-Day 리마인더 알림톡 및 수령인 포토/감사 카드 도착 알림톡 발송 기능 및 테스트 완비.
 - **수령인 완료 화면 선택 내역 요약 및 배송 링크 복사 (`gift/[token]/page.tsx`)**: 수령인이 주소지 입력 완료 시 선택한 브랜드/상품명/옵션 요약 카드 및 1-Click 실시간 배송 조회 링크 복사 버튼 연동 (가격 100% 비노출 원칙 유지).
 - **보낸 사람 선물 상자 직접 취소 & 전액 즉시 환불 (`OrderController.java`, `OrderService.java`, `dashboard/page.tsx`)**: 수령인이 수락하기 전 송신자가 대시보드에서 선물 상자를 직접 취소하고 가승인된 최대 예산 한도를 100% 즉시 자동 환불 처리(`CANCELLED_REFUNDED`).
+- **다국어(i18n) 럭셔리 룩북 모드 (`LanguageContext.tsx`, `Header.tsx`, `layout.tsx`)**: 한국어(KR) / 영어(EN) 글로벌 원클릭 토글 및 네비게이션/공통 UI 사전 딕셔너리 연동.
+- **5자리 우편번호(Zonecode) 및 도로명/지번 스마트 주소 자동완성 시뮬레이터 (`DeliveryDrawer.tsx`)**: 카카오 우편번호 서비스 스타일의 5자리 우편번호 및 도로명/지번/건물명 실시간 검색 및 자동 입력 지원.
+- **선물 카드 테마(`cardTheme`) 영속화 및 수령인 맞춤형 럭셔리 카드 렌더링 (`CurationBox.java`, `gift/[token]/page.tsx`)**: Ivory, Emerald, Noir, Rose 테마별 고유 배경/액센트/엠블럼 스타일 수령인 화면 동적 렌더링.
+- **선물 알림톡/문자 재발송 (`OrderController.java`, `OrderService.java`, `dashboard/page.tsx`)**: 발신자 대시보드에서 알림톡 미수신 수령인에게 원클릭 재발송 요청 API 및 실시간 토스트 피드백 지원.
 - **컨트롤러 계층 Bean Validation 400 Bad Request 방어 테스트 완비 (`OrderControllerTest`, `CurationBoxControllerTest`, `SupportInquiryControllerTest`)**: 유효성 검증 테스트 스위트 100% 그린 유지.
 
 ---
