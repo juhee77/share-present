@@ -211,6 +211,7 @@ export default function CreateGiftPage() {
     "생일 축하해! 마음에 드는 선물 하나 골라주면 주소지로 바로 보내줄게 🎁"
   );
   const [cardTheme, setCardTheme] = useState<"ivory" | "emerald" | "noir" | "rose">("ivory");
+  const [fontStyle, setFontStyle] = useState<"serif" | "handwriting" | "sans" | "mono">("serif");
   
   // Double-bound budget range states
   const [minBudget, setMinBudget] = useState(30000);
@@ -342,6 +343,7 @@ export default function CreateGiftPage() {
         maxBudget,
         messageCard,
         cardTheme,
+        fontStyle,
         allowCustomInput,
         productIds: selectedProductIds,
         customProducts: customProductsPayload,
@@ -505,6 +507,35 @@ export default function CreateGiftPage() {
                     }`}
                   >
                     <span>{cardTheme === item.id ? "✓" : "✦"}</span>
+                    <span>{item.label}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Font Style Typography Selector */}
+            <div>
+              <label className="block text-[11px] font-bold text-[#5e605d] uppercase tracking-wider mb-1.5">
+                카드 폰트 스타일 (Typography)
+              </label>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                {[
+                  { id: "serif" as const, label: "클래식 세리프", fontClass: "font-serif italic" },
+                  { id: "handwriting" as const, label: "감성 손글씨", fontClass: "font-serif font-medium tracking-wide" },
+                  { id: "sans" as const, label: "모던 산스", fontClass: "font-sans font-bold" },
+                  { id: "mono" as const, label: "빈티지 타자기", fontClass: "font-mono font-semibold" },
+                ].map((item) => (
+                  <button
+                    key={item.id}
+                    type="button"
+                    onClick={() => setFontStyle(item.id)}
+                    className={`py-2 px-2 rounded-xl border text-[11px] flex items-center justify-center gap-1 transition-all ${
+                      fontStyle === item.id
+                        ? "bg-[#3b483a] text-white border-[#3b483a] shadow-sm font-bold"
+                        : "bg-white text-[#5e605d] border-[#eae6df] hover:border-[#3b483a]"
+                    } ${item.fontClass}`}
+                  >
+                    <span>{fontStyle === item.id ? "✓" : "Aa"}</span>
                     <span>{item.label}</span>
                   </button>
                 ))}

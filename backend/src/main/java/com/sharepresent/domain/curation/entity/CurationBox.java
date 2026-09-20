@@ -40,6 +40,10 @@ public class CurationBox {
     private String cardTheme = "ivory";
 
     @Builder.Default
+    @Column(name = "font_style", nullable = false)
+    private String fontStyle = "serif";
+
+    @Builder.Default
     @Column(nullable = false)
     private String status = "CREATED";
 

@@ -317,6 +317,16 @@ export default function RecipientGiftPage({ params }: { params: Promise<{ token:
                 iconEmoji = "🌸";
               }
 
+              const fontStyle = boxData.fontStyle || "serif";
+              let messageFontClass = "font-serif font-bold";
+              if (fontStyle === "handwriting") {
+                messageFontClass = "font-serif font-medium tracking-wide italic";
+              } else if (fontStyle === "sans") {
+                messageFontClass = "font-sans font-bold";
+              } else if (fontStyle === "mono") {
+                messageFontClass = "font-mono font-semibold tracking-tight";
+              }
+
               return (
                 <section className={`editorial-card p-6 mb-5 relative overflow-hidden transition-all duration-500 shadow-sm ${cardBg}`}>
                   <div className="flex items-center justify-between mb-2">
@@ -327,7 +337,7 @@ export default function RecipientGiftPage({ params }: { params: Promise<{ token:
                       {theme} edition
                     </span>
                   </div>
-                  <p className={`text-lg font-serif font-bold ${textColor} mt-2 leading-relaxed border-t ${borderColor} pt-3.5`}>
+                  <p className={`text-lg ${messageFontClass} ${textColor} mt-2 leading-relaxed border-t ${borderColor} pt-3.5`}>
                     "{boxData.messageCard}"
                   </p>
                 </section>

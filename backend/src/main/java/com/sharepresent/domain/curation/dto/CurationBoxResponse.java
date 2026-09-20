@@ -13,6 +13,7 @@ public class CurationBoxResponse {
     private String senderName;
     private String messageCard;
     private String cardTheme;
+    private String fontStyle;
     private Integer minBudget;
     private Integer maxBudget;
     private String sharingToken;

@@ -25,6 +25,8 @@ public class CreateCurationBoxRequest {
 
     private String cardTheme;
 
+    private String fontStyle;
+
     private Boolean allowCustomInput;
 
     private List<Long> productIds;
