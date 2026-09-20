@@ -113,4 +113,27 @@ class CurationBoxServiceTest {
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("최소 예산이 최대 예산보다 클 수 없습니다.");
     }
+
+    @Test
+    @DisplayName("선물 수령 PIN 번호 검증 - 일치할 경우 true 반환")
+    void verifyClaimPin_validPin_returnsTrue() {
+        // given
+        CurationBox box = CurationBox.builder()
+                .id(100L)
+                .sharingToken("pin-token-1234")
+                .claimPin("1234")
+                .minBudget(30000)
+                .maxBudget(50000)
+                .build();
+
+        given(curationBoxRepository.findBySharingToken("pin-token-1234")).willReturn(Optional.of(box));
+
+        // when
+        boolean isValid = curationBoxService.verifyClaimPin("pin-token-1234", "1234");
+        boolean isInvalid = curationBoxService.verifyClaimPin("pin-token-1234", "9999");
+
+        // then
+        assertThat(isValid).isTrue();
+        assertThat(isInvalid).isFalse();
+    }
 }

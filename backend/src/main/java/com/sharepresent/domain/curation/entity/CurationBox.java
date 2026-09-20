@@ -47,6 +47,9 @@ public class CurationBox {
     @Column(name = "packaging_style", nullable = false)
     private String packagingStyle = "STANDARD";
 
+    @Column(name = "claim_pin", length = 10)
+    private String claimPin;
+
     @Builder.Default
     @Column(nullable = false)
     private String status = "CREATED";

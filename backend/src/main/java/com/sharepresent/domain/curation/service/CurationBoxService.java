@@ -46,6 +46,7 @@ public class CurationBoxService {
                 .cardTheme(request.getCardTheme() != null ? request.getCardTheme() : "ivory")
                 .fontStyle(request.getFontStyle() != null ? request.getFontStyle() : "serif")
                 .packagingStyle(request.getPackagingStyle() != null ? request.getPackagingStyle() : "STANDARD")
+                .claimPin(request.getClaimPin())
                 .sharingToken(token)
                 .allowCustomInput(request.getAllowCustomInput() != null && request.getAllowCustomInput())
                 .status("CREATED")
@@ -102,6 +103,16 @@ public class CurationBoxService {
         return convertToResponse(box);
     }
 
+    public boolean verifyClaimPin(String sharingToken, String pin) {
+        CurationBox box = curationBoxRepository.findBySharingToken(sharingToken)
+                .orElseThrow(() -> new IllegalArgumentException("선물 박스를 찾을 수 없습니다. Token: " + sharingToken));
+        
+        if (box.getClaimPin() == null || box.getClaimPin().trim().isEmpty()) {
+            return true;
+        }
+        return box.getClaimPin().trim().equals(pin != null ? pin.trim() : "");
+    }
+
     private CurationBoxResponse convertToResponse(CurationBox box) {
         List<CurationBoxResponse.ProductDto> itemDtos = box.getItems().stream()
                 .map(item -> {
@@ -130,6 +141,7 @@ public class CurationBoxService {
                 .cardTheme(box.getCardTheme())
                 .fontStyle(box.getFontStyle())
                 .packagingStyle(box.getPackagingStyle())
+                .hasPinSecurity(box.getClaimPin() != null && !box.getClaimPin().trim().isEmpty())
                 .minBudget(box.getMinBudget())
                 .maxBudget(box.getMaxBudget())
                 .sharingToken(box.getSharingToken())

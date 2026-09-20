@@ -33,4 +33,16 @@ public class CurationBoxController {
         CurationBoxResponse response = curationBoxService.getCurationBoxByToken(token);
         return ResponseEntity.ok(response);
     }
+
+    @PostMapping("/verify-pin/{token}")
+    @Operation(summary = "선물 수령 PIN 번호 검증", description = "수령인이 선물 상자 개봉을 위해 입력한 4자리 PIN 번호의 일치 여부를 검증합니다.")
+    public ResponseEntity<java.util.Map<String, Object>> verifyPin(
+            @PathVariable("token") String token,
+            @Valid @RequestBody com.sharepresent.domain.curation.dto.VerifyPinRequest request) {
+        boolean isValid = curationBoxService.verifyClaimPin(token, request.getPin());
+        return ResponseEntity.ok(java.util.Map.of(
+                "valid", isValid,
+                "message", isValid ? "PIN 번호가 일치합니다." : "PIN 번호가 일치하지 않습니다."
+        ));
+    }
 }

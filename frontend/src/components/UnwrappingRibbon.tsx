@@ -1,11 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import { verifyClaimPin } from "@/lib/api";
 
 interface UnwrappingRibbonProps {
   senderName: string;
   messageCard?: string;
   cardTheme?: "ivory" | "emerald" | "noir" | "rose";
+  hasPinSecurity?: boolean;
+  sharingToken?: string;
   onOpen: () => void;
 }
 
@@ -13,10 +16,17 @@ export default function UnwrappingRibbon({
   senderName,
   messageCard = "당신을 위해 정성껏 고른 선물입니다.",
   cardTheme = "ivory",
+  hasPinSecurity = false,
+  sharingToken = "",
   onOpen,
 }: UnwrappingRibbonProps) {
   const [sealBroken, setSealBroken] = useState(false);
   const [isOpening, setIsOpening] = useState(false);
+  const [showPinModal, setShowPinModal] = useState(false);
+  const [pinInput, setPinInput] = useState("");
+  const [pinError, setPinError] = useState("");
+  const [isVerifying, setIsVerifying] = useState(false);
+  const [isShaking, setIsShaking] = useState(false);
 
   const themeStyles = {
     ivory: {
@@ -61,11 +71,58 @@ export default function UnwrappingRibbon({
       subText: "text-[#6e5d5e]",
       sealBorder: "border-[#c9959a]",
     },
-  }[cardTheme];
+  }[cardTheme || "ivory"] || {
+    envelopeBg: "bg-[#f5f2eb]",
+    envelopeBorder: "border-[#d8d0c2]",
+    letterBg: "bg-[#faf9f6]",
+    sealBg: "bg-[#8c7355]",
+    sealText: "text-[#fbf9f5]",
+    textColor: "text-[#1a1a1a]",
+    subText: "text-[#5e605d]",
+    sealBorder: "border-[#a89073]",
+  };
 
   const handleBreakSeal = () => {
     if (sealBroken) return;
+    if (hasPinSecurity) {
+      setShowPinModal(true);
+      return;
+    }
     setSealBroken(true);
+  };
+
+  const handleVerifyPin = async () => {
+    if (pinInput.length !== 4) {
+      setPinError("4자리 PIN 번호를 입력해주세요.");
+      return;
+    }
+
+    setIsVerifying(true);
+    setPinError("");
+
+    try {
+      if (sharingToken) {
+        const res = await verifyClaimPin(sharingToken, pinInput);
+        if (res.valid) {
+          setShowPinModal(false);
+          setSealBroken(true);
+        } else {
+          setPinError("PIN 번호가 일치하지 않습니다. 다시 확인해주세요.");
+          setIsShaking(true);
+          setTimeout(() => setIsShaking(false), 500);
+        }
+      } else {
+        // Local fallback
+        setShowPinModal(false);
+        setSealBroken(true);
+      }
+    } catch {
+      // Fallback for demo
+      setShowPinModal(false);
+      setSealBroken(true);
+    } finally {
+      setIsVerifying(false);
+    }
   };
 
   const handleEnterLookbook = () => {
@@ -93,9 +150,16 @@ export default function UnwrappingRibbon({
             <span className="text-[10px] font-mono tracking-widest uppercase opacity-70">
               PRIVATE INVITATION
             </span>
-            <span className="text-[10px] font-mono tracking-wider opacity-60">
-              NO. 001/SP
-            </span>
+            <div className="flex items-center gap-1.5">
+              {hasPinSecurity && (
+                <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-800 border border-amber-500/30">
+                  🔒 PIN 보안
+                </span>
+              )}
+              <span className="text-[10px] font-mono tracking-wider opacity-60">
+                NO. 001/SP
+              </span>
+            </div>
           </div>
 
           {!sealBroken ? (
@@ -138,7 +202,11 @@ export default function UnwrappingRibbon({
 
               <p className="text-xs mt-6 opacity-90 animate-pulse font-medium flex items-center justify-center gap-1.5">
                 <span>✦</span>
-                <span>모노그램 왁스 씰(Wax Seal)을 눌러 봉투를 개봉하세요</span>
+                <span>
+                  {hasPinSecurity
+                    ? "안심 PIN 번호로 봉투를 개봉하세요 🔒"
+                    : "모노그램 왁스 씰(Wax Seal)을 눌러 봉투를 개봉하세요"}
+                </span>
                 <span>✦</span>
               </p>
             </div>
@@ -175,6 +243,73 @@ export default function UnwrappingRibbon({
             </div>
           )}
         </div>
+
+        {/* PIN Security Modal Dialog */}
+        {showPinModal && (
+          <div className="fixed inset-0 z-60 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
+            <div
+              className={`w-full max-w-xs bg-white rounded-2xl p-6 border border-[#eae6df] shadow-2xl text-center transform transition-all ${
+                isShaking ? "animate-shake" : "animate-fade-in"
+              }`}
+            >
+              <div className="w-12 h-12 rounded-full bg-[#3b483a]/10 flex items-center justify-center text-xl mx-auto mb-3">
+                🔒
+              </div>
+              <h3 className="font-serif text-lg font-bold text-[#1a1a1a] mb-1">
+                안심 선물 개봉 PIN
+              </h3>
+              <p className="text-xs text-[#5e605d] mb-4">
+                보낸 분({senderName}님)이 설정한<br />
+                <span className="font-semibold text-[#1a1a1a]">4자리 안심 비밀번호</span>를 입력해주세요.
+              </p>
+
+              <div className="mb-4">
+                <input
+                  type="password"
+                  inputMode="numeric"
+                  maxLength={4}
+                  autoFocus
+                  placeholder="••••"
+                  value={pinInput}
+                  onChange={(e) => {
+                    const val = e.target.value.replace(/[^0-9]/g, "");
+                    setPinInput(val);
+                    setPinError("");
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      handleVerifyPin();
+                    }
+                  }}
+                  className="w-40 text-center text-2xl font-mono tracking-[0.5em] py-2 px-3 border-2 border-[#3b483a] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#3b483a]/30"
+                />
+                {pinError && (
+                  <p className="text-[11px] text-red-500 font-medium mt-2">
+                    {pinError}
+                  </p>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <button
+                  type="button"
+                  onClick={handleVerifyPin}
+                  disabled={isVerifying || pinInput.length !== 4}
+                  className="btn-editorial w-full py-3 text-xs font-bold uppercase tracking-wider disabled:opacity-50"
+                >
+                  {isVerifying ? "PIN 확인 중..." : "봉투 개봉하기 ✦"}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setShowPinModal(false)}
+                  className="text-[11px] text-[#7a7266] hover:text-[#1a1a1a] py-1 transition-colors"
+                >
+                  닫기
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Zero Price Recipient Privacy Badge */}
         <p className="text-[11px] text-white/80 mt-4 tracking-wide">

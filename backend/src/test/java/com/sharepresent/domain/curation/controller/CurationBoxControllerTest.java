@@ -106,4 +106,24 @@ class CurationBoxControllerTest {
                 .andExpect(jsonPath("$.senderName").value("주희"))
                 .andExpect(jsonPath("$.messageCard").value("특별한 날을 축하해!"));
     }
+
+    @Test
+    @DisplayName("POST /api/v1/curation-boxes/verify-pin/{token} - 수령인 PIN 번호 검증 성공")
+    void verifyPin_success() throws Exception {
+        // given
+        com.sharepresent.domain.curation.dto.VerifyPinRequest request =
+                com.sharepresent.domain.curation.dto.VerifyPinRequest.builder()
+                        .pin("1234")
+                        .build();
+
+        given(curationBoxService.verifyClaimPin("valid-token", "1234")).willReturn(true);
+
+        // when & then
+        mockMvc.perform(post("/api/v1/curation-boxes/verify-pin/valid-token")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.valid").value(true))
+                .andExpect(jsonPath("$.message").value("PIN 번호가 일치합니다."));
+    }
 }

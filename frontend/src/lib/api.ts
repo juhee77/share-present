@@ -17,6 +17,7 @@ export interface CreateCurationBoxRequest {
   cardTheme?: "ivory" | "emerald" | "noir" | "rose" | string;
   fontStyle?: "serif" | "handwriting" | "sans" | "mono" | string;
   packagingStyle?: "STANDARD" | "BOJAGI" | "LUXURY_RIBBON" | "ECO_CRAFT" | string;
+  claimPin?: string;
   allowCustomInput: boolean;
   productIds: number[];
   customProducts?: CustomProductPayload[];
@@ -44,6 +45,7 @@ export interface CurationBoxResponse {
   cardTheme?: "ivory" | "emerald" | "noir" | "rose" | string;
   fontStyle?: "serif" | "handwriting" | "sans" | "mono" | string;
   packagingStyle?: "STANDARD" | "BOJAGI" | "LUXURY_RIBBON" | "ECO_CRAFT" | string;
+  hasPinSecurity?: boolean;
   minBudget: number;
   maxBudget: number;
   sharingToken: string;
@@ -198,6 +200,18 @@ export async function submitSupportInquiry(payload: SupportInquiryRequest): Prom
   });
   if (!res.ok) {
     throw new Error("문의 접수에 실패했습니다.");
+  }
+  return res.json();
+}
+
+export async function verifyClaimPin(sharingToken: string, pin: string): Promise<{ valid: boolean; message: string }> {
+  const res = await fetch(`${BASE_URL}/curation-boxes/verify-pin/${sharingToken}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ pin }),
+  });
+  if (!res.ok) {
+    throw new Error("PIN 번호 검증에 실패했습니다.");
   }
   return res.json();
 }

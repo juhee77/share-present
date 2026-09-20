@@ -190,6 +190,9 @@ export default function RecipientGiftPage({ params }: { params: Promise<{ token:
         <UnwrappingRibbon
           senderName={boxData.senderName}
           messageCard={boxData.messageCard}
+          cardTheme={boxData.cardTheme as "ivory" | "emerald" | "noir" | "rose"}
+          hasPinSecurity={boxData.hasPinSecurity}
+          sharingToken={token}
           onOpen={() => setShowRibbon(false)}
         />
       )}

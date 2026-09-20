@@ -213,6 +213,8 @@ export default function CreateGiftPage() {
   const [cardTheme, setCardTheme] = useState<"ivory" | "emerald" | "noir" | "rose">("ivory");
   const [fontStyle, setFontStyle] = useState<"serif" | "handwriting" | "sans" | "mono">("serif");
   const [packagingStyle, setPackagingStyle] = useState<"STANDARD" | "BOJAGI" | "LUXURY_RIBBON" | "ECO_CRAFT">("STANDARD");
+  const [enablePinSecurity, setEnablePinSecurity] = useState(false);
+  const [claimPin, setClaimPin] = useState("");
   
   // Double-bound budget range states
   const [minBudget, setMinBudget] = useState(30000);
@@ -346,6 +348,7 @@ export default function CreateGiftPage() {
         cardTheme,
         fontStyle,
         packagingStyle,
+        claimPin: enablePinSecurity && claimPin.trim().length === 4 ? claimPin.trim() : undefined,
         allowCustomInput,
         productIds: selectedProductIds,
         customProducts: customProductsPayload,
@@ -641,6 +644,48 @@ export default function CreateGiftPage() {
                 onChange={(e) => setAllowCustomInput(e.target.checked)}
                 className="w-5 h-5 accent-[#3b483a] cursor-pointer"
               />
+            </div>
+
+            {/* Optional 4-Digit Claim PIN Security */}
+            <div className="pt-3 border-t border-[#eae6df]">
+              <div className="flex items-center justify-between">
+                <div>
+                  <span className="text-xs font-bold text-[#1a1a1a] flex items-center gap-1.5">
+                    <span>🔒</span>
+                    <span>선물 개봉 4자리 안심 PIN 설정 (선택)</span>
+                  </span>
+                  <p className="text-[11px] text-[#5e605d] mt-0.5">
+                    수령인의 생일이나 둘만의 기념일 4자리를 지정하여 링크 유출을 방어합니다.
+                  </p>
+                </div>
+                <input
+                  type="checkbox"
+                  checked={enablePinSecurity}
+                  onChange={(e) => setEnablePinSecurity(e.target.checked)}
+                  className="w-5 h-5 accent-[#3b483a] cursor-pointer"
+                />
+              </div>
+
+              {enablePinSecurity && (
+                <div className="mt-3 p-3 bg-[#faf9f6] rounded-xl border border-[#dedad0] animate-fade-in">
+                  <label className="block text-[10px] font-bold text-[#7a7266] uppercase tracking-wider mb-1">
+                    4자리 안심 비밀번호 (숫자 4자리)
+                  </label>
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="text"
+                      maxLength={4}
+                      placeholder="예: 0428"
+                      value={claimPin}
+                      onChange={(e) => setClaimPin(e.target.value.replace(/[^0-9]/g, ""))}
+                      className="input-editorial w-32 font-mono font-bold tracking-widest text-center text-sm py-1.5"
+                    />
+                    <span className="text-[11px] text-[#7a7266]">
+                      {claimPin.length === 4 ? "✓ 4자리 설정 완료" : "숫자 4자리를 입력해주세요"}
+                    </span>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </section>
