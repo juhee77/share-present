@@ -71,6 +71,7 @@ class CurationBoxServiceTest {
                 .cardTheme("emerald")
                 .fontStyle("handwriting")
                 .packagingStyle("BOJAGI")
+                .sealMonogram("LOVE")
                 .allowCustomInput(true)
                 .productIds(List.of(10L))
                 .build();
@@ -93,6 +94,7 @@ class CurationBoxServiceTest {
         assertThat(response.getCardTheme()).isEqualTo("emerald");
         assertThat(response.getFontStyle()).isEqualTo("handwriting");
         assertThat(response.getPackagingStyle()).isEqualTo("BOJAGI");
+        assertThat(response.getSealMonogram()).isEqualTo("LOVE");
         assertThat(response.getSenderName()).isEqualTo("주희");
         assertThat(response.getSharingToken()).isNotNull().hasSize(16);
     }

@@ -51,6 +51,10 @@ public class CurationBox {
     private String claimPin;
 
     @Builder.Default
+    @Column(name = "seal_monogram", length = 20)
+    private String sealMonogram = "SP";
+
+    @Builder.Default
     @Column(nullable = false)
     private String status = "CREATED";
 

@@ -17,6 +17,7 @@ export interface CreateCurationBoxRequest {
   cardTheme?: "ivory" | "emerald" | "noir" | "rose" | string;
   fontStyle?: "serif" | "handwriting" | "sans" | "mono" | string;
   packagingStyle?: "STANDARD" | "BOJAGI" | "LUXURY_RIBBON" | "ECO_CRAFT" | string;
+  sealMonogram?: string;
   claimPin?: string;
   allowCustomInput: boolean;
   productIds: number[];
@@ -45,6 +46,7 @@ export interface CurationBoxResponse {
   cardTheme?: "ivory" | "emerald" | "noir" | "rose" | string;
   fontStyle?: "serif" | "handwriting" | "sans" | "mono" | string;
   packagingStyle?: "STANDARD" | "BOJAGI" | "LUXURY_RIBBON" | "ECO_CRAFT" | string;
+  sealMonogram?: string;
   hasPinSecurity?: boolean;
   minBudget: number;
   maxBudget: number;

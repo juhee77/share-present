@@ -213,6 +213,7 @@ export default function CreateGiftPage() {
   const [cardTheme, setCardTheme] = useState<"ivory" | "emerald" | "noir" | "rose">("ivory");
   const [fontStyle, setFontStyle] = useState<"serif" | "handwriting" | "sans" | "mono">("serif");
   const [packagingStyle, setPackagingStyle] = useState<"STANDARD" | "BOJAGI" | "LUXURY_RIBBON" | "ECO_CRAFT">("STANDARD");
+  const [sealMonogram, setSealMonogram] = useState<"SP" | "HBD" | "LOVE" | "THX" | "LUCK" | "CONG">("SP");
   const [enablePinSecurity, setEnablePinSecurity] = useState(false);
   const [claimPin, setClaimPin] = useState("");
   
@@ -348,6 +349,7 @@ export default function CreateGiftPage() {
         cardTheme,
         fontStyle,
         packagingStyle,
+        sealMonogram,
         claimPin: enablePinSecurity && claimPin.trim().length === 4 ? claimPin.trim() : undefined,
         allowCustomInput,
         productIds: selectedProductIds,
@@ -579,6 +581,41 @@ export default function CreateGiftPage() {
                       <span className="text-xs font-bold text-[#1a1a1a] block">{pkg.label}</span>
                       <span className="text-[10px] text-[#7a7266] leading-tight block mt-0.5">{pkg.desc}</span>
                     </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Wax Seal Monogram Stamp Selector */}
+            <div>
+              <label className="block text-[11px] font-bold text-[#5e605d] uppercase tracking-wider mb-1.5">
+                3D 왁스 씰 인장 모노그램 (Wax Seal Monogram)
+              </label>
+              <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
+                {[
+                  { id: "SP" as const, label: "SP 시그니처", sub: "Signature" },
+                  { id: "HBD" as const, label: "HBD 생일", sub: "Birthday" },
+                  { id: "LOVE" as const, label: "LOVE 애정", sub: "With Love" },
+                  { id: "THX" as const, label: "THX 감사", sub: "Thanks" },
+                  { id: "LUCK" as const, label: "LUCK 행운", sub: "Good Luck" },
+                  { id: "CONG" as const, label: "CONG 축하", sub: "Congrats" },
+                ].map((mono) => (
+                  <button
+                    key={mono.id}
+                    type="button"
+                    onClick={() => setSealMonogram(mono.id)}
+                    className={`p-2 rounded-xl border text-center transition-all flex flex-col items-center justify-center ${
+                      sealMonogram === mono.id
+                        ? "bg-[#3b483a] text-white border-[#3b483a] shadow-sm font-bold"
+                        : "bg-white text-[#5e605d] border-[#eae6df] hover:border-[#3b483a]"
+                    }`}
+                  >
+                    <span className="font-serif text-sm font-bold tracking-tight block">
+                      {mono.id}
+                    </span>
+                    <span className="text-[9px] opacity-80 block mt-0.5">
+                      {mono.label}
+                    </span>
                   </button>
                 ))}
               </div>

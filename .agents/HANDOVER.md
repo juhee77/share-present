@@ -68,6 +68,7 @@
 - **선물 부티크 패키징(Boutique Packaging) 커스텀 옵션 (`CurationBox.java`, `CreateCurationBoxRequest.java`, `page.tsx`, `gift/[token]/page.tsx`)**: 발신자가 시그니처 박스(`STANDARD`), 전통 실크 보자기 & 노리개(`BOJAGI`), 로열 리본 하드케이스(`LUXURY_RIBBON`), 친환경 생분해 크래프트(`ECO_CRAFT`) 중 선택할 수 있고, 수령인 선물 인비테이션 및 수락 완료 화면에서 맞춤형 포장 안내 배지가 품격 있게 렌더링됨.
 - **선물 개봉 4자리 안심 PIN 보안 코드 (`CurationBox.java`, `VerifyPinRequest.java`, `CurationBoxController.java`, `UnwrappingRibbon.tsx`, `page.tsx`)**: 발신자가 수령인 생일이나 기념일 4자리 비밀번호를 설정할 수 있으며, 수령인이 3D 왁스 씰 개봉 시 4자리 PIN 번호 검증 모달을 통해 안전하게 인증 후 룩북을 열람할 수 있도록 지원.
 - **수령인 전용 감사 카드 및 언박싱 포토 등록 API (`ThankYouReplyRequest.java`, `OrderController.java`, `OrderService.java`, `gift/[token]/page.tsx`, `dashboard/page.tsx`)**: 수령인이 선물 수락 완료 후 언제든 감사 스티커, 감동 답장 메시지, 언박싱 인증샷 포토를 등록/수정할 수 있는 전용 `POST /api/v1/orders/thank-you/{sharingToken}` API 구축 및 발신자 카카오 알림톡 실시간 연동.
+- **3D 왁스 씰 인장 모노그램(Wax Seal Monogram) 커스텀 (`CurationBox.java`, `UnwrappingRibbon.tsx`, `page.tsx`, `gift/[token]/page.tsx`)**: 발신자가 `SP`(시그니처), `HBD`(생일), `LOVE`(애정), `THX`(감사), `LUCK`(행운), `CONG`(축하) 중 모노그램 인장을 선택하고, 수령인이 선물 인비테이션을 개봉할 때 3D 왁스 씰에 선택한 모노그램이 음각 양각 입체 렌더링됨.
 - **컨트롤러 계층 Bean Validation 400 Bad Request 방어 테스트 완비 (`OrderControllerTest`, `CurationBoxControllerTest`, `SupportInquiryControllerTest`)**: 유효성 검증 테스트 스위트 100% 그린 유지.
 
 ---

@@ -28,6 +28,7 @@ public class CreateCurationBoxRequest {
     private String fontStyle;
     private String packagingStyle;
     private String claimPin;
+    private String sealMonogram;
 
     private Boolean allowCustomInput;
 

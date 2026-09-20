@@ -7,6 +7,7 @@ interface UnwrappingRibbonProps {
   senderName: string;
   messageCard?: string;
   cardTheme?: "ivory" | "emerald" | "noir" | "rose";
+  sealMonogram?: string;
   hasPinSecurity?: boolean;
   sharingToken?: string;
   onOpen: () => void;
@@ -16,6 +17,7 @@ export default function UnwrappingRibbon({
   senderName,
   messageCard = "당신을 위해 정성껏 고른 선물입니다.",
   cardTheme = "ivory",
+  sealMonogram = "SP",
   hasPinSecurity = false,
   sharingToken = "",
   onOpen,
@@ -190,7 +192,7 @@ export default function UnwrappingRibbon({
                   } ${themeStyles.sealText} ${themeStyles.sealBorder}`}
                 >
                   <span className="font-serif text-2xl font-bold tracking-tighter">
-                    SP
+                    {sealMonogram || "SP"}
                   </span>
                   <span className="text-[9px] uppercase tracking-widest font-mono mt-0.5 opacity-90">
                     SEAL
@@ -205,7 +207,7 @@ export default function UnwrappingRibbon({
                 <span>
                   {hasPinSecurity
                     ? "안심 PIN 번호로 봉투를 개봉하세요 🔒"
-                    : "모노그램 왁스 씰(Wax Seal)을 눌러 봉투를 개봉하세요"}
+                    : `모노그램 [${sealMonogram || "SP"}] 왁스 씰을 눌러 봉투를 개봉하세요`}
                 </span>
                 <span>✦</span>
               </p>
@@ -218,7 +220,7 @@ export default function UnwrappingRibbon({
                   themeStyles.sealBg
                 } ${themeStyles.sealText}`}
               >
-                SP
+                {sealMonogram || "SP"}
               </div>
 
               <span className="text-[10px] font-mono uppercase tracking-widest opacity-60 mb-2">

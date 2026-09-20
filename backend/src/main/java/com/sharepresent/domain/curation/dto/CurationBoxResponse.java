@@ -15,6 +15,7 @@ public class CurationBoxResponse {
     private String cardTheme;
     private String fontStyle;
     private String packagingStyle;
+    private String sealMonogram;
     private Boolean hasPinSecurity;
     private Integer minBudget;
     private Integer maxBudget;
