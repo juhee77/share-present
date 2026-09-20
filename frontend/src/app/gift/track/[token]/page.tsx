@@ -170,11 +170,33 @@ export default function RecipientTrackingPage({ params }: { params: Promise<{ to
             </div>
           )}
 
+          {/* Delivery Preferences Badges */}
+          <div className="mt-3 flex flex-wrap gap-2 text-[11px]">
+            {order.ecoFriendlyPackaging && (
+              <span className="inline-flex items-center gap-1 bg-[#2e392d]/10 text-[#2e392d] px-2.5 py-1 rounded-md font-bold">
+                <span>🌱</span>
+                <span>친환경 100% 분해 에코 종이 포장</span>
+              </span>
+            )}
+            {order.entranceMemo && (
+              <span className="inline-flex items-center gap-1 bg-[#f6f4f0] text-[#5e605d] border border-[#eae6df] px-2.5 py-1 rounded-md font-medium">
+                <span>🔑</span>
+                <span>공동현관: {order.entranceMemo}</span>
+              </span>
+            )}
+            {order.preDeliveryNotification && (
+              <span className="inline-flex items-center gap-1 bg-[#a38974]/15 text-[#a38974] px-2.5 py-1 rounded-md font-bold">
+                <span>📱</span>
+                <span>도착 직전 사전 알림</span>
+              </span>
+            )}
+          </div>
+
           {/* Boutique Packaging Guarantee Badge */}
           <div className="mt-4 pt-3 border-t border-[#eae6df] flex items-center justify-between text-[11px] text-[#5e605d]">
             <span className="flex items-center gap-1.5 font-bold text-[#3b483a]">
               <span>✨</span>
-              <span>프리미엄 린넨 리본 & 친환경 에코 박스 포장 완료</span>
+              <span>프리미엄 린넨 리본 & 실링 왁스 검수 완료</span>
             </span>
             <span className="text-[10px] font-mono text-[#a38974] bg-[#a38974]/10 px-2 py-0.5 rounded-full font-bold">
               안심 포장 검수 통과

@@ -116,6 +116,7 @@
 - `frontend/src/components/ThankYouStudioModal.tsx`: 수령인 맞춤 감사 카드 스튜디오 모달 (스티커, 4종 테마, AI 문구 프리셋, 실시간 엽서 프리뷰)
 - `frontend/src/components/GroupSplitModal.tsx`: 1/N 공동 발신자 예산 분할 정산 시뮬레이터 및 카카오톡 메시지 복사 모달
 - `frontend/src/components/CalendarReminderModal.tsx`: 선물 만료(D-7) 및 일정 캘린더 등록(Google Calendar / Apple iCal .ics) 모달
+- `frontend/src/app/gift/track/[token]/page.tsx`: 수령인 실시간 배송 타임라인, 운송장 조회, 배송지/희망수령일 수정 모달, 친환경 에코 포장 및 공동현관 출입 메모 뱃지
 - `frontend/src/lib/sound.ts`: Web Audio API 기반 무의존 럭셔리 인터랙션 음향(왁스씰 브레이크, 차임벨, 샴페인 팝) 신시사이저
 - `frontend/src/lib/api.ts`: 백엔드 REST API 연동 클라이언트 모듈
 

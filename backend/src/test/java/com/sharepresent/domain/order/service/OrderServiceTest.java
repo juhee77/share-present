@@ -223,4 +223,25 @@ class OrderServiceTest {
         assertThat(response.getPreDeliveryNotification()).isTrue();
         assertThat(response.getDesiredDeliveryDate()).isEqualTo("FASTEST");
     }
+
+    @Test
+    @DisplayName("선물 수락 대기 중인 선물 상자의 수락 기한을 +7일 연장 검증")
+    void extendGiftExpiry_success() {
+        // given
+        CurationBox waitingBox = testBox.toBuilder()
+                .status("WAITING")
+                .expiredAt(java.time.LocalDateTime.now().plusDays(2))
+                .build();
+
+        given(curationBoxRepository.findBySharingToken("test-token-123456")).willReturn(Optional.of(waitingBox));
+        given(curationBoxRepository.save(any(CurationBox.class))).willAnswer(inv -> inv.getArgument(0));
+        given(orderRepository.findByCurationBoxId(100L)).willReturn(Optional.of(testPrePaidOrder));
+
+        // when
+        OrderResponse response = orderService.extendGiftExpiry("test-token-123456");
+
+        // then
+        assertThat(response).isNotNull();
+        assertThat(response.getLockedAmount()).isEqualTo(60000);
+    }
 }
