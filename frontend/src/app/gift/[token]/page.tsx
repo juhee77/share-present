@@ -9,6 +9,7 @@ import { AlternativeGiftsDrawer } from "@/components/AlternativeGiftsDrawer";
 import ConfettiEffect from "@/components/ConfettiEffect";
 import RollingPaperSection from "@/components/RollingPaperSection";
 import TasteSurveyModal from "@/components/TasteSurveyModal";
+import ThankYouStudioModal from "@/components/ThankYouStudioModal";
 import { useToast } from "@/context/ToastContext";
 import { getCurationBox, acceptGift, submitThankYouReply, CurationBoxResponse, ProductDto } from "@/lib/api";
 
@@ -581,117 +582,33 @@ export default function RecipientGiftPage({ params }: { params: Promise<{ token:
         onSelectProduct={handleAlternativeProductSelect}
       />
 
-      {/* Feature 4: Recipient Thank-You Reply Card Modal */}
-      {showThankYouModal && (
-        <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex items-center justify-center p-5 animate-fade-in">
-          <div className="bg-white rounded-2xl p-6 max-w-sm w-full shadow-2xl border border-[#eae6df]">
-            <div className="flex items-center justify-between mb-3 pb-2 border-b border-[#eae6df]">
-              <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#a38974]">
-                Thank-You Card
-              </span>
-              <button
-                onClick={() => setShowThankYouModal(false)}
-                className="text-xs font-bold text-gray-400 hover:text-black"
-              >
-                ✕
-              </button>
-            </div>
-
-            <h2 className="text-lg font-bold text-[#1a1a1a] mb-1">
-              {boxData.senderName}님에게 감사 카드 작성
-            </h2>
-            <p className="text-xs text-[#5e605d] mb-4">
-              따뜻한 마음을 담아 스티커와 답장 메시지를 전달해보세요.
-            </p>
-
-            {/* Sticker Selection */}
-            <div className="space-y-2 mb-4">
-              <label className="block text-[11px] font-bold text-[#5e605d] uppercase tracking-wider">
-                감사 스티커 선택
-              </label>
-              <div className="grid grid-cols-2 gap-2">
-                {["💖 취향저격 고마워!", "✨ 예쁜 선물 감동이야", "🎁 예쁘게 잘 쓸게!", "☕ 힐링 타임 가질게"].map((stk) => (
-                  <button
-                    key={stk}
-                    type="button"
-                    onClick={() => setThankYouSticker(stk)}
-                    className={`p-2.5 rounded-xl text-xs font-bold transition-all text-left border ${
-                      thankYouSticker === stk
-                        ? "bg-[#3b483a] text-white border-[#3b483a]"
-                        : "bg-[#faf9f6] text-[#1a1a1a] border-[#eae6df]"
-                    }`}
-                  >
-                    {stk}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Photo Attachment Presets */}
-            <div className="space-y-2 mb-4">
-              <label className="block text-[11px] font-bold text-[#5e605d] uppercase tracking-wider">
-                📸 언박싱 / 인증 포토 첨부
-              </label>
-              <div className="grid grid-cols-2 gap-2">
-                {[
-                  { label: "🎁 언박싱 샷", url: "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=500&auto=format&fit=crop&q=80" },
-                  { label: "☕ 홈카페 머그", url: "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=500&auto=format&fit=crop&q=80" },
-                  { label: "🌿 향기/인테리어", url: "https://images.unsplash.com/photo-1547887537-6158d64c35b3?w=500&auto=format&fit=crop&q=80" },
-                  { label: "🧴 핸드/바디", url: "https://images.unsplash.com/photo-1608248597309-45da1e028896?w=500&auto=format&fit=crop&q=80" },
-                ].map((p) => (
-                  <button
-                    key={p.label}
-                    type="button"
-                    onClick={() => setThankYouPhoto(p.url)}
-                    className={`p-2 rounded-xl text-[11px] font-bold transition-all text-left border flex items-center justify-between ${
-                      thankYouPhoto === p.url
-                        ? "bg-[#3b483a] text-white border-[#3b483a]"
-                        : "bg-[#faf9f6] text-[#1a1a1a] border-[#eae6df]"
-                    }`}
-                  >
-                    <span>{p.label}</span>
-                    {thankYouPhoto === p.url && <span className="text-[10px]">✓</span>}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Message Textarea */}
-            <div className="mb-5">
-              <label className="block text-[11px] font-bold text-[#5e605d] uppercase tracking-wider mb-1.5">
-                답장 메시지
-              </label>
-              <textarea
-                rows={3}
-                value={thankYouMsg}
-                onChange={(e) => setThankYouMsg(e.target.value)}
-                className="input-editorial resize-none font-serif text-xs"
-              />
-            </div>
-
-            <button
-              type="button"
-              onClick={async () => {
-                try {
-                  await submitThankYouReply(token, {
-                    thankYouSticker,
-                    thankYouMessage: thankYouMsg,
-                    thankYouPhotoUrl: thankYouPhoto,
-                  });
-                } catch (e) {
-                  console.error(e);
-                }
-                setThankYouSent(true);
-                setShowThankYouModal(false);
-                showToast(`${boxData.senderName}님에게 감사 카드와 답장이 전달되었습니다! 💌`, "success");
-              }}
-              className="btn-editorial w-full py-3.5 text-xs font-bold uppercase tracking-wider shadow-md"
-            >
-              감사 답장 보내기 💌
-            </button>
-          </div>
-        </div>
-      )}
+      {/* Feature 4: Thank-You Card Studio Modal */}
+      <ThankYouStudioModal
+        isOpen={showThankYouModal}
+        onClose={() => setShowThankYouModal(false)}
+        senderName={boxData.senderName}
+        recipientName="받는 분"
+        productBrand={
+          boxData.items.find((i) => i.id === selectedProductId)?.brand || "SharePresent"
+        }
+        productName={
+          boxData.items.find((i) => i.id === selectedProductId)?.name || "소중한 선물"
+        }
+        onSave={async ({ sticker, message }) => {
+          setThankYouSticker(sticker);
+          setThankYouMsg(message);
+          try {
+            await submitThankYouReply(token, {
+              thankYouSticker: sticker,
+              thankYouMessage: message,
+              thankYouPhotoUrl: thankYouPhoto,
+            });
+          } catch (e) {
+            console.error(e);
+          }
+          setThankYouSent(true);
+        }}
+      />
 
       {/* Feature 5: AI Taste Survey Modal */}
       <TasteSurveyModal
