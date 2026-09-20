@@ -163,4 +163,28 @@ class OrderServiceTest {
         assertThat(response.getThankYouMessage()).isEqualTo("선물 너무 잘 쓸게!");
         assertThat(response.getThankYouPhotoUrl()).isEqualTo("https://example.com/unboxing.jpg");
     }
+
+    @Test
+    @DisplayName("출고 전 수령인 배송지 및 희망 배송일 변경 - Order 엔티티 갱신 검증")
+    void modifyRecipientAddress_success() {
+        // given
+        com.sharepresent.domain.order.dto.ModifyAddressRequest request =
+                com.sharepresent.domain.order.dto.ModifyAddressRequest.builder()
+                        .receiverName("김수령")
+                        .receiverPhone("010-9999-8888")
+                        .shippingAddress("서울특별시 용산구 한남대로 91")
+                        .desiredDeliveryDate("WEEKEND")
+                        .build();
+
+        given(curationBoxRepository.findBySharingToken("test-token-123456")).willReturn(Optional.of(testBox));
+        given(orderRepository.findByCurationBoxId(100L)).willReturn(Optional.of(testPrePaidOrder));
+        given(orderRepository.save(any(Order.class))).willAnswer(inv -> inv.getArgument(0));
+
+        // when
+        OrderResponse response = orderService.modifyRecipientAddress("test-token-123456", request);
+
+        // then
+        assertThat(response).isNotNull();
+        assertThat(response.getDesiredDeliveryDate()).isEqualTo("WEEKEND");
+    }
 }

@@ -73,4 +73,13 @@ public class OrderController {
         OrderResponse response = orderService.submitThankYouReply(sharingToken, request);
         return ResponseEntity.ok(response);
     }
+
+    @PostMapping("/modify-address/{sharingToken}")
+    @Operation(summary = "수령인 배송지 및 희망 배송일 변경", description = "상품 출고 전 수령인이 입력했던 배송 주소지, 수령인 연락처 또는 희망 배송일을 수정합니다.")
+    public ResponseEntity<OrderResponse> modifyRecipientAddress(
+            @PathVariable("sharingToken") String sharingToken,
+            @Valid @RequestBody com.sharepresent.domain.order.dto.ModifyAddressRequest request) {
+        OrderResponse response = orderService.modifyRecipientAddress(sharingToken, request);
+        return ResponseEntity.ok(response);
+    }
 }

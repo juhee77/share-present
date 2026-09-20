@@ -5,6 +5,7 @@ import Header from "@/components/Header";
 import Link from "next/link";
 import { getOrderResult, OrderResponse } from "@/lib/api";
 import { useToast } from "@/context/ToastContext";
+import ModifyAddressModal from "@/components/ModifyAddressModal";
 
 export default function RecipientTrackingPage({ params }: { params: Promise<{ token: string }> }) {
   const { showToast } = useToast();
@@ -15,6 +16,7 @@ export default function RecipientTrackingPage({ params }: { params: Promise<{ to
   const [loading, setLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [copiedTracking, setCopiedTracking] = useState(false);
+  const [isModifyAddressOpen, setIsModifyAddressOpen] = useState(false);
 
   const loadOrder = async () => {
     try {
@@ -269,14 +271,23 @@ export default function RecipientTrackingPage({ params }: { params: Promise<{ to
             </div>
           </div>
 
-          <div className="pt-2">
+          <div className="pt-2 flex flex-col sm:flex-row gap-2">
+            {order.shippingStatus !== "SHIPPED" && order.shippingStatus !== "DELIVERED" && (
+              <button
+                type="button"
+                onClick={() => setIsModifyAddressOpen(true)}
+                className="flex-1 btn-editorial text-center py-3 text-xs font-bold uppercase tracking-wider shadow-sm"
+              >
+                배송지 및 일정 변경 ✎
+              </button>
+            )}
             <a
               href={`https://tracker.delivery/rubydb/${(order.trackingNumber || "684930129381").replace(/[^0-9]/g, "")}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="btn-editorial-outline block text-center py-3 text-xs font-bold uppercase tracking-wider"
+              className="flex-1 btn-editorial-outline block text-center py-3 text-xs font-bold uppercase tracking-wider"
             >
-              택배사 실시간 위치조회 바로가기 ↗
+              택배사 위치조회 ↗
             </a>
           </div>
         </section>
@@ -295,6 +306,19 @@ export default function RecipientTrackingPage({ params }: { params: Promise<{ to
             </Link>
           </div>
         </div>
+
+        {/* Modify Address & Desired Date Modal */}
+        <ModifyAddressModal
+          isOpen={isModifyAddressOpen}
+          onClose={() => setIsModifyAddressOpen(false)}
+          token={token}
+          initialDesiredDeliveryDate={order.desiredDeliveryDate || "FASTEST"}
+          onSuccess={(updated) => {
+            if (updated.desiredDeliveryDate) {
+              setOrder((prev) => (prev ? { ...prev, desiredDeliveryDate: updated.desiredDeliveryDate } : prev));
+            }
+          }}
+        />
       </main>
     </div>
   );

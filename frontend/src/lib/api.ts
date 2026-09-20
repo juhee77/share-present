@@ -286,3 +286,23 @@ export async function generateAiMessage(payload: GenerateAiMessageRequest): Prom
   return res.json();
 }
 
+export interface ModifyAddressPayload {
+  receiverName?: string;
+  receiverPhone?: string;
+  shippingAddress: string;
+  deliveryMemo?: string;
+  desiredDeliveryDate?: string;
+}
+
+export async function modifyRecipientAddress(sharingToken: string, payload: ModifyAddressPayload): Promise<OrderResponse> {
+  const res = await fetch(`${BASE_URL}/orders/modify-address/${sharingToken}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) {
+    throw new Error("배송 주소지 변경에 실패했습니다.");
+  }
+  return res.json();
+}
+

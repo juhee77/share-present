@@ -385,6 +385,32 @@ public class OrderService {
         return convertToResponse(savedOrder);
     }
 
+    /**
+     * 수령인이 출고 전 배송 주소지 및 희망 배송일을 변경
+     */
+    @Transactional
+    public OrderResponse modifyRecipientAddress(String sharingToken, com.sharepresent.domain.order.dto.ModifyAddressRequest request) {
+        CurationBox box = curationBoxRepository.findBySharingToken(sharingToken)
+                .orElseThrow(() -> new IllegalArgumentException("선물 박스를 찾을 수 없습니다. Token: " + sharingToken));
+
+        Order order = orderRepository.findByCurationBoxId(box.getId())
+                .orElseThrow(() -> new IllegalArgumentException("주문 정보를 찾을 수 없습니다."));
+
+        if ("SHIPPED".equals(order.getShippingStatus()) || "DELIVERED".equals(order.getShippingStatus())) {
+            throw new IllegalStateException("이미 배송이 시작되어 배송지를 변경할 수 없습니다.");
+        }
+
+        Order modifiedOrder = order.toBuilder()
+                .recipientName(request.getReceiverName() != null ? request.getReceiverName() : order.getRecipientName())
+                .recipientPhone(request.getReceiverPhone() != null ? request.getReceiverPhone() : order.getRecipientPhone())
+                .shippingAddress(request.getShippingAddress() != null ? request.getShippingAddress() : order.getShippingAddress())
+                .desiredDeliveryDate(request.getDesiredDeliveryDate() != null ? request.getDesiredDeliveryDate() : order.getDesiredDeliveryDate())
+                .build();
+
+        Order savedOrder = orderRepository.save(modifiedOrder);
+        return convertToResponse(savedOrder);
+    }
+
     private void triggerActualPaymentCancel(String paymentKey, int cancelAmount) {
         // PG사 REST cancel API 호출 모킹 (실제 개발 스프린트 2단계에서 구현 예정)
         System.out.printf("[Toss Payments API] Settle complete. Succeeded in partial refund. Key: %s, Refunded: %d KRW\n", paymentKey, cancelAmount);

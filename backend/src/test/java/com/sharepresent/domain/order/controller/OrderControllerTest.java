@@ -222,4 +222,51 @@ class OrderControllerTest {
                 .andExpect(jsonPath("$.thankYouMessage").value("선물 너무 맘에 들어!"))
                 .andExpect(jsonPath("$.thankYouPhotoUrl").value("https://example.com/photo.jpg"));
     }
+
+    @Test
+    @DisplayName("POST /api/v1/orders/modify-address/{sharingToken} - 수령인 배송지 및 희망 배송일 변경 성공")
+    void modifyRecipientAddress_success() throws Exception {
+        // given
+        com.sharepresent.domain.order.dto.ModifyAddressRequest request =
+                com.sharepresent.domain.order.dto.ModifyAddressRequest.builder()
+                        .receiverName("김수령")
+                        .receiverPhone("010-9999-8888")
+                        .shippingAddress("서울특별시 용산구 한남대로 91 한남더힐")
+                        .desiredDeliveryDate("WEEKEND")
+                        .build();
+
+        OrderResponse mockResponse = OrderResponse.builder()
+                .orderId(1L)
+                .selectedProductName("소락사 샌디 도자기 머그")
+                .shippingStatus("PREPARING")
+                .desiredDeliveryDate("WEEKEND")
+                .build();
+
+        given(orderService.modifyRecipientAddress(eq("sample-token"), any(com.sharepresent.domain.order.dto.ModifyAddressRequest.class)))
+                .willReturn(mockResponse);
+
+        // when & then
+        mockMvc.perform(post("/api/v1/orders/modify-address/sample-token")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.desiredDeliveryDate").value("WEEKEND"))
+                .andExpect(jsonPath("$.shippingStatus").value("PREPARING"));
+    }
+
+    @Test
+    @DisplayName("POST /api/v1/orders/modify-address/{sharingToken} - 배송 주소 누락 시 400 Bad Request 검증")
+    void modifyRecipientAddress_validationFailure() throws Exception {
+        // given: shippingAddress 누락
+        com.sharepresent.domain.order.dto.ModifyAddressRequest request =
+                com.sharepresent.domain.order.dto.ModifyAddressRequest.builder()
+                        .receiverName("김수령")
+                        .build();
+
+        // when & then
+        mockMvc.perform(post("/api/v1/orders/modify-address/sample-token")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest());
+    }
 }
