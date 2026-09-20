@@ -316,6 +316,40 @@ public class OrderService {
         return convertToResponse(order);
     }
 
+    /**
+     * 송신자가 대시보드에서 선물 수락 기한을 +7일 연장
+     */
+    @Transactional
+    public OrderResponse extendGiftExpiry(String sharingToken) {
+        CurationBox box = curationBoxRepository.findBySharingToken(sharingToken)
+                .orElseThrow(() -> new IllegalArgumentException("선물 박스를 찾을 수 없습니다. Token: " + sharingToken));
+
+        if ("CANCELLED".equalsIgnoreCase(box.getStatus()) || "COMPLETED".equalsIgnoreCase(box.getStatus()) || "ACCEPTED".equalsIgnoreCase(box.getStatus())) {
+            throw new IllegalStateException("대기 중인 선물 상자만 기한을 연장할 수 있습니다.");
+        }
+
+        LocalDateTime currentExpiry = box.getExpiredAt() != null && box.getExpiredAt().isAfter(LocalDateTime.now())
+                ? box.getExpiredAt()
+                : LocalDateTime.now();
+
+        LocalDateTime newExpiry = currentExpiry.plusDays(7);
+
+        CurationBox updatedBox = box.toBuilder()
+                .expiredAt(newExpiry)
+                .build();
+        CurationBox savedBox = curationBoxRepository.save(updatedBox);
+
+        Order order = orderRepository.findByCurationBoxId(savedBox.getId())
+                .orElseGet(() -> Order.builder()
+                        .curationBox(savedBox)
+                        .sender(savedBox.getSender())
+                        .totalAmount(savedBox.getMaxBudget())
+                        .shippingStatus("WAITING")
+                        .build());
+
+        return convertToResponse(order);
+    }
+
     private void triggerActualPaymentCancel(String paymentKey, int cancelAmount) {
         // PG사 REST cancel API 호출 모킹 (실제 개발 스프린트 2단계에서 구현 예정)
         System.out.printf("[Toss Payments API] Settle complete. Succeeded in partial refund. Key: %s, Refunded: %d KRW\n", paymentKey, cancelAmount);
@@ -325,6 +359,10 @@ public class OrderService {
         String prodName = order.getSelectedProduct() != null ? order.getSelectedProduct().getName() : null;
         String prodBrand = order.getSelectedProduct() != null ? order.getSelectedProduct().getBrand() : null;
         String extUrl = order.getSelectedProduct() != null ? order.getSelectedProduct().getExternalUrl() : null;
+        String token = order.getCurationBox() != null ? order.getCurationBox().getSharingToken() : null;
+        String expAt = order.getCurationBox() != null && order.getCurationBox().getExpiredAt() != null
+                ? order.getCurationBox().getExpiredAt().toString()
+                : null;
 
         return OrderResponse.builder()
                 .orderId(order.getId())
@@ -338,6 +376,8 @@ public class OrderService {
                 .finalAmount(order.getFinalAmount())
                 .refundAmount(order.getRefundAmount())
                 .externalUrl(extUrl)
+                .sharingToken(token)
+                .expiredAt(expAt)
                 .status(order.getShippingStatus())
                 .thankYouSticker(order.getThankYouSticker())
                 .thankYouMessage(order.getThankYouMessage())

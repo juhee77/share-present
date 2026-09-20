@@ -57,4 +57,11 @@ public class OrderController {
         OrderResponse response = orderService.resendGiftNotification(sharingToken);
         return ResponseEntity.ok(response);
     }
+
+    @PostMapping("/extend-expiry/{sharingToken}")
+    @Operation(summary = "선물 수락 기한 연장", description = "발신자가 대시보드에서 선물 수락 유효 기한을 +7일 연장합니다.")
+    public ResponseEntity<OrderResponse> extendGiftExpiry(@PathVariable("sharingToken") String sharingToken) {
+        OrderResponse response = orderService.extendGiftExpiry(sharingToken);
+        return ResponseEntity.ok(response);
+    }
 }

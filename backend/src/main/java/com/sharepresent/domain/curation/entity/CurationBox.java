@@ -55,6 +55,7 @@ public class CurationBox {
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
+    @Builder.Default
     @Column(name = "expired_at")
-    private LocalDateTime expiredAt;
+    private LocalDateTime expiredAt = LocalDateTime.now().plusDays(7);
 }

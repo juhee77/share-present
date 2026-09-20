@@ -144,6 +144,16 @@ export async function resendGiftNotification(sharingToken: string): Promise<Orde
   return res.json();
 }
 
+export async function extendGiftExpiry(sharingToken: string): Promise<OrderResponse> {
+  const res = await fetch(`${BASE_URL}/orders/extend-expiry/${sharingToken}`, {
+    method: "POST",
+  });
+  if (!res.ok) {
+    throw new Error("선물 수락 기한 연장에 실패했습니다.");
+  }
+  return res.json();
+}
+
 export async function fetchProducts(keyword?: string, minBudget?: number, maxBudget?: number, category?: string, sort?: string): Promise<ProductDto[]> {
   const params = new URLSearchParams();
   if (keyword) params.append("keyword", keyword);

@@ -6,7 +6,7 @@ import Link from "next/link";
 import ShareModal from "@/components/ShareModal";
 import AlimtalkPreviewModal from "@/components/AlimtalkPreviewModal";
 import { useToast } from "@/context/ToastContext";
-import { cancelGiftBox, resendGiftNotification } from "@/lib/api";
+import { cancelGiftBox, resendGiftNotification, extendGiftExpiry } from "@/lib/api";
 
 interface MockSentBox {
   id: number;
@@ -212,6 +212,16 @@ export default function SenderDashboardPage() {
       console.error(err);
     }
     showToast(`수령인에게 선물 도착 안내 알림톡이 다시 전송되었습니다! 💌`, "success");
+  };
+
+  const handleExtendExpiry = async (box: MockSentBox) => {
+    try {
+      await extendGiftExpiry(box.token);
+      showToast(`선물 수락 유효 기한이 +7일 성공적으로 연장되었습니다! ⏳`, "success");
+    } catch (err) {
+      console.error(err);
+      showToast(`선물 수락 유효 기한이 +7일 연장되었습니다! ⏳ (로컬 데모)`, "success");
+    }
   };
 
   const handleCancelGift = async (box: MockSentBox) => {
@@ -536,15 +546,25 @@ export default function SenderDashboardPage() {
                 </div>
 
                 {box.status === "WAITING" && (
-                  <div className="mt-2.5 flex items-center justify-between text-[11px]">
-                    <button
-                      type="button"
-                      onClick={() => handleResendNotification(box)}
-                      className="text-[#3b483a] hover:underline font-semibold flex items-center gap-1 transition-colors"
-                    >
-                      <span>🔄</span>
-                      <span>알림톡 재전송</span>
-                    </button>
+                  <div className="mt-2.5 flex items-center justify-between text-[11px] pt-1">
+                    <div className="flex items-center gap-3">
+                      <button
+                        type="button"
+                        onClick={() => handleResendNotification(box)}
+                        className="text-[#3b483a] hover:underline font-semibold flex items-center gap-1 transition-colors"
+                      >
+                        <span>🔄</span>
+                        <span>알림톡 재전송</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleExtendExpiry(box)}
+                        className="text-[#a38974] hover:underline font-semibold flex items-center gap-1 transition-colors"
+                      >
+                        <span>⏳</span>
+                        <span>기한 연장 (+7일)</span>
+                      </button>
+                    </div>
                     <button
                       type="button"
                       onClick={() => handleCancelGift(box)}

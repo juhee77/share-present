@@ -167,4 +167,24 @@ class OrderControllerTest {
                 .andExpect(jsonPath("$.orderId").value(1))
                 .andExpect(jsonPath("$.shippingStatus").value("WAITING"));
     }
+
+    @Test
+    @DisplayName("POST /api/v1/orders/extend-expiry/{sharingToken} - 선물 수락 기한 연장 성공")
+    void extendGiftExpiry_success() throws Exception {
+        // given
+        OrderResponse mockResponse = OrderResponse.builder()
+                .orderId(1L)
+                .lockedAmount(60000)
+                .shippingStatus("WAITING")
+                .expiredAt("2026-10-01T10:00:00")
+                .build();
+
+        given(orderService.extendGiftExpiry("sample-token")).willReturn(mockResponse);
+
+        // when & then
+        mockMvc.perform(post("/api/v1/orders/extend-expiry/sample-token"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.orderId").value(1))
+                .andExpect(jsonPath("$.expiredAt").value("2026-10-01T10:00:00"));
+    }
 }
