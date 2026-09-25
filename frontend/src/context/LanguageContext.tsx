@@ -25,6 +25,10 @@ const translations: Translations = {
     ko: "고객센터",
     en: "Support Center",
   },
+  "nav.admin": {
+    ko: "관리자",
+    en: "Admin",
+  },
 
   // Home / Curation
   "home.curated_tag": {

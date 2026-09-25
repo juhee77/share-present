@@ -21,6 +21,9 @@ class SupportInquiryControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @org.springframework.boot.test.mock.mockito.MockBean
+    private com.sharepresent.domain.support.repository.SupportInquiryRepository supportInquiryRepository;
+
     @Test
     @DisplayName("POST /api/v1/support/inquiries - 1:1 고객 지원 문의 접수 성공")
     void submitInquiry_success() throws Exception {

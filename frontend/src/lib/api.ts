@@ -32,6 +32,7 @@ export interface ProductDto {
   description?: string;
   imageUrl?: string;
   externalUrl?: string;
+  category?: string;
   options?: string[];
   isCustom?: boolean;
   icon?: string;
@@ -344,4 +345,226 @@ export async function addRollingPaperMessage(sharingToken: string, payload: AddR
   }
   return res.json();
 }
+
+// ================= ADMIN API INTERFACES & FUNCTIONS =================
+
+export interface AdminStatsDto {
+  totalOrders: number;
+  totalGrossAmount: number;
+  totalSettledAmount: number;
+  totalRefundAmount: number;
+  preparingCount: number;
+  shippingCount: number;
+  deliveredCount: number;
+  waitingAcceptCount: number;
+  acceptanceRate: number;
+  pendingInquiriesCount: number;
+  totalProductsCount: number;
+  soldOutProductsCount: number;
+}
+
+export interface AdminOrderDto {
+  id: number;
+  curationBoxId?: number;
+  sharingToken?: string;
+  senderName: string;
+  senderEmail?: string;
+  recipientName?: string;
+  recipientPhone?: string;
+  shippingAddress?: string;
+  shippingStatus: string;
+  carrierName?: string;
+  trackingNumber?: string;
+  selectedProductId?: number;
+  selectedProductName?: string;
+  selectedProductBrand?: string;
+  selectedProductPrice?: number;
+  selectedProductImageUrl?: string;
+  selectedOption?: string;
+  totalAmount: number;
+  finalAmount?: number;
+  refundAmount?: number;
+  paidAt?: string;
+  settledAt?: string;
+  desiredDeliveryDate?: string;
+  ecoFriendlyPackaging?: boolean;
+  entranceMemo?: string;
+  thankYouSticker?: string;
+  thankYouMessage?: string;
+  thankYouPhotoUrl?: string;
+  curationBoxStatus?: string;
+}
+
+export interface AdminInquiryDto {
+  id: number;
+  inquiryCode: string;
+  name: string;
+  email: string;
+  category?: string;
+  content: string;
+  status: "IN_PROGRESS" | "ANSWERED" | string;
+  adminReply?: string;
+  repliedAt?: string;
+  createdAt: string;
+}
+
+export interface UpdateShippingPayload {
+  shippingStatus: string;
+  carrierName?: string;
+  trackingNumber?: string;
+}
+
+export interface CreateProductPayload {
+  brand: string;
+  name: string;
+  price: number;
+  description?: string;
+  imageUrl?: string;
+  category?: string;
+  options?: string[];
+  stockQuantity?: number;
+}
+
+export interface UpdateProductPayload {
+  brand: string;
+  name: string;
+  price: number;
+  description?: string;
+  imageUrl?: string;
+  category?: string;
+  options?: string[];
+  isSoldOut?: boolean;
+  stockQuantity?: number;
+}
+
+export interface UpdateStockPayload {
+  isSoldOut?: boolean;
+  stockQuantity?: number;
+}
+
+export interface ReplyInquiryPayload {
+  reply: string;
+}
+
+export async function fetchAdminStats(): Promise<AdminStatsDto> {
+  const res = await fetch(`${BASE_URL}/admin/stats`);
+  if (!res.ok) {
+    throw new Error("어드민 통계 조회에 실패했습니다.");
+  }
+  return res.json();
+}
+
+export async function fetchAdminOrders(status?: string, keyword?: string): Promise<AdminOrderDto[]> {
+  const params = new URLSearchParams();
+  if (status && status !== "ALL") params.append("status", status);
+  if (keyword) params.append("keyword", keyword);
+
+  const res = await fetch(`${BASE_URL}/admin/orders?${params.toString()}`);
+  if (!res.ok) {
+    throw new Error("주문 목록 조회에 실패했습니다.");
+  }
+  return res.json();
+}
+
+export async function fetchAdminOrderById(orderId: number): Promise<AdminOrderDto> {
+  const res = await fetch(`${BASE_URL}/admin/orders/${orderId}`);
+  if (!res.ok) {
+    throw new Error("주문 상세 조회에 실패했습니다.");
+  }
+  return res.json();
+}
+
+export async function updateAdminShipping(orderId: number, payload: UpdateShippingPayload): Promise<AdminOrderDto> {
+  const res = await fetch(`${BASE_URL}/admin/orders/${orderId}/shipping`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) {
+    throw new Error("배송 상태 수정에 실패했습니다.");
+  }
+  return res.json();
+}
+
+export async function fetchAdminProducts(category?: string, keyword?: string): Promise<ProductDto[]> {
+  const params = new URLSearchParams();
+  if (category && category !== "ALL") params.append("category", category);
+  if (keyword) params.append("keyword", keyword);
+
+  const res = await fetch(`${BASE_URL}/admin/products?${params.toString()}`);
+  if (!res.ok) {
+    throw new Error("상품 목록 조회에 실패했습니다.");
+  }
+  return res.json();
+}
+
+export async function createAdminProduct(payload: CreateProductPayload): Promise<ProductDto> {
+  const res = await fetch(`${BASE_URL}/admin/products`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) {
+    throw new Error("상품 등록에 실패했습니다.");
+  }
+  return res.json();
+}
+
+export async function updateAdminProduct(productId: number, payload: UpdateProductPayload): Promise<ProductDto> {
+  const res = await fetch(`${BASE_URL}/admin/products/${productId}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) {
+    throw new Error("상품 수정에 실패했습니다.");
+  }
+  return res.json();
+}
+
+export async function updateAdminProductStock(productId: number, payload: UpdateStockPayload): Promise<ProductDto> {
+  const res = await fetch(`${BASE_URL}/admin/products/${productId}/stock`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) {
+    throw new Error("재고 상태 수정에 실패했습니다.");
+  }
+  return res.json();
+}
+
+export async function deleteAdminProduct(productId: number): Promise<{ message: string }> {
+  const res = await fetch(`${BASE_URL}/admin/products/${productId}`, {
+    method: "DELETE",
+  });
+  if (!res.ok) {
+    throw new Error("상품 삭제에 실패했습니다.");
+  }
+  return res.json();
+}
+
+export async function fetchAdminInquiries(status?: string): Promise<AdminInquiryDto[]> {
+  const params = new URLSearchParams();
+  if (status && status !== "ALL") params.append("status", status);
+
+  const res = await fetch(`${BASE_URL}/admin/inquiries?${params.toString()}`);
+  if (!res.ok) {
+    throw new Error("문의 목록 조회에 실패했습니다.");
+  }
+  return res.json();
+}
+
+export async function replyAdminInquiry(inquiryCode: string, payload: ReplyInquiryPayload): Promise<AdminInquiryDto> {
+  const res = await fetch(`${BASE_URL}/admin/inquiries/${inquiryCode}/reply`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) {
+    throw new Error("문의 답변 등록에 실패했습니다.");
+  }
+  return res.json();
+}
+
 

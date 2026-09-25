@@ -12,6 +12,7 @@ export default function Header() {
     { href: "/", label: t("nav.create") },
     { href: "/dashboard", label: t("nav.dashboard") },
     { href: "/support", label: t("nav.support") },
+    { href: "/admin", label: t("nav.admin") },
   ];
 
   return (

@@ -74,6 +74,12 @@
 - **고객센터 탭 네비게이션 & 1:1 문의 실시간 처리 현황 조회 (`SupportInquiryController.java`, `support/page.tsx`, `api.ts`)**: FAQ 검색, 1:1 문의 접수, 접수 번호(`inquiryId`) 기반 전문 상담원 배정/처리 상태 실시간 추적 뷰 및 평균 2시간 이내 회신 타임라인 가이드 제공.
 - **수령인 출고 전 실시간 배송 주소지 및 희망 배송일 변경 (`OrderController.java`, `OrderService.java`, `ModifyAddressModal.tsx`, `gift/track/[token]/page.tsx`)**: 수령인이 선물 수락 후 배송 출발 전(`PREPARING`) 상태일 때 실시간 배송 트래커 화면에서 배송 주소, 수령인 연락처, 희망 배송일(주말/평일/가장 빠른 배송)을 원클릭으로 안전하게 변경할 수 있도록 지원 (출고 후 변경 방어 로직 완비).
 - **컨트롤러 계층 Bean Validation 400 Bad Request 방어 테스트 완비 (`OrderControllerTest`, `CurationBoxControllerTest`, `SupportInquiryControllerTest`)**: 유효성 검증 테스트 스위트 100% 그린 유지.
+- **럭셔리 컨시어지 어드민 콘솔 & 백엔드 관리자 통합 도메인 (`AdminController.java`, `AdminService.java`, `admin/page.tsx`, `api.ts`)**:
+  1. **📊 대시보드 & 통계 (Overview)**: 총 가승인액, 실 정산 완료액, 자동 환불액, 선물 수락 전환율, 배송 단계별 풀필먼트 퍼널(상품준비/배송중/배송완료) 실시간 KPI 집계.
+  2. **📦 주문 & 배송 풀필먼트 관리 (Orders)**: 상태별 필터(상품준비/배송중/배송완료/취소환불), 발신자/수령인/운송장/연락처 실시간 검색, 배송지 주소 및 공동현관 출입 메모 조회, **1-Click 택배사(CJ대한통운, 우체국 등) 선택 및 운송장 번호 등록/배송 상태 업데이트 모달**.
+  3. **🏷️ 상품 & 재고 관리 (Catalog & Inventory)**: 카테고리별 필터, **실시간 품절(Sold-out) 토글 스위치**, 인라인 재고 증감 카운터, **신규 럭셔리 상품 등록/수정 모달 및 삭제 기능**.
+  4. **💬 1:1 고객센터 문의 관리 (Customer Inquiries)**: 고객 접수 문의 실시간 조회, **관리자 공식 답변 작성 모달** 및 답변 완료 시 고객 알림톡/이메일 발송 시뮬레이션 연동.
+  5. **DB 마이그레이션 (`V7__create_support_inquiries.sql`) & 단위/슬라이스 테스트 100% 그린 유지**.
 
 ---
 
