@@ -52,6 +52,21 @@
   }
 }
 
+/* Full Width Admin Console Layout Override */
+body:has(.admin-full-layout) {
+  background-color: #0d131f !important;
+  display: block !important;
+}
+
+.app-container:has(.admin-full-layout) {
+  max-width: 100% !important;
+  width: 100% !important;
+  background: #0d131f !important;
+  box-shadow: none !important;
+  border-left: none !important;
+  border-right: none !important;
+}
+
 /* Editorial Lookbook Cards */
 .editorial-card {
   background: #ffffff;

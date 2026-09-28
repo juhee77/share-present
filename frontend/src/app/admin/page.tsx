@@ -476,7 +476,7 @@ export default function AdminPage() {
   });
 
   return (
-    <div className="min-h-screen bg-[#0d131f] text-[#f8fafc] flex flex-col font-sans selection:bg-[#d4af37] selection:text-black">
+    <div className="admin-full-layout min-h-screen bg-[#0d131f] text-[#f8fafc] flex flex-col font-sans selection:bg-[#d4af37] selection:text-black w-full">
       <Header />
 
       {/* Admin Subheader Bar */}
@@ -790,7 +790,7 @@ export default function AdminPage() {
             {/* Orders Table */}
             <div className="bg-[#131b2e] border border-[#1e293b] rounded-xl overflow-hidden shadow-lg">
               <div className="overflow-x-auto">
-                <table className="w-full text-left text-xs">
+                <table className="w-full text-left text-xs min-w-[850px]">
                   <thead className="bg-[#18233c] text-[#94a3b8] uppercase font-bold tracking-wider border-b border-[#1e293b]">
                     <tr>
                       <th className="py-3 px-4">주문 번호</th>
