@@ -42,13 +42,58 @@ export default function ShareModal({
 원하는 아이템과 배송지를 입력하면 선물 배송이 시작됩니다:
 ${giftUrl}`;
 
+  const handleKakaoShare = async () => {
+    // 1. 클립보드에 초대 텍스트 자동 복사 (안전장치)
+    try {
+      await navigator.clipboard.writeText(kakaoMessage);
+    } catch {
+      // ignore clipboard error
+    }
+
+    // 2. 카카오톡 웹 공유 팝업 열기 (PC/모바일 공통 지원)
+    const kakaoSharerUrl = `https://sharer.kakao.com/talk/friends/picker/link?link=${encodeURIComponent(
+      giftUrl
+    )}&app_key=sharepresent`;
+
+    // 3. 모바일 Web Share API가 사용 가능한 경우 시스템 공유 시도
+    if (typeof navigator !== "undefined" && navigator.share && /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)) {
+      try {
+        await navigator.share({
+          title: `[SharePresent] ${senderName}님의 프라이빗 선물`,
+          text: kakaoMessage,
+          url: giftUrl,
+        });
+        soundFx.playSuccessTick();
+        showToast("카카오톡으로 선물이 공유되었습니다! 💌", "success");
+        return;
+      } catch (err) {
+        if ((err as Error).name === "AbortError") return;
+      }
+    }
+
+    // 4. 데스크탑 또는 Web Share fallback: 카카오 공식 웹 공유 팝업 열기
+    soundFx.playSuccessTick();
+    setCopiedType("kakao");
+    const width = 500;
+    const height = 650;
+    const left = window.screen.width / 2 - width / 2;
+    const top = window.screen.height / 2 - height / 2;
+    window.open(
+      kakaoSharerUrl,
+      "kakao_share",
+      `width=${width},height=${height},top=${top},left=${left},scrollbars=yes,resizable=yes`
+    );
+    showToast("카카오톡 공유창이 열렸습니다! (문구도 복사 완료) 💌", "success");
+    setTimeout(() => setCopiedType(null), 3000);
+  };
+
   const handleCopy = async (text: string, type: string) => {
     try {
       await navigator.clipboard.writeText(text);
       soundFx.playSuccessTick();
       setCopiedType(type);
-      if (type === "kakao") {
-        showToast("카카오톡 초대 문구가 복사되었습니다! 💌", "success");
+      if (type === "kakao-text") {
+        showToast("카카오톡 초대 문구가 복사되었습니다! 💬", "success");
       } else if (type === "insta") {
         showToast("인스타 DM 초대 링크가 복사되었습니다! ✨", "success");
       } else {
@@ -109,7 +154,7 @@ ${giftUrl}`;
   const themeStyles = themeMap[cardTheme] || themeMap.ivory;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fadeIn">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
       <div
         className="bg-[#faf9f6] w-full max-w-md rounded-2xl p-6 shadow-2xl border border-[#d8d5cf] relative overflow-hidden"
         onClick={(e) => e.stopPropagation()}
@@ -143,7 +188,7 @@ ${giftUrl}`;
             <div
               className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-serif font-bold shadow-inner ${themeStyles.seal}`}
             >
-              SP
+              {sealMonogram}
             </div>
           </div>
           <p className="text-xs font-serif italic mb-2 line-clamp-2">
@@ -159,29 +204,41 @@ ${giftUrl}`;
 
         {/* Share Action Grid */}
         <div className="space-y-2.5 mb-5">
+          {/* Primary Kakao Direct Send Button */}
+          <button
+            onClick={handleKakaoShare}
+            className="w-full flex items-center justify-center gap-2.5 py-3.5 bg-[#FEE500] hover:bg-[#FDD800] text-[#191919] rounded-xl text-xs font-bold active:scale-[0.99] transition-all shadow-md border border-[#f0d600]"
+          >
+            <svg className="w-4 h-4 fill-current flex-shrink-0" viewBox="0 0 24 24">
+              <path d="M12 3C6.477 3 2 6.477 2 10.765c0 2.766 1.868 5.19 4.686 6.556l-.97 3.567a.5.5 0 0 0 .736.545l4.242-2.802c.427.042.862.064 1.306.064 5.523 0 10-3.477 10-7.765S17.523 3 12 3z" />
+            </svg>
+            <span>카카오톡으로 선물 바로 보내기</span>
+            {copiedType === "kakao" && <span className="text-[10px] text-[#3c1e1e] font-normal">(실행 중)</span>}
+          </button>
+
           {/* Native Mobile Share */}
           <button
             onClick={handleNativeShare}
-            className="w-full flex items-center justify-center gap-2 py-3 bg-[#3b483a] text-white rounded-xl text-xs font-medium hover:bg-[#2e392d] active:scale-[0.99] transition-all shadow-md"
+            className="w-full flex items-center justify-center gap-2 py-2.5 bg-[#3b483a] text-white rounded-xl text-xs font-medium hover:bg-[#2e392d] active:scale-[0.99] transition-all shadow-sm"
           >
             <span>📱</span>
-            <span>스마트폰 기본 공유하기 (카카오톡, SNS)</span>
+            <span>스마트폰 기본 앱으로 공유하기</span>
           </button>
 
           <div className="grid grid-cols-2 gap-2">
             {/* Kakao Formatted Copy */}
             <button
-              onClick={() => handleCopy(kakaoMessage, "kakao")}
+              onClick={() => handleCopy(kakaoMessage, "kakao-text")}
               className={`flex flex-col items-center justify-center p-3 rounded-xl border text-xs font-medium transition-all ${
-                copiedType === "kakao"
+                copiedType === "kakao-text"
                   ? "bg-[#fee500]/20 border-[#fee500] text-[#3c1e1e]"
                   : "bg-[#fffdfa] border-[#e2ded6] hover:bg-[#f5f2eb] text-[#3c1e1e]"
               }`}
             >
-              <span className="text-base mb-1">🟡</span>
-              <span className="font-bold">카카오톡 초대문구</span>
+              <span className="text-base mb-1">💬</span>
+              <span className="font-bold">초대 문구 복사</span>
               <span className="text-[10px] text-[#7a7266] mt-0.5">
-                {copiedType === "kakao" ? "✓ 복사 완료!" : "정중한 안내 텍스트 복사"}
+                {copiedType === "kakao-text" ? "✓ 복사 완료!" : "정중한 안내 텍스트"}
               </span>
             </button>
 

@@ -14,6 +14,7 @@
   <!-- Premium Typography & Icons -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Noto+Sans+KR:wght@300;400;500;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
   <style>
@@ -23,6 +24,8 @@
       margin: 0;
       padding: 0;
       -webkit-tap-highlight-color: transparent;
+      word-break: keep-all;
+      overflow-wrap: break-word;
     }
 
     :root {
@@ -36,7 +39,7 @@
       --card-shadow: 0 10px 40px rgba(0, 0, 0, 0.04);
       --card-border: 1px solid rgba(121, 138, 117, 0.12);
       --serif-font: "Playfair Display", serif;
-      --sans-font: "Outfit", "Noto Sans KR", sans-serif;
+      --sans-font: "Pretendard", "Outfit", "Noto Sans KR", -apple-system, BlinkMacSystemFont, sans-serif;
       --transition-smooth: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
@@ -48,6 +51,9 @@
       display: flex;
       justify-content: center;
       align-items: flex-start;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
       min-height: 100vh;
       padding: 0;
     }
@@ -850,9 +856,13 @@
 
       <div id="generatedLinkArea" style="margin-top: 15px; display: none;">
         <div class="premium-card" style="padding: 16px; background-color: rgba(121, 138, 117, 0.05); text-align: center;">
-          <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 10px; word-break: break-all;">아래의 선물 전용 공유 링크가 복사되었습니다.<br>받는 사람에게 카톡이나 문자로 전송하세요!</p>
-          <input class="text-input" type="text" id="shareUrlInput" readonly style="font-size: 0.75rem; text-align: center; margin-bottom: 12px;">
-          <button class="secondary-btn" id="copyShareUrlBtn">링크 복사하기</button>
+          <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 10px; word-break: keep-all;">선물 전용 공유 링크가 준비되었습니다.<br>받는 분께 카카오톡이나 메시지로 전달해보세요!</p>
+          <button id="sendKakaoDirectBtn" style="width: 100%; padding: 12px; background: #FEE500; color: #191919; border: 1px solid #f0d600; border-radius: 50px; font-weight: 700; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 8px;">
+            <span>💬</span>
+            <span>카카오톡으로 바로 보내기</span>
+          </button>
+          <input class="text-input" type="text" id="shareUrlInput" readonly style="font-size: 0.75rem; text-align: center; margin-bottom: 8px;">
+          <button class="secondary-btn" id="copyShareUrlBtn">초대 링크 복사하기</button>
         </div>
       </div>
     </div>
@@ -1411,6 +1421,36 @@
       }).catch(err => {
         console.error("클립보드 복사 실패", err);
       });
+    });
+
+    getEl('sendKakaoDirectBtn').addEventListener('click', () => {
+      const shareUrl = getEl('shareUrlInput').value;
+      const senderName = getEl('senderInputName').value.trim() || "친구";
+      const kakaoMsg = `💌 [SharePresent] ${senderName}님이 당신을 위한 프라이빗 선물 룩북을 보냈습니다.\n\n취향에 꼭 맞는 선물을 직접 고르실 수 있도록 준비했어요.\n\n▶ ${shareUrl}`;
+
+      // 1. 클립보드 복사
+      navigator.clipboard.writeText(kakaoMsg).catch(() => {});
+
+      // 2. 모바일 Web Share API 지원 시
+      if (navigator.share && /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)) {
+        navigator.share({
+          title: `SharePresent - ${senderName}님의 선물`,
+          text: kakaoMsg,
+          url: shareUrl
+        }).catch(err => {
+          if (err.name !== 'AbortError') showToast("카카오톡 문구가 복사되었습니다!");
+        });
+        return;
+      }
+
+      // 3. 데스크탑 카카오 공식 웹 공유 팝업
+      const kakaoUrl = `https://sharer.kakao.com/talk/friends/picker/link?link=${encodeURIComponent(shareUrl)}&app_key=sharepresent`;
+      const width = 500;
+      const height = 650;
+      const left = window.screen.width / 2 - width / 2;
+      const top = window.screen.height / 2 - height / 2;
+      window.open(kakaoUrl, 'kakao_share', `width=${width},height=${height},top=${top},left=${left},scrollbars=yes,resizable=yes`);
+      showToast("카카오톡 공유창이 열렸습니다! (문구 복사 완료)");
     });
 
     getEl('copyShareUrlBtn').addEventListener('click', () => {

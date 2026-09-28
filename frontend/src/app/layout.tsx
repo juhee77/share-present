@@ -11,6 +11,7 @@ const notoSans = Noto_Sans_KR({
   subsets: ["latin"],
   weight: ["300", "400", "500", "700"],
   variable: "--font-sans",
+  preload: false,
 });
 
 export const viewport: Viewport = {

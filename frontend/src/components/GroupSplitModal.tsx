@@ -52,6 +52,47 @@ export default function GroupSplitModal({
     return text;
   };
 
+  const handleKakaoShare = async () => {
+    const text = generateShareText();
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch {
+      // ignore clipboard error
+    }
+
+    if (typeof navigator !== "undefined" && navigator.share && /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)) {
+      try {
+        await navigator.share({
+          title: `[SharePresent] 공동 선물 정산 요청`,
+          text: text,
+        });
+        setCopied(true);
+        showToast("카카오톡으로 정산 요청이 공유되었습니다! 💬", "success");
+        setTimeout(() => setCopied(false), 3000);
+        return;
+      } catch (err) {
+        if ((err as Error).name === "AbortError") return;
+      }
+    }
+
+    // 데스크탑 / fallback
+    const kakaoSharerUrl = `https://sharer.kakao.com/talk/friends/picker/link?link=${encodeURIComponent(
+      window.location.origin
+    )}&app_key=sharepresent`;
+    const width = 500;
+    const height = 650;
+    const left = window.screen.width / 2 - width / 2;
+    const top = window.screen.height / 2 - height / 2;
+    window.open(
+      kakaoSharerUrl,
+      "kakao_share",
+      `width=${width},height=${height},top=${top},left=${left},scrollbars=yes,resizable=yes`
+    );
+    setCopied(true);
+    showToast("정산 메시지가 복사되었으며, 카카오톡 공유창이 열렸습니다! 💬", "success");
+    setTimeout(() => setCopied(false), 3000);
+  };
+
   const handleCopy = () => {
     navigator.clipboard.writeText(generateShareText());
     setCopied(true);
@@ -204,10 +245,11 @@ export default function GroupSplitModal({
             닫기
           </button>
           <button
-            onClick={handleCopy}
-            className="flex-[2] py-2.5 text-xs font-bold text-white bg-[#3b483a] hover:bg-[#2e392d] rounded-xl shadow-md transition-all flex items-center justify-center gap-1.5"
+            onClick={handleKakaoShare}
+            className="flex-[2] py-2.5 text-xs font-bold text-[#191919] bg-[#FEE500] hover:bg-[#FDD800] border border-[#f0d600] rounded-xl shadow-sm transition-all flex items-center justify-center gap-1.5"
           >
-            <span>{copied ? "✓ 복사 완료!" : "💬 카톡 정산 메시지 복사"}</span>
+            <span>💬</span>
+            <span>{copied ? "✓ 전송 완료!" : "카톡으로 정산 요청 보내기"}</span>
           </button>
         </div>
       </div>

@@ -1,3 +1,4 @@
+@import "pretendard/dist/web/static/pretendard.css";
 @import "tailwindcss";
 
 @layer base {
@@ -13,14 +14,22 @@
     --border-color: rgba(59, 72, 58, 0.08);
   }
 
+  * {
+    word-break: keep-all;
+    overflow-wrap: break-word;
+  }
+
   body {
     background-color: var(--bg-color);
     color: var(--text-dark);
-    font-family: var(--font-sans), system-ui, -apple-system, sans-serif;
+    font-family: "Pretendard", var(--font-sans), -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Noto Sans KR", sans-serif;
     min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: flex-start;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
   }
 }
 
