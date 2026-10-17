@@ -98,7 +98,7 @@ const MOCK_RECEIVED_BOXES: MockReceivedBox[] = [
     shippingStatus: "SHIPPED",
     carrierName: "CJ대한통운",
     trackingNumber: "7210-9834-1102",
-    imageUrl: "https://images.unsplash.com/photo-1608248597309-45da1e028896?w=600&auto=format&fit=crop&q=80",
+    imageUrl: "https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?w=600&auto=format&fit=crop&q=80",
   },
 ];
 
@@ -161,7 +161,7 @@ const TRENDING_GIFTS = [
     pickRate: "28%",
     category: "바디/스파",
     tag: "🍃 스파 릴랙싱",
-    imageUrl: "https://images.unsplash.com/photo-1608248597309-45da1e028896?w=600&auto=format&fit=crop&q=80",
+    imageUrl: "https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?w=600&auto=format&fit=crop&q=80",
   },
   {
     rank: 7,

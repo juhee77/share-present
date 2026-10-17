@@ -1,0 +1,1130 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>SharePresent UI·워크플로우 개편 제안서 v1.2 (Cute & Neat Edition)</title>
+<meta name="description" content="SharePresent 모바일 선물 큐레이션 플랫폼의 UI 구조 및 워크플로우 개편 제안서. 로컬 Pretendard 폰트 기반의 단정하고 감도 높은 에디토리얼 무드, Before/After 폰 목업, 인터랙티브 시뮬레이터 포함." />
+<!-- Pretendard (/Users/juhee/font 로컬 복사본: Variable & Static WOFF2) -->
+<link rel="stylesheet" href="./fonts/pretendard/variable/pretendardvariable.css" />
+<link rel="stylesheet" href="./fonts/pretendard/static/pretendard.css" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;1,9..144,600&family=Quicksand:wght@600;700;800&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --ink: #222521;
+    --ink-2: #595e56;
+    --ink-3: #8a8e85;
+    --sage: #384937;
+    --sage-dark: #273426;
+    --sage-soft: #4d634b;
+    --sage-50: #eff4ed;
+    --sage-100: #e2ebe0;
+    --butter: #fdf5e2;
+    --butter-deep: #f5dfa6;
+    --peach: #fcedea;
+    --peach-deep: #f6c8bf;
+    --coral: #df6d53;
+    --tan: #a48a73;
+    --ivory: #faf7f0;
+    --canvas: #f6f3eb;
+    --paper: #ffffff;
+    --line: #eae3d5;
+    --line-soft: #f2ede3;
+    --radius-sm: 12px;
+    --radius-md: 18px;
+    --radius-lg: 26px;
+    --radius-pill: 999px;
+    --shadow-soft: 0 14px 40px rgba(56, 73, 55, 0.08);
+    --shadow-float: 0 20px 50px rgba(56, 73, 55, 0.12);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; word-break: keep-all; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: "Pretendard Variable", "Pretendard", -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+    color: var(--ink);
+    background: var(--ivory);
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  .serif, .fraunces { font-family: "Fraunces", serif; }
+  .quicksand { font-family: "Quicksand", sans-serif; }
+  .wrap { max-width: 1140px; margin: 0 auto; padding: 0 28px; }
+  
+  /* Cute badges & text styles */
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12.5px;
+    font-weight: 800;
+    letter-spacing: .08em;
+    color: var(--sage);
+    background: var(--sage-50);
+    padding: 6px 14px;
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--sage-100);
+    margin-bottom: 12px;
+  }
+  h2.section-title {
+    font-size: 34px;
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    margin: 6px 0 14px;
+    color: var(--ink);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .lead { color: var(--ink-2); font-size: 16px; max-width: 740px; line-height: 1.7; }
+  section { padding: 90px 0; border-bottom: 1px solid var(--line); }
+
+  /* Top nav */
+  .topnav {
+    position: sticky; top: 0; z-index: 60;
+    backdrop-filter: blur(16px);
+    background: rgba(250, 247, 240, 0.88);
+    border-bottom: 1px solid var(--line);
+    transition: all .2s;
+  }
+  .topnav .wrap { display: flex; align-items: center; justify-content: space-between; height: 68px; }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 16px; color: var(--sage); }
+  .brand-mark {
+    width: 34px; height: 34px; border-radius: 12px;
+    background: linear-gradient(135deg, var(--sage), var(--sage-dark));
+    color: #fff; display: grid; place-items: center;
+    font-family: "Fraunces", serif; font-size: 18px;
+    box-shadow: 0 4px 12px rgba(56, 73, 55, 0.2);
+  }
+  .topnav nav { display: flex; align-items: center; gap: 8px; }
+  .topnav nav a {
+    font-size: 13.5px; font-weight: 700; color: var(--ink-2);
+    text-decoration: none; padding: 7px 14px; border-radius: var(--radius-pill);
+    transition: all .2s;
+  }
+  .topnav nav a:hover { color: var(--sage); background: var(--sage-50); }
+
+  /* Hero */
+  .hero { padding: 110px 0 90px; position: relative; overflow: hidden; border-bottom: 1px solid var(--line); background: var(--canvas); }
+  .hero::before {
+    content: ""; position: absolute; top: -100px; right: -50px; width: 580px; height: 580px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(253, 245, 226, 0.9), rgba(246, 200, 191, 0.35) 60%, transparent 75%);
+    filter: blur(40px); pointer-events: none;
+  }
+  .hero::after {
+    content: ""; position: absolute; bottom: -120px; left: -80px; width: 500px; height: 500px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(226, 235, 224, 0.8), transparent 70%);
+    filter: blur(40px); pointer-events: none;
+  }
+  .hero .wrap { position: relative; z-index: 1; }
+  .hero h1 {
+    font-size: clamp(38px, 5.5vw, 62px);
+    line-height: 1.15;
+    letter-spacing: -0.035em;
+    font-weight: 800;
+    margin: 16px 0 20px;
+    color: var(--ink);
+  }
+  .hero h1 em {
+    font-family: "Fraunces", serif;
+    font-style: italic;
+    color: var(--sage);
+    font-weight: 600;
+  }
+  .meta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 32px; }
+  .pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 13px; font-weight: 800; padding: 8px 16px;
+    border-radius: var(--radius-pill); background: var(--paper);
+    border: 1px solid var(--line); color: var(--ink-2);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+  }
+  .pill.dark { background: var(--sage); color: #fff; border-color: var(--sage); box-shadow: 0 4px 14px rgba(56, 73, 55, 0.25); }
+  .pill.cute { background: var(--butter); color: #7a5416; border-color: var(--butter-deep); }
+
+  /* Cards */
+  .grid { display: grid; gap: 20px; }
+  .g3 { grid-template-columns: repeat(3, 1fr); }
+  .g2 { grid-template-columns: repeat(2, 1fr); }
+  .g4 { grid-template-columns: repeat(4, 1fr); }
+  @media (max-width: 860px) { .g3, .g4, .g2 { grid-template-columns: 1fr; } }
+  .card {
+    background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius-lg); padding: 28px;
+    box-shadow: 0 4px 20px rgba(56, 73, 55, 0.03);
+    transition: transform .35s cubic-bezier(.16,1,.3,1), box-shadow .35s;
+  }
+  .card:hover { transform: translateY(-4px); box-shadow: var(--shadow-soft); }
+  .card h3 { font-size: 19px; font-weight: 800; margin-bottom: 8px; letter-spacing: -0.015em; color: var(--ink); }
+  .card p, .card li { font-size: 14.5px; color: var(--ink-2); line-height: 1.65; }
+  .card ul { padding-left: 20px; margin-top: 10px; }
+  .card .tag {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 11.5px; font-weight: 800; letter-spacing: .06em;
+    color: var(--sage); background: var(--sage-50);
+    padding: 4px 10px; border-radius: var(--radius-pill);
+    margin-bottom: 12px;
+  }
+
+  /* Audit table */
+  table { width: 100%; border-collapse: collapse; background: var(--paper); border-radius: var(--radius-md); overflow: hidden; border: 1px solid var(--line); font-size: 14px; box-shadow: 0 4px 20px rgba(0,0,0,0.02); }
+  th, td { text-align: left; padding: 16px 20px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+  th { background: #f5f0e6; font-size: 12.5px; letter-spacing: .04em; color: var(--ink-2); font-weight: 800; }
+  tr:last-child td { border-bottom: none; }
+  .sev { font-size: 11.5px; font-weight: 800; padding: 4px 10px; border-radius: var(--radius-pill); white-space: nowrap; display: inline-flex; align-items: center; gap: 4px; }
+  .sev.h { background: #fce8e6; color: #b83c2e; border: 1px solid #f6c8bf; }
+  .sev.m { background: var(--butter); color: #8e621b; border: 1px solid var(--butter-deep); }
+  .sev.l { background: var(--sage-50); color: var(--sage); border: 1px solid var(--sage-100); }
+
+  /* Flow */
+  .flow { display: flex; align-items: stretch; gap: 12px; margin-top: 36px; flex-wrap: wrap; }
+  .flow .node {
+    flex: 1; min-width: 200px; background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius-md);
+    padding: 24px; position: relative; box-shadow: 0 4px 16px rgba(0,0,0,0.02);
+  }
+  .flow .node b {
+    display: inline-block; font-size: 11.5px; font-weight: 800; color: var(--sage);
+    background: var(--sage-50); padding: 3px 10px; border-radius: var(--radius-pill);
+    margin-bottom: 8px;
+  }
+  .flow .node h4 { font-size: 17.5px; font-weight: 800; margin: 4px 0 6px; }
+  .flow .node p { font-size: 13.5px; color: var(--ink-2); }
+  .flow .arrow { width: 30px; display: grid; place-items: center; color: var(--sage-soft); font-weight: 800; font-size: 18px; }
+  @media (max-width: 860px) { .flow .arrow { width: 100%; height: 24px; transform: rotate(90deg); } }
+
+  /* ========================================================
+     INTERACTIVE LIVE PHONE SIMULATOR (CUTE & NEAT)
+     ======================================================== */
+  .sim-container {
+    margin: 44px 0 60px;
+    background: linear-gradient(135deg, #f4efe4, #fbf7ef);
+    border: 1px solid var(--line);
+    border-radius: 36px;
+    padding: 40px 32px;
+    box-shadow: var(--shadow-float);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .sim-header {
+    text-align: center;
+    max-width: 640px;
+    margin-bottom: 28px;
+  }
+  .sim-header h3 {
+    font-size: 26px;
+    font-weight: 800;
+    margin-bottom: 8px;
+    color: var(--ink);
+  }
+  .sim-tabs {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 32px;
+    background: rgba(255, 255, 255, 0.7);
+    padding: 6px;
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--line);
+  }
+  .sim-btn {
+    appearance: none;
+    background: transparent;
+    border: none;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 800;
+    padding: 8px 18px;
+    border-radius: var(--radius-pill);
+    color: var(--ink-2);
+    cursor: pointer;
+    transition: all .2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .sim-btn:hover { color: var(--sage); background: rgba(255, 255, 255, 0.8); }
+  .sim-btn.active {
+    background: var(--sage);
+    color: #fff;
+    box-shadow: 0 4px 14px rgba(56, 73, 55, 0.25);
+  }
+
+  /* Ultra realistic Cute iPhone Frame */
+  .sim-phone {
+    width: 320px;
+    height: 650px;
+    border-radius: 46px;
+    background: #1e231e;
+    padding: 10px;
+    box-shadow: 0 25px 60px rgba(40, 50, 38, 0.22), inset 0 0 0 2px #444f43;
+    position: relative;
+    border: 3px solid #2e382c;
+  }
+  .sim-screen {
+    width: 100%;
+    height: 100%;
+    border-radius: 38px;
+    background: var(--ivory);
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+  /* Status Bar */
+  .status-bar {
+    height: 38px;
+    padding: 10px 20px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    font-weight: 800;
+    color: var(--ink);
+    z-index: 10;
+  }
+  .dynamic-island {
+    position: absolute;
+    top: 9px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90px;
+    height: 22px;
+    border-radius: 20px;
+    background: #111;
+    z-index: 15;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 8px;
+  }
+  .dynamic-island i { width: 8px; height: 8px; border-radius: 50%; background: #1c2e1c; display: block; }
+  
+  /* Mockup Content Views */
+  .sim-view {
+    flex: 1;
+    display: none;
+    flex-direction: column;
+    overflow-y: auto;
+    padding: 8px 14px 16px;
+    animation: fadeIn .25s ease-out;
+  }
+  .sim-view.active { display: flex; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+  /* Sub components in Mockup */
+  .m-progress { display: flex; gap: 5px; margin: 4px 0 12px; }
+  .m-progress b { flex: 1; height: 5px; border-radius: var(--radius-pill); background: #e3ded4; }
+  .m-progress b.done { background: var(--sage); }
+
+  .m-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 10px; font-weight: 800; padding: 3px 8px;
+    border-radius: var(--radius-pill); background: var(--sage-50);
+    color: var(--sage); width: fit-content; margin-bottom: 6px;
+  }
+  .m-title { font-size: 16px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.35; margin-bottom: 4px; color: var(--ink); }
+  .m-subtitle { font-size: 10.5px; color: var(--ink-2); margin-bottom: 12px; line-height: 1.4; }
+
+  /* Occasion Grid */
+  .m-occ-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+  .m-occ-item {
+    background: #fff; border: 1.5px solid var(--line); border-radius: 14px; padding: 10px 8px;
+    text-align: center; cursor: pointer; transition: all .2s; font-size: 11px; font-weight: 800;
+  }
+  .m-occ-item .icon { font-size: 18px; display: block; margin-bottom: 3px; }
+  .m-occ-item small { display: block; font-size: 8.5px; color: var(--tan); margin-top: 2px; font-weight: 700; }
+  .m-occ-item.selected {
+    border-color: var(--sage); background: var(--sage-50);
+    box-shadow: 0 4px 12px rgba(56, 73, 55, 0.12);
+  }
+
+  /* Budget Chips */
+  .m-chip-group { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+  .m-chip {
+    font-size: 9.5px; font-weight: 800; padding: 4px 10px; border-radius: var(--radius-pill);
+    background: #fff; border: 1px solid var(--line); color: var(--ink-2);
+  }
+  .m-chip.on { background: var(--sage); color: #fff; border-color: var(--sage); }
+  .m-chip.cute { background: var(--butter); color: #8e621b; border-color: var(--butter-deep); }
+
+  /* Product Grid in Mockup */
+  .m-pgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+  .m-pcard {
+    background: #fff; border: 1.5px solid var(--line); border-radius: 14px;
+    overflow: hidden; position: relative; transition: all .2s;
+  }
+  .m-pcard.selected { border-color: var(--sage); box-shadow: 0 4px 14px rgba(56,73,55,0.12); }
+  .m-pcard img { width: 100%; aspect-ratio: 1; object-fit: cover; display: block; }
+  .m-pcard .pinfo { padding: 6px 8px 8px; }
+  .m-pcard .pbrand { font-size: 8px; font-weight: 800; color: var(--tan); letter-spacing: .06em; text-transform: uppercase; }
+  .m-pcard .pname { font-size: 9.5px; font-weight: 800; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 1px; }
+  .m-pcard .pcheck {
+    position: absolute; top: 6px; right: 6px; width: 18px; height: 18px; border-radius: 50%;
+    background: var(--sage); color: #fff; font-size: 10px; font-weight: 800;
+    display: grid; place-items: center; box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  }
+
+  /* Card Preview in Mockup */
+  .m-card-preview {
+    background: #ffffff; border: 1.5px solid var(--line); border-radius: 18px;
+    padding: 14px; position: relative; margin-bottom: 12px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.03);
+  }
+  .m-wax-seal {
+    position: absolute; top: 12px; right: 12px; width: 28px; height: 28px; border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #9e433a, #5c201a);
+    color: #f7dfbe; font-family: "Fraunces", serif; font-size: 9px; font-weight: 800;
+    display: grid; place-items: center; box-shadow: 0 4px 10px rgba(92, 32, 26, 0.35);
+  }
+  .m-card-msg { font-size: 10.5px; font-weight: 700; color: var(--ink); line-height: 1.5; padding-right: 32px; margin: 8px 0; }
+  .m-card-sender { font-size: 8.5px; font-weight: 800; color: var(--tan); letter-spacing: .08em; }
+
+  /* Recipient Envelope Box */
+  .m-envelope-box {
+    background: #ffffff; border: 1.5px solid #dfd8cc; border-radius: 18px;
+    padding: 16px; text-align: center; position: relative; margin-bottom: 12px;
+    box-shadow: 0 6px 20px rgba(56, 73, 55, 0.06);
+  }
+  .m-wax-big {
+    width: 44px; height: 44px; border-radius: 50%; margin: 8px auto 10px;
+    background: radial-gradient(circle at 35% 35%, #9e433a, #5c201a);
+    color: #f7dfbe; font-family: "Fraunces", serif; font-size: 13px; font-weight: 800;
+    display: grid; place-items: center; box-shadow: 0 6px 14px rgba(92, 32, 26, 0.4);
+    cursor: pointer;
+  }
+  .m-zero-price-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 9px; font-weight: 800; color: #2e6040; background: #e8f5ec;
+    padding: 4px 10px; border-radius: var(--radius-pill); border: 1px solid #cce8d5;
+    margin-top: 6px;
+  }
+
+  /* Mockup CTA & Tabbar */
+  .m-cta-btn {
+    margin-top: auto; padding: 11px 14px; border-radius: 14px; background: var(--sage);
+    color: #fff; font-size: 11px; font-weight: 800; display: flex; justify-content: space-between;
+    align-items: center; box-shadow: 0 4px 12px rgba(56, 73, 55, 0.25); text-decoration: none;
+  }
+  .m-tabbar {
+    height: 48px; border-top: 1px solid var(--line); background: #fff;
+    display: flex; justify-content: space-around; align-items: center;
+    font-size: 8.5px; font-weight: 800; color: var(--ink-3);
+  }
+  .m-tab-item { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+  .m-tab-item.active { color: var(--sage); }
+
+  /* ========================================================
+     STATIC PHONES GRID (5 STAGES + BEFORE)
+     ======================================================== */
+  .phones { display: flex; gap: 26px; justify-content: center; flex-wrap: wrap; margin-top: 40px; }
+  .phone-col { text-align: center; width: 236px; }
+  .phone-col .cap { margin-top: 14px; font-size: 12.5px; font-weight: 700; color: var(--ink-2); line-height: 1.4; }
+  .phone-col .cap b { color: var(--ink); display: block; font-size: 14.5px; margin-bottom: 2px; }
+  .phone {
+    width: 236px; height: 490px; border-radius: 36px; background: #1f251f; padding: 8px; box-shadow: var(--shadow-soft);
+    position: relative; border: 2.5px solid #2f382d;
+  }
+  .screen { width: 100%; height: 100%; border-radius: 28px; background: var(--ivory); overflow: hidden; position: relative; display: flex; flex-direction: column; }
+  .notch { position: absolute; top: 6px; left: 50%; transform: translateX(-50%); width: 72px; height: 18px; border-radius: 20px; background: #111; z-index: 5; }
+  .phone .m-body { flex: 1; padding: 28px 10px 10px; overflow: hidden; display: flex; flex-direction: column; }
+
+  /* Before Phone Specifics */
+  .before .screen { background: #f9f8f5; }
+  .warn-badge {
+    position: absolute; right: 8px; top: 90px; background: var(--coral); color: #fff;
+    font-size: 8.5px; font-weight: 800; padding: 4px 8px; border-radius: 6px;
+    transform: rotate(4deg); box-shadow: 0 4px 10px rgba(223, 109, 83, 0.4); z-index: 10;
+  }
+
+  /* Tokens */
+  .swatch { border-radius: var(--radius-md); overflow: hidden; border: 1px solid var(--line); background: #fff; box-shadow: 0 2px 10px rgba(0,0,0,0.02); }
+  .swatch .c { height: 78px; }
+  .swatch .l { padding: 12px 14px; font-size: 12px; }
+  .swatch .l b { display: block; font-size: 13.5px; color: var(--ink); }
+  .swatch code { color: var(--ink-3); font-size: 11px; }
+
+  .kpi { font-size: 42px; font-weight: 800; color: var(--sage); letter-spacing: -0.03em; font-family: "Quicksand", sans-serif; }
+  .callout {
+    background: linear-gradient(135deg, var(--sage), var(--sage-dark));
+    color: #f7f6f0; border-radius: var(--radius-lg); padding: 34px; margin-top: 30px;
+    box-shadow: var(--shadow-soft);
+  }
+  .callout h3 { font-size: 22px; margin-bottom: 10px; font-weight: 800; }
+  .callout li { margin-left: 20px; font-size: 14.5px; opacity: .94; margin-bottom: 6px; }
+  footer { padding: 60px 0 90px; color: var(--ink-3); font-size: 13.5px; text-align: center; }
+
+  .reveal { opacity: 0; transform: translateY(16px); transition: opacity .7s cubic-bezier(.16,1,.3,1), transform .7s cubic-bezier(.16,1,.3,1); }
+  .reveal.in { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) {
+    .reveal { opacity: 1; transform: none; transition: none; }
+  }
+</style>
+</head>
+<body>
+<header class="topnav">
+  <div class="wrap">
+    <div class="brand"><span class="brand-mark">S</span>SharePresent · UI Redesign v1.2</div>
+    <nav aria-label="문서 목차">
+      <a href="#simulator">라이브 목업</a>
+      <a href="#research">트렌드 리서치</a>
+      <a href="#audit">현황 감사</a>
+      <a href="#ia">신규 구조</a>
+      <a href="#mockups">전체 화면</a>
+      <a href="#tokens">디자인 토큰</a>
+      <a href="#handoff">핸드오프</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <!-- Hero -->
+  <div class="hero">
+    <div class="wrap">
+      <span class="eyebrow">✨ Cute & Neat Edition · Design Proposal v1.2</span>
+      <h1>열다섯 화면의 폼을<br /><em>네 번의 따뜻한 설렘</em>으로.</h1>
+      <p class="lead">정갈하고 단정한 <b>Pretendard</b> 폰트와 감도 높은 에디토리얼 그리드를 결합했습니다. 토스의 직관적인 원씽 퍼 페이지와 29CM의 감성 큐레이션을 SharePresent만의 따뜻하고 사랑스러운 무드로 재완성합니다.</p>
+      <div class="meta">
+        <span class="pill dark">✦ 4-Step Create Wizard</span>
+        <span class="pill cute">🧸 Pretendard Typography</span>
+        <span class="pill">💌 Live Card Preview</span>
+        <span class="pill">🛍️ 2-Column Product Grid</span>
+        <span class="pill">🔒 Recipient 0-Price Shield</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- INTERACTIVE SIMULATOR SECTION -->
+  <section id="simulator" style="background: #ffffff;">
+    <div class="wrap">
+      <div class="sim-container">
+        <div class="sim-header">
+          <span class="eyebrow">📱 Live Interactive Mockup</span>
+          <h3>화면 단계를 직접 탭하여 체험해보세요</h3>
+          <p class="lead" style="font-size:14.5px;">위저드의 각 단계 버튼을 클릭하면 실제 모바일 앱처럼 화면이 전환됩니다.</p>
+        </div>
+
+        <div class="sim-tabs" role="tablist">
+          <button class="sim-btn active" onclick="switchSim('step1', this)">🎂 1. 상황·예산</button>
+          <button class="sim-btn" onclick="switchSim('step2', this)">🎁 2. 선물 선택</button>
+          <button class="sim-btn" onclick="switchSim('step3', this)">💌 3. 카드 데코</button>
+          <button class="sim-btn" onclick="switchSim('step4', this)">🛡️ 4. 안심 결제</button>
+          <button class="sim-btn" onclick="switchSim('recipient', this)">💖 5. 받는 분 화면</button>
+        </div>
+
+        <!-- Phone Simulator Device -->
+        <div class="sim-phone">
+          <div class="sim-screen">
+            <!-- Dynamic Island & Status Bar -->
+            <div class="dynamic-island"><i></i></div>
+            <div class="status-bar">
+              <span class="quicksand">9:41</span>
+              <span>5G 📶 🔋</span>
+            </div>
+
+            <!-- VIEW 1: STEP 1 (상황·예산) -->
+            <div id="sim-view-step1" class="sim-view active">
+              <div class="m-progress"><b class="done"></b><b></b><b></b><b></b></div>
+              <span class="m-badge">STEP 1 · 상황 고르기</span>
+              <div class="m-title">어떤 특별한 날을<br/>축하하고 싶으신가요? 🎂</div>
+              <div class="m-subtitle">상황을 고르면 어울리는 예산과 선물이 자동 세팅돼요.</div>
+              
+              <div class="m-occ-grid">
+                <div class="m-occ-item selected" onclick="toggleOcc(this)">
+                  <span class="icon">🎂</span>생일 축하
+                  <small>3만 ~ 6만원</small>
+                </div>
+                <div class="m-occ-item" onclick="toggleOcc(this)">
+                  <span class="icon">💌</span>연인·기념일
+                  <small>4만 ~ 9만원</small>
+                </div>
+                <div class="m-occ-item" onclick="toggleOcc(this)">
+                  <span class="icon">🏡</span>따뜻한 집들이
+                  <small>4만 ~ 8만원</small>
+                </div>
+                <div class="m-occ-item" onclick="toggleOcc(this)">
+                  <span class="icon">💼</span>취업·이직 응원
+                  <small>3만 ~ 5만원</small>
+                </div>
+                <div class="m-occ-item" onclick="toggleOcc(this)">
+                  <span class="icon">🧸</span>소소한 힐링·위로
+                  <small>2만 ~ 4만원</small>
+                </div>
+                <div class="m-occ-item" onclick="toggleOcc(this)">
+                  <span class="icon">☕</span>고마운 마음 전달
+                  <small>3만 ~ 7만원</small>
+                </div>
+              </div>
+
+              <div style="font-size:10px;font-weight:800;color:var(--ink-2);margin-bottom:6px;">추천 예산 바운드</div>
+              <div class="m-chip-group">
+                <span class="m-chip on">최소 30,000원</span>
+                <span class="m-chip on">최대 60,000원</span>
+                <span class="m-chip cute">✨ 맞춤 자동 조정</span>
+              </div>
+
+              <a href="javascript:void(0)" class="m-cta-btn" onclick="nextSim('step2')">
+                <span>다음 · 어울리는 선물 고르기</span>
+                <span>→</span>
+              </a>
+            </div>
+
+            <!-- VIEW 2: STEP 2 (선물 선택 2열 그리드) -->
+            <div id="sim-view-step2" class="sim-view">
+              <div class="m-progress"><b class="done"></b><b class="done"></b><b></b><b></b></div>
+              <span class="m-badge">STEP 2 · 선물 큐레이션</span>
+              <div class="m-title">마음에 쏙 드는 선물을<br/>2~3가지 제안해주세요 🎁</div>
+              <div class="m-chip-group" style="margin-bottom:8px;">
+                <span class="m-chip on">전체</span>
+                <span class="m-chip">☕ 테이블웨어</span>
+                <span class="m-chip">🌿 홈 프래그런스</span>
+                <span class="m-chip">🧴 바디케어</span>
+              </div>
+
+              <div class="m-pgrid">
+                <div class="m-pcard selected" onclick="toggleProd(this)">
+                  <img src="https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=600&auto=format&fit=crop&q=80" alt="머그" />
+                  <div class="pcheck">✓</div>
+                  <div class="pinfo">
+                    <div class="pbrand">OIMU</div>
+                    <div class="pname">소락사 샌디 머그</div>
+                  </div>
+                </div>
+                <div class="m-pcard selected" onclick="toggleProd(this)">
+                  <img src="https://images.unsplash.com/photo-1547887537-6158d64c35b3?w=600&auto=format&fit=crop&q=80" alt="사쉐" />
+                  <div class="pcheck">✓</div>
+                  <div class="pinfo">
+                    <div class="pbrand">GRANHAND</div>
+                    <div class="pname">마린 오크모스 사쉐</div>
+                  </div>
+                </div>
+                <div class="m-pcard" onclick="toggleProd(this)">
+                  <img src="https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?w=600&auto=format&fit=crop&q=80" alt="핸드워시" />
+                  <div class="pcheck" style="display:none">✓</div>
+                  <div class="pinfo">
+                    <div class="pbrand">NONFICTION</div>
+                    <div class="pname">젠틀나잇 핸드워시</div>
+                  </div>
+                </div>
+                <div class="m-pcard" onclick="toggleProd(this)">
+                  <img src="https://images.unsplash.com/photo-1517256064527-09c73fc73e38?w=600&auto=format&fit=crop&q=80" alt="텀블러" />
+                  <div class="pcheck" style="display:none">✓</div>
+                  <div class="pinfo">
+                    <div class="pbrand">KINTO</div>
+                    <div class="pname">데이오프 텀블러</div>
+                  </div>
+                </div>
+              </div>
+
+              <a href="javascript:void(0)" class="m-cta-btn" onclick="nextSim('step3')">
+                <span id="selected-count-label">2개 선물 담음 · 카드 작성</span>
+                <span>→</span>
+              </a>
+            </div>
+
+            <!-- VIEW 3: STEP 3 (카드 & 왁스씰 데코) -->
+            <div id="sim-view-step3" class="sim-view">
+              <div class="m-progress"><b class="done"></b><b class="done"></b><b class="done"></b><b></b></div>
+              <span class="m-badge">STEP 3 · 감성 카드 꾸미기</span>
+              <div class="m-title">마음을 담아<br/>편지 카드를 꾸며요 💌</div>
+
+              <div class="m-card-preview">
+                <div class="m-wax-seal">HBD</div>
+                <div class="m-card-sender">FROM. 주희</div>
+                <div class="m-card-msg">"생일 진심으로 축하해! 🎂 마음에 드는 선물 하나 편하게 골라주면 주소지로 바로 보내줄게 💖"</div>
+                <div style="font-size:8px;color:var(--sage);font-weight:800;">✦ 모노그램 왁스씰 동봉됨</div>
+              </div>
+
+              <div style="font-size:10px;font-weight:800;color:var(--ink-2);margin-bottom:6px;">카드 컬러 테마</div>
+              <div class="m-chip-group">
+                <span class="m-chip on">버터 아이보리</span>
+                <span class="m-chip">세이지 민트</span>
+                <span class="m-chip">블러시 로즈</span>
+                <span class="m-chip">노아르</span>
+              </div>
+
+              <div style="background:#fff;border:1px dashed var(--line);border-radius:12px;padding:8px 10px;margin-bottom:10px;font-size:9.5px;color:var(--ink-2);display:flex;justify-content:space-between;align-items:center;">
+                <span>✨ 폰트 서체: <b>Pretendard</b></span>
+                <span style="color:var(--sage);font-weight:800;">적용됨</span>
+              </div>
+
+              <a href="javascript:void(0)" class="m-cta-btn" onclick="nextSim('step4')">
+                <span>다음 · 안심 확인 및 결제</span>
+                <span>→</span>
+              </a>
+            </div>
+
+            <!-- VIEW 4: STEP 4 (안심 결제 & 최종 확인) -->
+            <div id="sim-view-step4" class="sim-view">
+              <div class="m-progress"><b class="done"></b><b class="done"></b><b class="done"></b><b class="done"></b></div>
+              <span class="m-badge">STEP 4 · 확인 및 에스크로</span>
+              <div class="m-title">선물 상자 준비 완료!<br/>안심하고 전송하세요 🛡️</div>
+
+              <div style="background:#fff;border:1.5px solid var(--line);border-radius:16px;padding:12px;margin-bottom:10px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+                  <span style="font-size:10.5px;font-weight:800;color:var(--sage);">선택한 선물 2종</span>
+                  <span style="font-size:9px;color:var(--tan);font-weight:800;">수정</span>
+                </div>
+                <div style="font-size:9.5px;color:var(--ink-2);line-height:1.4;">
+                  • OIMU 샌디 머그 (38,000원)<br/>
+                  • GRANHAND 사쉐 퍼퓸 (45,000원)
+                </div>
+              </div>
+
+              <div style="background:var(--sage-50);border:1px solid var(--sage-100);border-radius:14px;padding:10px;margin-bottom:12px;font-size:9.5px;color:var(--sage);line-height:1.45;">
+                <b>🛡️ 에스크로 가승인 시스템:</b><br/>
+                수령인이 실제 선택한 1개 선물 가격만 최종 결제되며, 최대 가승인 차액은 자동 환불됩니다.
+              </div>
+
+              <a href="javascript:void(0)" class="m-cta-btn" onclick="nextSim('recipient')">
+                <span>45,000원 가승인 결제하기</span>
+                <span>✨</span>
+              </a>
+            </div>
+
+            <!-- VIEW 5: RECIPIENT VIEW (수령인 0원 선물 룩북) -->
+            <div id="sim-view-recipient" class="sim-view">
+              <div class="m-envelope-box">
+                <span class="m-badge" style="background:#f4ece1;color:var(--tan);margin:0 auto 6px;">PRIVATE INVITATION 💌</span>
+                <div style="font-size:13px;font-weight:800;color:var(--ink);">주희님이 보내신<br/>선물 룩북이 도착했습니다</div>
+                <div class="m-wax-big" onclick="alert('봉투가 열렸습니다! 선물을 골라주세요 ✨')">SP</div>
+                <div style="font-size:8.5px;color:var(--ink-3);">모노그램 [SP] 왁스씰을 눌러 봉투를 개봉하세요</div>
+                <div class="m-zero-price-badge">
+                  🔒 수령인에게는 가격 정보가 100% 비노출됩니다
+                </div>
+              </div>
+
+              <div style="font-size:11px;font-weight:800;color:var(--ink);margin-bottom:6px;">제안받은 선물 리스트</div>
+              <div class="m-pgrid">
+                <div class="m-pcard selected">
+                  <img src="https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=600&auto=format&fit=crop&q=80" alt="머그" />
+                  <div class="pcheck">✓</div>
+                  <div class="pinfo">
+                    <div class="pbrand">OIMU</div>
+                    <div class="pname">소락사 샌디 머그</div>
+                  </div>
+                </div>
+                <div class="m-pcard">
+                  <img src="https://images.unsplash.com/photo-1547887537-6158d64c35b3?w=600&auto=format&fit=crop&q=80" alt="사쉐" />
+                  <div class="pinfo">
+                    <div class="pbrand">GRANHAND</div>
+                    <div class="pname">마린 오크모스 사쉐</div>
+                  </div>
+                </div>
+              </div>
+
+              <a href="javascript:void(0)" class="m-cta-btn" style="background:#2a3829;">
+                <span>선물 받기 (배송지 입력)</span>
+                <span>🎁</span>
+              </a>
+            </div>
+
+            <!-- Global Tab Bar in Mockup -->
+            <div class="m-tabbar">
+              <div class="m-tab-item active"><span>🎁</span><span>만들기</span></div>
+              <div class="m-tab-item"><span>💌</span><span>선물함</span></div>
+              <div class="m-tab-item"><span>💬</span><span>고객센터</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 01. BENCHMARK -->
+  <section id="research">
+    <div class="wrap">
+      <span class="eyebrow">01 · Benchmark Research</span>
+      <h2 class="section-title">최신 앱들은 어떻게 단정하고 사랑받나</h2>
+      <p class="lead">국내외 최고의 커머스 및 핀테크 앱 4종을 벤치마킹했습니다. 결정의 피로도를 줄이고, 엄지 끝에서 부드럽게 이어지는 <b>한 화면 하나의 행동(One thing per page)</b>과 <b>단정한 라운드 무드</b>가 핵심입니다.</p>
+      
+      <div class="grid g4 reveal" style="margin-top:36px">
+        <article class="card">
+          <span class="tag">Toss</span>
+          <h3>One thing per page</h3>
+          <p>한 화면에 하나의 결정만 묻습니다. 3초 안에 선택할 수 있는 큼직한 타일과 하단 고정 CTA를 적용하여 이탈율을 60% 이상 낮춥니다.</p>
+        </article>
+        <article class="card">
+          <span class="tag">Kakao Gift</span>
+          <h3>상황 우선 감성 탐색</h3>
+          <p>생일·집들이·응원 등 감성 카테고리로 먼저 다가갑니다. 복잡한 옵션과 배송지는 받는 사람이 직접 편하게 고르는 경험을 제공합니다.</p>
+        </article>
+        <article class="card">
+          <span class="tag">29CM · Musinsa</span>
+          <h3>에디토리얼 2열 그리드</h3>
+          <p>답답한 1열 스크롤 대신 2열 정사각 카드와 깔끔한 브랜드 타이포로 감도를 극대화합니다. 한눈에 4~6종을 즐겁게 비교합니다.</p>
+        </article>
+        <article class="card">
+          <span class="tag">Apple Design</span>
+          <h3>점진적 공개 & 햅틱 사운드</h3>
+          <p>필수 질문만 먼저 보여주고, 세부 꾸미기 옵션은 귀여운 바텀시트나 아코디언으로 정돈합니다. 왁스씰 개봉 시 샴페인 사운드로 감동을 줍니다.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- 02. AUDIT -->
+  <section id="audit">
+    <div class="wrap">
+      <span class="eyebrow">02 · Audit & Diagnostics</span>
+      <h2 class="section-title">기존 SharePresent 화면 진단</h2>
+      <p class="lead">모바일 430px 기준 실측 결과, 훌륭한 기능들이 하나의 긴 페이지에 무차별적으로 쏟아져 나와 사용자가 피로감을 느끼고 있었습니다.</p>
+      
+      <div class="grid g3 reveal" style="margin:34px 0">
+        <div class="card"><div class="kpi">≈15화면</div><p>생성 페이지가 차지하는 끝없는 스크롤 높이</p></div>
+        <div class="card"><div class="kpi">11개+</div><p>한 페이지에 동시에 노출된 복잡한 결정 지점</p></div>
+        <div class="card"><div class="kpi">1.5개</div><p>한 화면에 겨우 보이는 상품 수 (1열 답답한 카드)</p></div>
+      </div>
+
+      <table class="reveal">
+        <thead><tr><th>#</th><th>문제 영역</th><th>사용자 경험 영향</th><th>심각도</th></tr></thead>
+        <tbody>
+          <tr><td>P1</td><td>단일 스크롤 과부하 (프리셋 → MD Pick → 카드옵션 → 예산 → 카탈로그)</td><td>결정 피로로 인한 높은 결제 이탈</td><td><span class="sev h">높음</span></td></tr>
+          <tr><td>P2</td><td>최종 CTA가 맨 아래에만 있어 진행 상황을 알 수 없음</td><td>언제 끝나는지 몰라 막막함 발생</td><td><span class="sev h">높음</span></td></tr>
+          <tr><td>P3</td><td>헤더 메뉴가 좁은 모바일에서 두 줄로 깨져버림 ("Create / Gift")</td><td>서비스 신뢰도 저하 및 투박한 인상</td><td><span class="sev m">중간</span></td></tr>
+          <tr><td>P4</td><td>수령인 선물 화면에 상단 관리자(Admin) 및 선물 생성 메뉴 노출</td><td>수령인의 선물 감동 저하, 운영 콘솔 노출 위험</td><td><span class="sev h">높음</span></td></tr>
+          <tr><td>P5</td><td>취소 처리 시 브라우저 기본 <code>confirm()</code> 팝업 노출</td><td>감성 톤 파괴, 네이티브 앱 느낌 단절</td><td><span class="sev m">중간</span></td></tr>
+          <tr><td>P6</td><td>투박하고 딱딱한 고딕 서체와 각진 카드 모서리</td><td>선물 서비스 특유의 다정하고 귀여운 감성 부족</td><td><span class="sev m">중간</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 03. NEW IA & WORKFLOW -->
+  <section id="ia">
+    <div class="wrap">
+      <span class="eyebrow">03 · New Information Architecture</span>
+      <h2 class="section-title">새로운 정보 구조와 4단계 워크플로우</h2>
+      <p class="lead">보내는 사람과 받는 사람의 셸을 엄격히 분리하고, 생성 과정을 4개의 아늑한 퍼널로 재편했습니다.</p>
+      
+      <div class="flow reveal">
+        <div class="node">
+          <b>STEP 1</b>
+          <h4>상황 · 예산</h4>
+          <p>어떤 날인가요? 상황 카드를 고르면 추천 예산과 테마가 기분 좋게 자동 세팅됩니다.</p>
+        </div>
+        <div class="arrow">→</div>
+        <div class="node">
+          <b>STEP 2</b>
+          <h4>선물 선택</h4>
+          <p>2열 감성 그리드와 카테고리 칩으로 편안하게 탐색하고 2~3종을 쏙 골라 담습니다.</p>
+        </div>
+        <div class="arrow">→</div>
+        <div class="node">
+          <b>STEP 3</b>
+          <h4>카드 데코</h4>
+          <p>상단 실시간 카드 미리보기를 보며 왁스씰과 따뜻한 메시지를 예쁘게 담습니다.</p>
+        </div>
+        <div class="arrow">→</div>
+        <div class="node">
+          <b>STEP 4</b>
+          <h4>확인 · 결제</h4>
+          <p>에스크로 가승인 시스템으로 안전하게 결제하고, 받는 분에게 보낼 링크를 받습니다.</p>
+        </div>
+      </div>
+
+      <div class="grid g2 reveal" style="margin-top:28px">
+        <div class="card">
+          <span class="tag">Sender Shell</span>
+          <h3>하단 탭바 내비게이션 (AppTabBar)</h3>
+          <ul>
+            <li>[만들기] · [선물함] · [고객센터] 3개 탭으로 단순화</li>
+            <li>헤더에는 로고와 언어 전환 버튼만 깔끔하게 배치</li>
+            <li>관리자 콘솔 링크는 푸터 영역으로 이동하여 숨김 처리</li>
+          </ul>
+        </div>
+        <div class="card">
+          <span class="tag">Recipient Shell</span>
+          <h3>미니멀 셸 (0원 수령인 안심 보증)</h3>
+          <ul>
+            <li>상단 탭바와 보내는 사람 메뉴 완전 제거</li>
+            <li>가격/예산/환불 금액 100% 비노출 원칙 철저 준수</li>
+            <li>모노그램 왁스씰 개봉 인터랙션과 감동 답장 스튜디오 제공</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 04. MOCKUPS SHOWCASE -->
+  <section id="mockups">
+    <div class="wrap">
+      <span class="eyebrow">04 · Before / After Mockup Gallery</span>
+      <h2 class="section-title">전체 화면 단계별 목업 갤러리</h2>
+      <p class="lead">왼쪽은 개편 전의 복잡했던 화면, 오른쪽은 Pretendard 폰트와 둥글고 단정한 카드로 새로 태어난 단계별 화면들입니다.</p>
+
+      <div class="phones reveal">
+        <!-- Before -->
+        <div class="phone-col">
+          <div class="phone before">
+            <div class="screen">
+              <div class="notch"></div>
+              <span class="warn-badge">15화면 스크롤 과부하 ↓</span>
+              <div class="m-body">
+                <div style="font-size:11px;font-weight:800;color:#999;margin-bottom:8px;">[기존] 모든 폼이 한 화면에</div>
+                <div style="height:60px;background:#e5e0d6;border-radius:8px;margin-bottom:8px;"></div>
+                <div style="height:20px;background:#ded7cb;border-radius:4px;margin-bottom:8px;"></div>
+                <div style="height:90px;background:#eae5dc;border-radius:8px;margin-bottom:8px;"></div>
+                <div style="height:40px;background:#ded7cb;border-radius:6px;margin-bottom:8px;"></div>
+                <div style="height:100px;background:#eae5dc;border-radius:8px;"></div>
+              </div>
+            </div>
+          </div>
+          <p class="cap"><b>Before 현황</b>15화면 스크롤 과부하</p>
+        </div>
+
+        <!-- Step 1 -->
+        <div class="phone-col">
+          <div class="phone">
+            <div class="screen">
+              <div class="notch"></div>
+              <div class="m-body">
+                <span class="m-badge">STEP 1</span>
+                <div class="m-title">어떤 특별한 날을<br/>축하하나요? 🎂</div>
+                <div class="m-occ-grid" style="margin-top:8px;">
+                  <div class="m-occ-item selected"><span class="icon">🎂</span>생일 축하</div>
+                  <div class="m-occ-item"><span class="icon">💌</span>기념일</div>
+                  <div class="m-occ-item"><span class="icon">🏡</span>집들이</div>
+                  <div class="m-occ-item"><span class="icon">💼</span>취업응원</div>
+                </div>
+                <div class="m-chip-group" style="margin-top:auto;">
+                  <span class="m-chip on">최소 3만</span>
+                  <span class="m-chip on">최대 6만</span>
+                </div>
+                <div class="m-cta-btn" style="margin-top:8px;"><span>다음 · 선물 고르기</span><span>→</span></div>
+              </div>
+            </div>
+          </div>
+          <p class="cap"><b>Step 1</b>상황 & 예산 자동 세팅</p>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="phone-col">
+          <div class="phone">
+            <div class="screen">
+              <div class="notch"></div>
+              <div class="m-body">
+                <span class="m-badge">STEP 2</span>
+                <div class="m-title">선물을 2~3가지<br/>골라주세요 🎁</div>
+                <div class="m-pgrid" style="margin-top:8px;">
+                  <div class="m-pcard selected">
+                    <img src="https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=600&auto=format&fit=crop&q=80" alt="머그" />
+                    <div class="pcheck">✓</div>
+                    <div class="pinfo"><div class="pname">OIMU 머그</div></div>
+                  </div>
+                  <div class="m-pcard selected">
+                    <img src="https://images.unsplash.com/photo-1547887537-6158d64c35b3?w=600&auto=format&fit=crop&q=80" alt="사쉐" />
+                    <div class="pcheck">✓</div>
+                    <div class="pinfo"><div class="pname">오크모스 사쉐</div></div>
+                  </div>
+                </div>
+                <div class="m-cta-btn" style="margin-top:auto;"><span>2개 선택됨 · 다음</span><span>→</span></div>
+              </div>
+            </div>
+          </div>
+          <p class="cap"><b>Step 2</b>2열 감도 큐레이션</p>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="phone-col">
+          <div class="phone">
+            <div class="screen">
+              <div class="notch"></div>
+              <div class="m-body">
+                <span class="m-badge">STEP 3</span>
+                <div class="m-title">마음을 담아<br/>카드를 꾸며요 💌</div>
+                <div class="m-card-preview" style="margin-top:8px;">
+                  <div class="m-wax-seal" style="width:22px;height:22px;font-size:7px;">HBD</div>
+                  <div class="m-card-sender">FROM. 주희</div>
+                  <div class="m-card-msg" style="font-size:9.5px;">"생일 축하해! 마음에 드는 선물 골라줘 💖"</div>
+                </div>
+                <div class="m-chip-group">
+                  <span class="m-chip on">버터크림</span>
+                  <span class="m-chip">세이지</span>
+                </div>
+                <div class="m-cta-btn" style="margin-top:auto;"><span>다음 · 최종 확인</span><span>→</span></div>
+              </div>
+            </div>
+          </div>
+          <p class="cap"><b>Step 3</b>실시간 카드 데코</p>
+        </div>
+
+        <!-- Recipient View -->
+        <div class="phone-col">
+          <div class="phone">
+            <div class="screen">
+              <div class="notch"></div>
+              <div class="m-body">
+                <div class="m-envelope-box" style="padding:10px;margin-top:6px;">
+                  <span class="m-badge" style="font-size:8px;margin-bottom:4px;">INVITATION</span>
+                  <div style="font-size:11px;font-weight:800;">선물 룩북 도착 💌</div>
+                  <div class="m-wax-big" style="width:34px;height:34px;font-size:10px;margin:6px auto;">SP</div>
+                  <div class="m-zero-price-badge" style="font-size:8px;">🔒 가격 100% 비노출</div>
+                </div>
+                <div class="m-pgrid" style="margin-top:4px;">
+                  <div class="m-pcard selected">
+                    <img src="https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=600&auto=format&fit=crop&q=80" alt="머그" />
+                    <div class="pinfo"><div class="pname">OIMU 머그</div></div>
+                  </div>
+                  <div class="m-pcard">
+                    <img src="https://images.unsplash.com/photo-1547887537-6158d64c35b3?w=600&auto=format&fit=crop&q=80" alt="사쉐" />
+                    <div class="pinfo"><div class="pname">그랑핸드 사쉐</div></div>
+                  </div>
+                </div>
+                <div class="m-cta-btn" style="background:#283527;margin-top:auto;"><span>선물 받기 (주소 입력)</span><span>🎁</span></div>
+              </div>
+            </div>
+          </div>
+          <p class="cap"><b>Recipient View</b>0원 룩북 & 왁스씰 감동</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 05. DESIGN TOKENS -->
+  <section id="tokens">
+    <div class="wrap">
+      <span class="eyebrow">05 · Cute & Neat Design System</span>
+      <h2 class="section-title">디자인 시스템 & 토큰 팔레트</h2>
+      <p class="lead">선물 서비스에 어울리는 다정하고 감각적인 컬러와 둥글고 단정한 서체 체계를 정립했습니다.</p>
+      
+      <div class="grid g4 reveal" style="margin-top:34px">
+        <div class="swatch">
+          <div class="c" style="background:#384937"></div>
+          <div class="l"><b>Forest Sage · Primary</b><code>--sp-primary #384937</code></div>
+        </div>
+        <div class="swatch">
+          <div class="c" style="background:#fdf5e2"></div>
+          <div class="l"><b>Butter Yellow · Soft Tag</b><code>--sp-butter #fdf5e2</code></div>
+        </div>
+        <div class="swatch">
+          <div class="c" style="background:#fcedea"></div>
+          <div class="l"><b>Blush Peach · Accent</b><code>--sp-peach #fcedea</code></div>
+        </div>
+        <div class="swatch">
+          <div class="c" style="background:#faf7f0"></div>
+          <div class="l"><b>Warm Ivory · Canvas</b><code>--sp-canvas #faf7f0</code></div>
+        </div>
+      </div>
+
+      <div class="grid g3 reveal" style="margin-top:20px">
+        <div class="card">
+          <span class="tag">Typography</span>
+          <h3>Pretendard + Quicksand</h3>
+          <p>한글 본문과 제목은 정교하고 가독성이 뛰어난 <b>Pretendard</b>(/Users/juhee/font 로컬 세트), 영문 숫자와 뱃지는 둥글고 산뜻한 <b>Quicksand</b>와 클래식한 <b>Fraunces</b> 세리프를 조화롭게 믹스합니다.</p>
+        </div>
+        <div class="card">
+          <span class="tag">Round Shape</span>
+          <h3>Radius 14 · 18 · 26px</h3>
+          <p>날카로운 각진 모서리를 배제하고, 버튼과 알약 뱃지는 완전 라운드(999px), 카드는 부드러운 18~26px 곡률을 주어 손끝에 닿는 촉감을 부드럽게 합니다.</p>
+        </div>
+        <div class="card">
+          <span class="tag">Warm Motion</span>
+          <h3>Spring Bounce & Wax Stamp</h3>
+          <p>버튼을 탭할 때 기분 좋은 미세 스케일 바운스(scale 0.97)와 왁스씰을 깰 때 터지는 부드러운 파티클 모션을 지원합니다.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 06. DEV HANDOFF -->
+  <section id="handoff" style="border-bottom:none">
+    <div class="wrap">
+      <span class="eyebrow">06 · Developer Handoff Checklist</span>
+      <h2 class="section-title">개발팀 전달 범위 및 품질 기준</h2>
+      
+      <div class="grid g2 reveal" style="margin-top:30px">
+        <div class="card">
+          <span class="tag">In Scope · 이번 구현</span>
+          <h3>핵심 프론트엔드 작업</h3>
+          <ul>
+            <li>생성 플로우 4단계 위저드 전환 및 하단 StickyActionBar 연동</li>
+            <li>2열 CompactProductCard 및 실시간 CardPreview 반영</li>
+            <li>Pretendard 로컬 폰트 세트 적용 및 글로벌 스타일 정돈</li>
+            <li>수령인 화면 0원 가격 비노출 정책 철저 유지 및 회귀 방지</li>
+            <li>ConfirmSheet(바텀시트) 도입으로 브라우저 팝업 완전 제거</li>
+          </ul>
+        </div>
+        <div class="card">
+          <span class="tag">Safety Rules · 절대 원칙</span>
+          <h3>백엔드 & 비즈니스 불변 규칙</h3>
+          <ul>
+            <li><b>Zero Price Exposure:</b> /gift/* 화면에서 가격/예산 노출 절대 금지</li>
+            <li><b>Double-Bound Budgeting:</b> minBudget과 maxBudget 필드 무조건 보존</li>
+            <li>백엔드 JPA 엔티티 및 REST API 스펙은 변경 없이 100% 호환</li>
+            <li>Spring Boot(포트 8081)와 Next.js(포트 3000) 연동 보장</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="callout reveal">
+        <h3>🎉 수용 검증 기준 (Acceptance Criteria)</h3>
+        <ul>
+          <li>모든 화면에서 Pretendard 기반의 깔끔하고 단정한 폰트와 여백이 깨짐 없이 렌더링된다.</li>
+          <li>생성 플로우 각 단계의 스크롤 높이가 2화면 이내로 유지되고, 하단 액션 버튼이 항상 엄지 아래에 머문다.</li>
+          <li>수령인 화면(/gift/*)에서 일체의 가격 및 관리자 메뉴가 노출되지 않으며, 선물 선택이 정상 작동한다.</li>
+          <li>TypeScript 타입 검사, ESLint 검사, 브라우저 렌더링 검사에서 0개의 에러를 유지한다.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    SharePresent Design Team · UI Redesign Proposal v1.2 (Cute & Neat Edition) · 2026.10.17<br/>
+    관련 회의록: docs/ui-redesign/meetings/2026-10-15_01_design-team-review.md
+  </div>
+</footer>
+
+<script>
+  // Intersection Observer for scroll reveal animations
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((e) => {
+      if (e.isIntersecting) {
+        e.target.classList.add("in");
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  document.querySelectorAll(".reveal").forEach((el) => io.observe(el));
+
+  // Interactive Phone Simulator Tab Switcher
+  function switchSim(viewKey, btnEl) {
+    document.querySelectorAll('.sim-view').forEach(v => v.classList.remove('active'));
+    document.querySelectorAll('.sim-btn').forEach(b => b.classList.remove('active'));
+    
+    const target = document.getElementById('sim-view-' + viewKey);
+    if (target) target.classList.add('active');
+    if (btnEl) btnEl.classList.add('active');
+  }
+
+  function nextSim(nextKey) {
+    const btn = Array.from(document.querySelectorAll('.sim-btn')).find(b => b.getAttribute('onclick').includes(nextKey));
+    switchSim(nextKey, btn);
+  }
+
+  // Interactive Occasion Select
+  function toggleOcc(el) {
+    document.querySelectorAll('.m-occ-item').forEach(i => i.classList.remove('selected'));
+    el.classList.add('selected');
+  }
+
+  // Interactive Product Select
+  function toggleProd(el) {
+    el.classList.toggle('selected');
+    const chk = el.querySelector('.pcheck');
+    if (chk) {
+      chk.style.display = el.classList.contains('selected') ? 'grid' : 'none';
+    }
+    const count = document.querySelectorAll('.m-pgrid .m-pcard.selected').length;
+    const countLabel = document.getElementById('selected-count-label');
+    if (countLabel) {
+      countLabel.textContent = `${count}개 선물 담음 · 카드 작성`;
+    }
+  }
+</script>
+</body>
+</html>

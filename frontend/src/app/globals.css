@@ -1,4 +1,5 @@
-@import "pretendard/dist/web/static/pretendard.css";
+@import "../fonts/pretendard/variable/pretendardvariable.css";
+@import "../fonts/pretendard/static/pretendard.css";
 @import "tailwindcss";
 
 @layer base {
@@ -22,7 +23,7 @@
   body {
     background-color: var(--bg-color);
     color: var(--text-dark);
-    font-family: "Pretendard", var(--font-sans), -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Noto Sans KR", sans-serif;
+    font-family: "Pretendard Variable", "Pretendard", var(--font-sans), -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
     min-height: 100vh;
     display: flex;
     justify-content: center;

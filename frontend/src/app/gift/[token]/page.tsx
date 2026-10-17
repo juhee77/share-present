@@ -49,6 +49,9 @@ export default function RecipientGiftPage({ params }: { params: Promise<{ token:
   const [showTasteModal, setShowTasteModal] = useState(false);
   const [tasteMatchResult, setTasteMatchResult] = useState<{ productId: number | string; summary: string } | null>(null);
 
+  // Alternative gift selection (must be declared before any early return — Rules of Hooks)
+  const [selectedAltProduct, setSelectedAltProduct] = useState<ProductDto | null>(null);
+
   useEffect(() => {
     async function loadBox() {
       try {
@@ -106,7 +109,7 @@ export default function RecipientGiftPage({ params }: { params: Promise<{ token:
               name: "젠틀나잇 핸드워시 (300ml)",
               price: 32000,
               description: "달콤한 스웨이드와 시더우드 향이 어우러져 매일의 일상을 특별하게 해주는 핸드케어.",
-              imageUrl: "https://images.unsplash.com/photo-1608248597309-45da1e028896?w=600&auto=format&fit=crop&q=80",
+              imageUrl: "https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?w=600&auto=format&fit=crop&q=80",
             },
           ],
         });
@@ -141,8 +144,6 @@ export default function RecipientGiftPage({ params }: { params: Promise<{ token:
     setSelectedOption(product.options?.[0] || "");
     setIsDrawerOpen(true);
   };
-
-  const [selectedAltProduct, setSelectedAltProduct] = useState<ProductDto | null>(null);
 
   const handleAlternativeProductSelect = (product: ProductDto) => {
     setSelectedAltProduct(product);
