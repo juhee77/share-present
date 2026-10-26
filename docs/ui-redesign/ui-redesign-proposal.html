@@ -5,7 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>SharePresent UI·워크플로우 개편 제안서 v1.2 (Cute & Neat Edition)</title>
 <meta name="description" content="SharePresent 모바일 선물 큐레이션 플랫폼의 UI 구조 및 워크플로우 개편 제안서. 로컬 Pretendard 폰트 기반의 단정하고 감도 높은 에디토리얼 무드, Before/After 폰 목업, 인터랙티브 시뮬레이터 포함." />
-<!-- Pretendard (/Users/juhee/font 로컬 복사본: Variable & Static WOFF2) -->
+<!-- Pretendard: CDN 우선 + 로컬 WOFF2 fallback -->
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
 <link rel="stylesheet" href="./fonts/pretendard/variable/pretendardvariable.css" />
 <link rel="stylesheet" href="./fonts/pretendard/static/pretendard.css" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -40,16 +41,22 @@
     --shadow-float: 0 20px 50px rgba(56, 73, 55, 0.12);
   }
   * { box-sizing: border-box; margin: 0; padding: 0; word-break: keep-all; }
-  html { scroll-behavior: smooth; }
+  html {
+    scroll-behavior: smooth;
+    font-family: "Pretendard Variable", "Pretendard", -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+  }
   body {
     font-family: "Pretendard Variable", "Pretendard", -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
     color: var(--ink);
     background: var(--ivory);
     line-height: 1.65;
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
   }
-  .serif, .fraunces { font-family: "Fraunces", serif; }
-  .quicksand { font-family: "Quicksand", sans-serif; }
+  button, input, select, textarea { font-family: inherit; }
+  .serif, .fraunces { font-family: "Pretendard Variable", "Pretendard", -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif; }
+  .quicksand { font-family: "Pretendard Variable", "Pretendard", -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif; font-feature-settings: "tnum"; }
   .wrap { max-width: 1140px; margin: 0 auto; padding: 0 28px; }
   
   /* Cute badges & text styles */
@@ -95,7 +102,7 @@
     width: 34px; height: 34px; border-radius: 12px;
     background: linear-gradient(135deg, var(--sage), var(--sage-dark));
     color: #fff; display: grid; place-items: center;
-    font-family: "Fraunces", serif; font-size: 18px;
+    font-family: "Pretendard Variable", "Pretendard", -apple-system, BlinkMacSystemFont, sans-serif; font-size: 16px; font-weight: 800;
     box-shadow: 0 4px 12px rgba(56, 73, 55, 0.2);
   }
   .topnav nav { display: flex; align-items: center; gap: 8px; }
@@ -128,10 +135,10 @@
     color: var(--ink);
   }
   .hero h1 em {
-    font-family: "Fraunces", serif;
-    font-style: italic;
+    font-family: inherit;
+    font-style: normal;
     color: var(--sage);
-    font-weight: 600;
+    font-weight: 800;
   }
   .meta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 32px; }
   .pill {
@@ -446,7 +453,7 @@
   .swatch .l b { display: block; font-size: 13.5px; color: var(--ink); }
   .swatch code { color: var(--ink-3); font-size: 11px; }
 
-  .kpi { font-size: 42px; font-weight: 800; color: var(--sage); letter-spacing: -0.03em; font-family: "Quicksand", sans-serif; }
+  .kpi { font-size: 42px; font-weight: 800; color: var(--sage); letter-spacing: -0.03em; font-family: "Pretendard Variable", "Pretendard", -apple-system, BlinkMacSystemFont, sans-serif; font-feature-settings: "tnum"; }
   .callout {
     background: linear-gradient(135deg, var(--sage), var(--sage-dark));
     color: #f7f6f0; border-radius: var(--radius-lg); padding: 34px; margin-top: 30px;

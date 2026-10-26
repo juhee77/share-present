@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
-import { Playfair_Display, Noto_Sans_KR } from "next/font/google";
+import { Playfair_Display } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 
 const playfair = Playfair_Display({
@@ -7,11 +8,11 @@ const playfair = Playfair_Display({
   variable: "--font-serif",
 });
 
-const notoSans = Noto_Sans_KR({
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "700"],
-  variable: "--font-sans",
-  preload: false,
+const pretendard = localFont({
+  src: "../fonts/pretendard/variable/woff2/PretendardVariable.woff2",
+  display: "swap",
+  weight: "45 920",
+  variable: "--font-pretendard",
 });
 
 export const viewport: Viewport = {
@@ -43,7 +44,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ko" className={`${playfair.variable} ${notoSans.variable}`}>
+    <html lang="ko" className={`${playfair.variable} ${pretendard.variable}`}>
+      <head>
+        <link
+          rel="stylesheet"
+          as="style"
+          crossOrigin="anonymous"
+          href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css"
+        />
+      </head>
       <body>
         <LanguageProvider>
           <ToastProvider>

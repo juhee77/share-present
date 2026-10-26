@@ -11,10 +11,10 @@
   <meta property="og:description" content="소중한 분에게 감도 높은 선물 리스트를 제안해보세요.">
   <meta property="og:type" content="website">
 
-  <!-- Local Pretendard Fonts + CDN Fallback & Google Typography -->
+  <!-- Pretendard: CDN 우선 + 로컬 WOFF2 Fallback & Typography -->
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
   <link rel="stylesheet" href="./docs/ui-redesign/fonts/pretendard/variable/pretendardvariable.css">
   <link rel="stylesheet" href="./docs/ui-redesign/fonts/pretendard/static/pretendard.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;1,9..144,600&family=Quicksand:wght@600;700;800&display=swap" rel="stylesheet">
@@ -28,6 +28,10 @@
       -webkit-tap-highlight-color: transparent;
       word-break: keep-all;
       overflow-wrap: break-word;
+    }
+
+    button, input, select, textarea {
+      font-family: inherit;
     }
 
     :root {
@@ -50,7 +54,7 @@
       --card-border: 1px solid #eae3d5;
       --serif-font: "Fraunces", "Playfair Display", serif;
       --sans-font: "Pretendard Variable", "Pretendard", -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
-      --round-font: "Quicksand", sans-serif;
+      --round-font: "Pretendard Variable", "Pretendard", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
       --radius-sm: 12px;
       --radius-md: 18px;
       --radius-lg: 24px;
@@ -131,9 +135,9 @@
     }
 
     .brand-logo {
-      font-family: var(--serif-font);
-      font-size: 1.55rem;
-      font-weight: 700;
+      font-family: var(--sans-font);
+      font-size: 1.45rem;
+      font-weight: 800;
       color: var(--primary-color);
       letter-spacing: -0.5px;
       cursor: pointer;
@@ -470,9 +474,9 @@
     }
 
     .ribbon-title {
-      font-family: var(--serif-font);
-      font-size: 2.1rem;
-      font-weight: 600;
+      font-family: var(--sans-font);
+      font-size: 1.95rem;
+      font-weight: 800;
       margin-bottom: 8px;
       color: var(--text-dark);
       letter-spacing: -0.02em;
@@ -517,9 +521,9 @@
     }
 
     .recipient-msg-title {
-      font-family: var(--serif-font);
+      font-family: var(--sans-font);
       font-size: 1.15rem;
-      font-weight: 700;
+      font-weight: 800;
       margin-bottom: 6px;
       color: var(--primary-color);
     }

@@ -23,7 +23,7 @@
   body {
     background-color: var(--bg-color);
     color: var(--text-dark);
-    font-family: "Pretendard Variable", "Pretendard", var(--font-sans), -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+    font-family: var(--font-pretendard), "Pretendard Variable", "Pretendard", -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
     min-height: 100vh;
     display: flex;
     justify-content: center;
@@ -31,6 +31,10 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
+  }
+
+  button, input, optgroup, select, textarea {
+    font-family: inherit;
   }
 }
 

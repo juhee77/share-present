@@ -6,6 +6,14 @@
 
 ---
 
+## 🔗 Live Demo & Deployment Links (배포 링크)
+
+* 🌐 **모바일 인터랙티브 데모 (GitHub Pages)**: [https://juhee77.github.io/share-present/](https://juhee77.github.io/share-present/)
+* 📄 **UI·워크플로우 개편 제안서 (Cute & Neat Edition)**: [https://juhee77.github.io/share-present/docs/ui-redesign/ui-redesign-proposal.html](https://juhee77.github.io/share-present/docs/ui-redesign/ui-redesign-proposal.html)
+* 📦 **GitHub Repository**: [https://github.com/juhee77/share-present](https://github.com/juhee77/share-present)
+
+---
+
 ## 1. Product Vision & Target Audience
 
 ### 1) Core Vision
@@ -24,10 +32,15 @@
 ### 1) 럭셔리 에디토리얼 룩북 (Editorial Lookbook UI)
 인스타그램 소셜 피드 느낌(하트, 좋아요 카운트 등)을 전면 제거하고, 20년 차 마케팅 디렉터와 탑티어 디자이너 팀이 브랜드 컨셉 회의 끝에 디자인한 듯한 명품 카탈로그 / 파이빗 살롱 인비테이션 스타일을 적용했습니다.
 
-### 2) 수령인 전용 실시간 배송 조회 (`/gift/track/[token]`)
+### 2) Pretendard 타이포그래피 & 모던 룩앤필
+토스(Toss), 29CM 등 국내 탑티어 커머스/핀테크 서비스의 표준 폰트인 **Pretendard(프리텐다드)** 가변 폰트를 전역 적용했습니다.
+- **Next.js 풀스택 웹 앱(`frontend/`)**: `next/font/local`을 통해 WOFF2 가변 폰트를 자체 호스팅 및 최적화 번들링하여 레이아웃 시프트(CLS) 0% 달성
+- **GitHub Pages 정적 데모(`index.html` & 제안서 HTML)**: jsDelivr 공식 CDN + 로컬 WOFF2 Fallback의 2단계 안정성 구조를 적용하여 로컬/모바일/웹뷰 환경 어디서나 선명하고 단정한 한국어 타이포그래피 보장
+
+### 3) 수령인 전용 실시간 배송 조회 (`/gift/track/[token]`)
 선물 수락 완료 후 받는 사람이 자신의 선물이 어떻게 준비되고 있는지 4단계 타임라인(`선물 수락` ➔ `상품 준비중` ➔ `배송 시작` ➔ `배송 완료`)과 택배사 운송장 번호(CJ대한통운 등)로 실시간 조회할 수 있습니다.
 
-### 3) 보내는 사람 전용 대시보드 & 인기 랭킹 (`/dashboard`)
+### 4) 보내는 사람 전용 대시보드 & 인기 랭킹 (`/dashboard`)
 *   **내가 보낸 선물 보관함**: `🟡 수령인 선택 대기 중` 카톡 링크 복사 및 `🟢 수령 완료` 건의 정산 명세서 상세 조회 지원.
 *   **🔥 주간 인기 큐레이션 선물 랭킹 (Weekly Popular Choice)**: 선택률 1위 사쉐 퍼퓸, 도자기 머그, 핸드워시 등 브랜드 인기도 데이터를 기반으로 원클릭 선물 상자 생성을 지원합니다.
 
@@ -46,7 +59,8 @@
 - **Framework**: Next.js 16 (App Router, Turbopack)
 - **Language**: TypeScript
 - **Styling**: Vanilla CSS, Tailwind CSS (Custom Editorial Design Tokens)
-- **Deployment**: Vercel / Static Export
+- **Typography**: Pretendard Variable (`next/font/local` 최적화 번들링 & CDN Fallback)
+- **Deployment**: Vercel / GitHub Pages Static Export
 
 ---
 
@@ -143,3 +157,5 @@ npm run dev
 ## 8. License & Contact
 - **Project Lead**: juhee
 - **Repository**: [https://github.com/juhee77/share-present.git](https://github.com/juhee77/share-present.git)
+- **Live Demo (GitHub Pages)**: [https://juhee77.github.io/share-present/](https://juhee77.github.io/share-present/)
+- **UI Redesign Proposal**: [https://juhee77.github.io/share-present/docs/ui-redesign/ui-redesign-proposal.html](https://juhee77.github.io/share-present/docs/ui-redesign/ui-redesign-proposal.html)
